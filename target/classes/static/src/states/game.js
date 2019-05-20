@@ -11,6 +11,7 @@ Spacewar.gameState.prototype = {
 		if (game.global.DEBUG_MODE) {
 			console.log("[DEBUG] Entering **GAME** state");
 		}
+		//print world size
 		game.world.setBounds(0, 0, 1920, 1920);
 	},
 
@@ -41,6 +42,11 @@ Spacewar.gameState.prototype = {
 		game.global.myPlayer.image = game.add.sprite(0, 0, 'spacewar',
 				game.global.myPlayer.shipType)
 		game.global.myPlayer.image.anchor.setTo(0.5, 0.5)
+		
+		// print usernames
+		var style = { font: "16px Arial", fill: "#ffffff", align: "center" };
+		game.global.myPlayer.username = game.add.text(0, 0, "Pepe el botella", style); //TODO Poner que lea el nombre
+		game.global.myPlayer.username.anchor.set(0.5,2.0);
 	},
 
 	create : function() {
@@ -93,6 +99,10 @@ Spacewar.gameState.prototype = {
 		if (this.spaceKey.isDown) {
 			msg.bullet = this.fireBullet()
 		}
+		
+		//TODO Hacer esto en el cliente
+		game.global.myPlayer.username.x = game.global.myPlayer.image.x;
+		game.global.myPlayer.username.y = game.global.myPlayer.image.y;
 
 		if (game.global.DEBUG_MODE) {
 			console.log("[DEBUG] Sending UPDATE MOVEMENT message to server")
