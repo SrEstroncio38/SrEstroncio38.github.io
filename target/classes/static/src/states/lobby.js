@@ -1,22 +1,13 @@
 Spacewar.lobbyState = function(game) {
 
-<<<<<<< HEAD
 	// PRUEBA PRUEBERINA
-	
-	
-=======
->>>>>>> refs/remotes/origin/master
 }
 
 function actionOnClick(){
 
     lobby.visible.setTo = false;
     console.log("hola");
-<<<<<<< HEAD
-    //JUES JUES
-=======
     console.log("esto Es una prueba");
->>>>>>> refs/remotes/origin/master
 }
 
 Spacewar.lobbyState.prototype = {
