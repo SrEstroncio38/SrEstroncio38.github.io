@@ -1,6 +1,6 @@
 window.onload = function() {
 
-	game = new Phaser.Game(1024, 600, Phaser.AUTO, 'gameDiv')
+	game = new Phaser.Game(1635, 920, Phaser.AUTO, 'gameDiv')
 
 	// GLOBAL VARIABLES
 	game.global = {
