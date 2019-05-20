@@ -8,6 +8,7 @@ function actionOnClick(){
     lobby.visible.setTo = false;
     console.log("hola");
     console.log("esto Es una prueba");
+    game.state.start('gameState');
 }
 
 Spacewar.lobbyState.prototype = {
