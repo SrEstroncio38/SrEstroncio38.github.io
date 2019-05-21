@@ -1,6 +1,5 @@
 Spacewar.menuState = function(game) {
-	this.username
-	this.deletingText
+
 }
 
 Spacewar.menuState.prototype = {
@@ -12,19 +11,6 @@ Spacewar.menuState.prototype = {
 	},
 
 	preload : function() {
-		this.enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
-		this.backKey = game.input.keyboard.addKey(Phaser.Keyboard.BACKSPACE);
-		
-		// add your name
-		var style = { font: "24px Arial", fill: "#ffffaa", align: "center" };
-		var text = game.add.text(game.world.centerX, game.world.centerY, "Escribe tu nombre:", style);
-		text.anchor.set(0.5,0.75);
-		game.global.myPlayer.username = "";
-		style = { font: "24px Arial", fill: "#ffffff", align: "center" };
-		username = game.add.text(game.world.centerX, game.world.centerY, "< " + game.global.myPlayer.username + " >", style);
-		username.anchor.set(0.5,-0.75);
-		
-		deletingText = false;
 		
 		// In case JOIN message from server failed, we force it
 		if (typeof game.global.myPlayer.id == 'undefined') {
@@ -39,24 +25,11 @@ Spacewar.menuState.prototype = {
 	},
 
 	create : function() {
-
+		game.state.start('lobbyState');
 	},
 
 	update : function() {
-		if (this.backKey.isDown){
-			if (!deletingText) {
-				game.global.myPlayer.username = game.global.myPlayer.username.substring(0,game.global.myPlayer.username.length-1);
-				deletingText = true;
-			}
-		} else {
-			game.input.keyboard.addCallbacks(this, null, null, function (char) {
-				game.global.myPlayer.username += char;
-			});
-			deletingText = false;
-		}
-		username.text = "< " + game.global.myPlayer.username + " >";
-
-		if (this.enterKey.isDown && typeof game.global.myPlayer.id !== 'undefined')
-			game.state.start('lobbyState');
-	}
+		
+	},		
+	
 }

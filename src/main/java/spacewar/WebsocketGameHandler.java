@@ -52,12 +52,6 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				player.getSession().sendMessage(new TextMessage(msg.toString()));
 				break;
 			case "JOIN ROOM":
-				player.setUsername(node.path("username").asText());
-				for (Player currentplayer : game.getPlayers()) {
-					if (currentplayer.getPlayerId() == player.getPlayerId()) {
-						currentplayer.setUsername(node.path("username").asText());
-					}
-				}
 				msg.put("event", "NEW ROOM");
 				msg.put("room", "GLOBAL");
 				player.getSession().sendMessage(new TextMessage(msg.toString()));
@@ -70,6 +64,15 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				if (node.path("bullet").asBoolean()) {
 					Projectile projectile = new Projectile(player, this.projectileId.incrementAndGet());
 					game.addProjectile(projectile.getId(), projectile);
+				}
+				break;
+			case "UPDATE NAME":
+				System.err.println("Hola soy UPDATE NAME");
+				player.setUsername(node.path("username").asText());
+				for (Player currentplayer : game.getPlayers()) {
+					if (currentplayer.getPlayerId() == player.getPlayerId()) {
+						currentplayer.setUsername(node.path("username").asText());
+					}
 				}
 				break;
 			default:
