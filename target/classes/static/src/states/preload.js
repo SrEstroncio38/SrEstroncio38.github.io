@@ -17,6 +17,9 @@ Spacewar.preloadState.prototype = {
 		game.load.atlas('explosion', 'assets/atlas/explosion.png',
 				'assets/atlas/explosion.json',
 				Phaser.Loader.TEXTURE_ATLAS_JSON_HASH)
+				
+		game.load.image('health2','assets/spaceship/hp_bar_2.png');
+		game.load.image('health1','assets/spaceship/hp_bar_1.png');
 	},
 
 	create : function() {

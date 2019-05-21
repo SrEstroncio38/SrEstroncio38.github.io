@@ -16,7 +16,7 @@ public class Player extends Spaceship {
 	public Player(int playerId, WebSocketSession session) {
 		this.playerId = playerId;
 		this.username = "Unknown";
-		this.health = 10.0f;
+		this.health = 100.0f;
 		this.session = session;
 		this.shipType = this.getRandomShipType();
 	}
@@ -47,6 +47,14 @@ public class Player extends Spaceship {
 	
 	public float getHealth() {
 		return health;
+	}
+	
+	public void addHealth(float health) {
+		this.health += health;
+		if (this.health < 0)
+			this.health = 0.0f;
+		if (this.health > 100)
+			this.health = 100.0f;
 	}
 
 	private String getRandomShipType() {

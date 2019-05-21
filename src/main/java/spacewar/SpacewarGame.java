@@ -112,6 +112,7 @@ public class SpacewarGame {
 				jsonPlayer.put("id", player.getPlayerId());
 				jsonPlayer.put("shipType", player.getShipType());
 				jsonPlayer.put("username", player.getUsername());
+				jsonPlayer.put("health", player.getHealth());
 				jsonPlayer.put("posX", player.getPosX());
 				jsonPlayer.put("posY", player.getPosY());
 				jsonPlayer.put("facingAngle", player.getFacingAngle());
@@ -127,6 +128,10 @@ public class SpacewarGame {
 					if ((projectile.getOwner().getPlayerId() != player.getPlayerId()) && player.intersect(projectile)) {
 						// System.out.println("Player " + player.getPlayerId() + " was hit!!!");
 						projectile.setHit(true);
+						player.addHealth(-10);
+						if (player.getHealth() <= 0) {
+							// He is fuckig dead
+						}
 						break;
 					}
 				}

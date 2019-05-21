@@ -65,15 +65,31 @@ window.onload = function() {
 						game.global.myPlayer.image.angle = player.facingAngle
 						game.global.myPlayer.userNLabel.x = player.posX
 						game.global.myPlayer.userNLabel.y = player.posY
+						game.global.myPlayer.healthValue = player.health
+						game.global.myPlayer.health2.x = player.posX - 50
+						game.global.myPlayer.health2.y = player.posY
+						game.global.myPlayer.health1.x = player.posX - 50
+						game.global.myPlayer.health1.y = player.posY
+						var scale = player.health/100.0
+						console.log(player.health)
+						console.log(scale)
+						game.global.myPlayer.health1.scale.setTo(scale, 1)
 					} else {
 						if (typeof game.global.otherPlayers[player.id] == 'undefined') {
 							game.global.otherPlayers[player.id] = {
 									image : game.add.sprite(player.posX, player.posY, 'spacewar', player.shipType),
 									username: player.username,
-									userNLabel: game.add.text(0, 0, player.username, { font: "16px Arial", fill: "#ff8888", align: "center" })
+									userNLabel: game.add.text(0, 0, player.username, { font: "16px Arial", fill: "#ff8888", align: "center" }),
+									healthValue: player.health,
+									health2: game.add.sprite(0, 0, 'health2'),
+									health1: game.add.sprite(0, 0, 'health1')
 							}
 							game.global.otherPlayers[player.id].image.anchor.setTo(0.5, 0.5)
-							game.global.otherPlayers[player.id].userNLabel.anchor.setTo(0.5, 2.0)
+							game.global.otherPlayers[player.id].userNLabel.anchor.setTo(0.5, 2.5)
+							game.global.otherPlayers[player.id].health2.anchor.setTo(0, 3.5)
+							game.global.otherPlayers[player.id].health1.anchor.setTo(0, 3.5)
+							game.global.otherPlayers[player.id].health2.scale.setTo(1, 1)
+							game.global.otherPlayers[player.id].health1.scale.setTo(1, 1)
 						} else {
 							game.global.otherPlayers[player.id].image.x = player.posX
 							game.global.otherPlayers[player.id].image.y = player.posY
@@ -81,6 +97,13 @@ window.onload = function() {
 							game.global.otherPlayers[player.id].userNLabel.setText(player.username)
 							game.global.otherPlayers[player.id].userNLabel.x = player.posX
 							game.global.otherPlayers[player.id].userNLabel.y = player.posY
+							game.global.otherPlayers[player.id].healthValue = player.health
+							game.global.otherPlayers[player.id].health2.x = player.posX - 50
+							game.global.otherPlayers[player.id].health2.y = player.posY
+							game.global.otherPlayers[player.id].health1.x = player.posX - 50
+							game.global.otherPlayers[player.id].health1.y = player.posY
+							var scale = player.health/100.0
+							game.global.otherPlayers[player.id].health1.scale.setTo(scale, 1)
 						}
 					}
 				}
@@ -114,6 +137,8 @@ window.onload = function() {
 			}
 			game.global.otherPlayers[msg.id].image.destroy()
 			game.global.otherPlayers[msg.id].userNLabel.destroy()
+			game.global.otherPlayers[msg.id].health2.destroy()
+			game.global.otherPlayers[msg.id].health1.destroy()
 			delete game.global.otherPlayers[msg.id]
 		default :
 			console.dir(msg)

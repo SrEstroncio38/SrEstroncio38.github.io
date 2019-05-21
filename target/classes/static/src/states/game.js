@@ -16,6 +16,8 @@ Spacewar.gameState.prototype = {
 	},
 
 	preload : function() {
+		game.load.image('ammo','assets/images/ammo.png');
+		
 		// We create a procedural starfield background
 		for (var i = 0; i < this.numStars; i++) {
 			let sprite = game.add.sprite(game.world.randomX,
@@ -46,7 +48,17 @@ Spacewar.gameState.prototype = {
 		// print usernames
 		var style = { font: "16px Arial", fill: "#ffffff", align: "center" };
 		game.global.myPlayer.userNLabel = game.add.text(0, 0, game.global.myPlayer.username, style);
-		game.global.myPlayer.userNLabel.anchor.set(0.5,2.0);
+		game.global.myPlayer.userNLabel.anchor.set(0.5,2.5);
+		
+		// print healthbars
+		game.load.image('health2','assets/images/hp_bar_2.png');
+		game.global.myPlayer.health2 = game.add.sprite(0, 0, 'health2')
+		game.global.myPlayer.health2.anchor.set(0,3.5);
+		game.global.myPlayer.health2.scale.setTo(1,1);
+		game.load.image('health2','assets/images/hp_bar_1.png');
+		game.global.myPlayer.health1 = game.add.sprite(0, 0, 'health1')
+		game.global.myPlayer.health1.anchor.set(0,3.5);
+		game.global.myPlayer.health1.scale.setTo(1,1);
 	},
 
 	create : function() {
@@ -73,6 +85,13 @@ Spacewar.gameState.prototype = {
 				Phaser.Keyboard.SPACEBAR ]);
 
 		game.camera.follow(game.global.myPlayer.image);
+		
+		ammoButton = game.add.sprite(10,10, 'ammo');
+		ammoButton.inputEnabled = true;
+		var style = { fontSize: "48px", fill: "#ff0000"};
+		ammoButton.addChild (scoreText = game.add.text(95,80, '0', style));
+		ammoButton.fixedToCamera = true;
+		ammoButton.scale.setTo(0.6,0.6);
 	},
 
 	update : function() {
