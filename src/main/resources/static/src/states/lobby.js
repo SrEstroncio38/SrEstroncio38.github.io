@@ -8,7 +8,7 @@ function actionOnClick(){
     lobby.visible.setTo = false;
     console.log("hola");
     console.log("esto Es una prueba");
-    game.state.start('gameState');
+    game.state.start('matchmakingState');
 }
 
 Spacewar.lobbyState.prototype = {
@@ -31,7 +31,7 @@ Spacewar.lobbyState.prototype = {
     },
 
     create : function() {
-
+    	
         lobby = game.add.sprite(game.world.centerX, game.world.centerY, 'lobby');
         lobby.scale.setTo(0.8,0.8);
         lobby.anchor.setTo(0.5,0.5);
@@ -39,13 +39,10 @@ Spacewar.lobbyState.prototype = {
         addRoom.scale.setTo(0.3, 0.3);
         close = game.add.button(game.world.centerX + 170,game.world.centerY + 180, '-', actionOnClick, this, 2, 1, 0);
         close.scale.setTo(0.3, 0.3);
-
-
     },
 
     update : function() {
-
-
+    	
     },
 
 

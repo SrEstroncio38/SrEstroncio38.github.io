@@ -78,6 +78,7 @@ window.onload = function() {
 							game.global.otherPlayers[player.id].image.x = player.posX
 							game.global.otherPlayers[player.id].image.y = player.posY
 							game.global.otherPlayers[player.id].image.angle = player.facingAngle
+							game.global.otherPlayers[player.id].userNLabel.setText(player.username)
 							game.global.otherPlayers[player.id].userNLabel.x = player.posX
 							game.global.otherPlayers[player.id].userNLabel.y = player.posY
 						}
@@ -112,6 +113,7 @@ window.onload = function() {
 				console.dir(msg.players)
 			}
 			game.global.otherPlayers[msg.id].image.destroy()
+			game.global.otherPlayers[msg.id].userNLabel.destroy()
 			delete game.global.otherPlayers[msg.id]
 		default :
 			console.dir(msg)
