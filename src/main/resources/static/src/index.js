@@ -9,7 +9,8 @@ window.onload = function() {
 		socket : null,
 		myPlayer : new Object(),
 		otherPlayers : [],
-		projectiles : []
+		projectiles : [],
+		deathText : null
 	}
 
 	// WEBSOCKET CONFIGURATOR
@@ -57,6 +58,7 @@ window.onload = function() {
 				console.log('[DEBUG] GAME STATE UPDATE message recieved')
 				console.dir(msg)
 			}
+			
 			if (typeof game.global.myPlayer.image !== 'undefined') {
 				for (var player of msg.players) {
 					if (game.global.myPlayer.id == player.id) {
@@ -65,15 +67,20 @@ window.onload = function() {
 						game.global.myPlayer.image.angle = player.facingAngle
 						game.global.myPlayer.userNLabel.x = player.posX
 						game.global.myPlayer.userNLabel.y = player.posY
-						game.global.myPlayer.healthValue = player.health
 						game.global.myPlayer.health2.x = player.posX - 50
 						game.global.myPlayer.health2.y = player.posY
+						game.global.myPlayer.healthValue = player.health
+						var scale = player.health/100.0
+						game.global.myPlayer.health1.scale.setTo(scale, 1)
 						game.global.myPlayer.health1.x = player.posX - 50
 						game.global.myPlayer.health1.y = player.posY
-						var scale = player.health/100.0
-						console.log(player.health)
-						console.log(scale)
-						game.global.myPlayer.health1.scale.setTo(scale, 1)
+						if (player.death) {
+							game.global.myPlayer.image.alpha = 0.25
+							game.global.myPlayer.userNLabel.alpha = 0.0
+							game.global.myPlayer.health2.alpha = 0.0
+							game.global.myPlayer.health1.alpha = 0.0
+							game.global.deathText.alpha = 1.0
+						}
 					} else {
 						if (typeof game.global.otherPlayers[player.id] == 'undefined') {
 							game.global.otherPlayers[player.id] = {
@@ -94,16 +101,22 @@ window.onload = function() {
 							game.global.otherPlayers[player.id].image.x = player.posX
 							game.global.otherPlayers[player.id].image.y = player.posY
 							game.global.otherPlayers[player.id].image.angle = player.facingAngle
-							game.global.otherPlayers[player.id].userNLabel.setText(player.username)
 							game.global.otherPlayers[player.id].userNLabel.x = player.posX
 							game.global.otherPlayers[player.id].userNLabel.y = player.posY
-							game.global.otherPlayers[player.id].healthValue = player.health
+							game.global.otherPlayers[player.id].userNLabel.setText(player.username)
 							game.global.otherPlayers[player.id].health2.x = player.posX - 50
 							game.global.otherPlayers[player.id].health2.y = player.posY
-							game.global.otherPlayers[player.id].health1.x = player.posX - 50
-							game.global.otherPlayers[player.id].health1.y = player.posY
+							game.global.otherPlayers[player.id].healthValue = player.health
 							var scale = player.health/100.0
 							game.global.otherPlayers[player.id].health1.scale.setTo(scale, 1)
+							game.global.otherPlayers[player.id].health1.x = player.posX - 50
+							game.global.otherPlayers[player.id].health1.y = player.posY
+							if (player.death) {
+								game.global.otherPlayers[player.id].image.alpha = 0.25
+								game.global.otherPlayers[player.id].userNLabel.alpha = 0.0
+								game.global.otherPlayers[player.id].health2.alpha = 0.0
+								game.global.otherPlayers[player.id].health1.alpha = 0.0
+							}
 						}
 					}
 				}

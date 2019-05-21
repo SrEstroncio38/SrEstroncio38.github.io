@@ -61,13 +61,12 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 						node.path("movement").get("brake").asBoolean(),
 						node.path("movement").get("rotLeft").asBoolean(),
 						node.path("movement").get("rotRight").asBoolean());
-				if (node.path("bullet").asBoolean()) {
+				if (node.path("bullet").asBoolean() && player.getDeath() == false) {
 					Projectile projectile = new Projectile(player, this.projectileId.incrementAndGet());
 					game.addProjectile(projectile.getId(), projectile);
 				}
 				break;
 			case "UPDATE NAME":
-				System.err.println("Hola soy UPDATE NAME");
 				player.setUsername(node.path("username").asText());
 				for (Player currentplayer : game.getPlayers()) {
 					if (currentplayer.getPlayerId() == player.getPlayerId()) {

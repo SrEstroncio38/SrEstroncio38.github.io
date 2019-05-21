@@ -92,6 +92,14 @@ Spacewar.gameState.prototype = {
 		ammoButton.addChild (scoreText = game.add.text(95,80, '0', style));
 		ammoButton.fixedToCamera = true;
 		ammoButton.scale.setTo(0.6,0.6);
+		
+		var style = { font: "128px Arial", fill: "#ff4444", align: "center" };
+		game.global.deathText = game.add.text(640, 320, "Git Gud", style);
+		game.global.deathText.alpha = 0.0;
+		game.global.deathText.anchor.set(0.5,0.5);
+		game.global.deathText.fixedToCamera = true;
+		
+		
 	},
 
 	update : function() {

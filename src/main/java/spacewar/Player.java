@@ -12,11 +12,16 @@ public class Player extends Spaceship {
 	private final String shipType;
 	private String username;
 	private float health;
+	
+	private boolean _dead;
 
 	public Player(int playerId, WebSocketSession session) {
 		this.playerId = playerId;
 		this.username = "Unknown";
 		this.health = 100.0f;
+		
+		this._dead = false;
+		
 		this.session = session;
 		this.shipType = this.getRandomShipType();
 	}
@@ -55,6 +60,21 @@ public class Player extends Spaceship {
 			this.health = 0.0f;
 		if (this.health > 100)
 			this.health = 100.0f;
+	}
+	
+	public void setDeath(boolean bool) {
+		this._dead = bool;
+	}
+	
+	public boolean getDeath() {
+		return this._dead;
+	}
+	
+	@Override
+	public void loadMovement(boolean thrust, boolean brake, boolean rotLeft, boolean rotRight) {
+		if (_dead == false) {
+			super.loadMovement(thrust, brake, rotLeft, rotRight);
+		}
 	}
 
 	private String getRandomShipType() {
