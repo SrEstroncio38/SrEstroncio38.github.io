@@ -12,6 +12,7 @@ public class Player extends Spaceship {
 	private final String shipType;
 	private String username;
 	private float health;
+	private int ammo;
 	
 	private boolean _dead;
 
@@ -19,7 +20,8 @@ public class Player extends Spaceship {
 		this.playerId = playerId;
 		this.username = "Unknown";
 		this.health = 100.0f;
-		
+		//Cambiar esta linea (hay que mandar el numero max de proyectiles)
+		this.ammo = 8;
 		this._dead = false;
 		
 		this.session = session;
@@ -87,5 +89,13 @@ public class Player extends Spaceship {
 	@Override
 	public String toString() {
 		return this.username;
+	}
+
+	public int getAmmo() {
+		return ammo;
+	}
+
+	public void setAmmo(int ammo) {
+		this.ammo = ammo;
 	}
 }

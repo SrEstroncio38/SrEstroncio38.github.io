@@ -113,6 +113,7 @@ public class SpacewarGame {
 				jsonPlayer.put("shipType", player.getShipType());
 				jsonPlayer.put("username", player.getUsername());
 				jsonPlayer.put("health", player.getHealth());
+				jsonPlayer.put("ammo", player.getAmmo());
 				jsonPlayer.put("death", player.getDeath());
 				jsonPlayer.put("posX", player.getPosX());
 				jsonPlayer.put("posY", player.getPosY());

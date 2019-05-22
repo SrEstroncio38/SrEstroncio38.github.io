@@ -40,6 +40,7 @@ window.onload = function() {
 			game.global.myPlayer.id = msg.id
 			game.global.myPlayer.shipType = msg.shipType
 			game.global.myPlayer.username = msg.username
+			game.global.myPlayer.ammo = msg.ammo
 			if (game.global.DEBUG_MODE) {
 				console.log('[DEBUG] ID assigned to player: ' + game.global.myPlayer.id)
 			}

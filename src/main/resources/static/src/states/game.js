@@ -3,6 +3,10 @@ Spacewar.gameState = function(game) {
 	this.fireBullet
 	this.numStars = 100 // Should be canvas size dependant
 	this.maxProjectiles = 800 // 8 per player
+	this.playerAmmo
+	this.ammoButton
+	this.ammoText
+	this.bulletIsFired = false
 }
 
 Spacewar.gameState.prototype = {
@@ -64,11 +68,15 @@ Spacewar.gameState.prototype = {
 	create : function() {
 		this.bulletTime = 0
 		this.fireBullet = function() {
-			if (game.time.now > this.bulletTime) {
+			if (game.time.now > this.bulletTime && game.global.myPlayer.ammo > 0) {
 				this.bulletTime = game.time.now + 250;
+				game.global.myPlayer.ammo -= 1;
+				this.playerAmmo = game.global.myPlayer.ammo - 1;
 				// this.weapon.fire()
+				this.bulletIsFired = true;
 				return true
 			} else {
+				this.playerAmmo = game.global.myPlayer.ammo;
 				return false
 			}
 		}
@@ -87,9 +95,9 @@ Spacewar.gameState.prototype = {
 		game.camera.follow(game.global.myPlayer.image);
 		
 		ammoButton = game.add.sprite(10,10, 'ammo');
-		ammoButton.inputEnabled = true;
 		var style = { fontSize: "48px", fill: "#ff0000"};
-		ammoButton.addChild (scoreText = game.add.text(95,80, '0', style));
+		ammoButton.addChild(this.ammoText = game.add.text(95,80, game.global.myPlayer.ammo.toString(), style));
+		ammoButton.inputEnabled = true;		
 		ammoButton.fixedToCamera = true;
 		ammoButton.scale.setTo(0.6,0.6);
 		
@@ -125,6 +133,14 @@ Spacewar.gameState.prototype = {
 			msg.movement.rotRight = true;
 		if (this.spaceKey.isDown) {
 			msg.bullet = this.fireBullet()
+			msg.ammo = this.playerAmmo;
+		}
+
+		//update ammo icon
+		if (this.bulletIsFired){
+			this.ammoText.destroy();
+			var style = { fontSize: "48px", fill: "#ff0000"};
+			ammoButton.addChild(this.ammoText = game.add.text(95,80, game.global.myPlayer.ammo.toString(), style));
 		}
 
 		if (game.global.DEBUG_MODE) {
