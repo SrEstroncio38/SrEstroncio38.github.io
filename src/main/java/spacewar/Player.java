@@ -31,6 +31,10 @@ public class Player extends Spaceship {
 		this.shipType = this.getRandomShipType();
 	}
 	
+	public void setRoomname(String roomname) {
+		this.roomname = roomname;
+	}
+	
 	public String getRoomname() {
 		return this.roomname;
 	}

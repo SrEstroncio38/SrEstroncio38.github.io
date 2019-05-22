@@ -103,7 +103,6 @@ public class GameRoom {
 			// Update players
 			for (Player player : getPlayers()) {
 				player.calculateMovement();
-
 				ObjectNode jsonPlayer = mapper.createObjectNode();
 				jsonPlayer.put("id", player.getPlayerId());
 				jsonPlayer.put("shipType", player.getShipType());

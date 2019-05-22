@@ -36,8 +36,8 @@ public class SpacewarGame {
 	
 	private SpacewarGame() {
 		this.numRooms.getAndSet(-1);
-		rooms.put("Sala 1", new GameRoom());
-		rooms.put("Sala 2", new GameRoom());
+		/*rooms.put("Sala 1", new GameRoom());
+		rooms.put("Sala 2", new GameRoom());*/
 
 	}
 	

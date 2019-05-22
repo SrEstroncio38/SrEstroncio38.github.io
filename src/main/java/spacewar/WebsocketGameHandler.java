@@ -54,6 +54,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 			Player player = (Player) session.getAttributes().get(PLAYER_ATTRIBUTE);
 
 			switch (node.get("event").asText()) {
+			//Mensaje que se activa cuando se entra en la aplicacion
 			case "JOIN":
 				msg.put("event", "JOIN");
 				msg.put("id", player.getPlayerId());
@@ -62,6 +63,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				msg.put("ammo", player.getAmmo());
 				player.getSession().sendMessage(new TextMessage(msg.toString()));
 				break;
+			//Mensaje que permite entrar a la sala pasada en "room", en caso de null entra en una default, GLOBAL
 			case "JOIN ROOM":
 				String roomname = node.path("room").asText();
 				GameRoom room = game.rooms.get(roomname);
@@ -76,6 +78,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					player.getSession().sendMessage(new TextMessage(msg.toString()));
 				}
 				break;
+			//Mensaje para actualizar la posicion del jugador
 			case "UPDATE MOVEMENT":
 				GameRoom currentRoom = null;
 				for (GameRoom croom : game.getRooms()) {
@@ -94,6 +97,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					player.setAmmo(node.path("ammo").asInt());
 				}
 				break;
+			//Mensaje que actualiza el nombre del jugador al escogido	
 			case "UPDATE NAME":
 				player.setUsername(node.path("username").asText());
 				for (Player currentplayer : game.getPlayers()) {
@@ -102,6 +106,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					}
 				}
 				break;
+			//Mensaje que se llama cuando se crea una nueva sala para recibir su nombre
 			case "CREATE ROOM":
 				game.addRoom(node.path("roomname").asText());
 				/*msg.put("event", "GO TO ROOM");

@@ -19,14 +19,16 @@ Spacewar.createRoom.prototype = {
 
 	create : function() {
 		
-		
+		//Colocamos el background
 		var bg = game.add.sprite(game.world.centerX, game.world.centerY, 'background');
     	bg.anchor.setTo(0.5,0.5);
 		
+    	//Colocamos la ventana
 		var window = game.add.sprite(game.world.centerX, game.world.centerY, 'window');
         window.scale.setTo(0.5,0.5);
         window.anchor.setTo(0.5,0.5);
         
+        //Colocamos el input
         var textbox = game.add.sprite(game.world.centerX, game.world.centerY + 20, 'textinput');
         textbox.scale.setTo(1,0.5);
         textbox.anchor.setTo(0.5,0.5);

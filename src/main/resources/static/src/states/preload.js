@@ -20,13 +20,15 @@ Spacewar.preloadState.prototype = {
 		
 		//Imagenes del lobby
 		game.load.image('lobby','assets/images/lobby.png');
-        game.load.image('+','assets/buttons/Play_BTN.png');
-        game.load.image('-','assets/buttons/Close_BTN.png');
+        game.load.image('addroom','assets/buttons/Map_BTN.png');
+        game.load.image('exit','assets/buttons/Exit_BTN.png');
         game.load.image('start','assets/buttons/Start_BTN.png');
+        game.load.image('backwards','assets/buttons/Backward_BTN.png');
+        game.load.image('forward','assets/buttons/Forward_BTN.png');
         //game.load.image('+A','assets/buttons/Play_BTN_act.png');
         //game.load.image('-A','assets/buttons/Close_BTN_act.png');
         
-        //Imagenes de name
+        //Imagenes de name y createRoom
         game.load.image('background','assets/images/stars.png');
         game.load.image('roombg','assets/images/buttongbg.png');
 		game.load.image('window','assets/images/window.png');
