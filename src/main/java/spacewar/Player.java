@@ -13,6 +13,7 @@ public class Player extends Spaceship {
 	private String username;
 	private float health;
 	private int ammo;
+	private int points;
 	
 	private boolean _dead;
 
@@ -23,6 +24,7 @@ public class Player extends Spaceship {
 		// TODO Cambiar esta linea (hay que mandar el numero max de proyectiles)
 		this.ammo = 50;
 		this._dead = false;
+		this.points = 0;
 		
 		this.session = session;
 		this.shipType = this.getRandomShipType();
@@ -101,5 +103,17 @@ public class Player extends Spaceship {
 	
 	public void addAmmo(int ammo) {
 		this.ammo += ammo;
+	}
+	
+	public int getPoints() {
+		return this.points;
+	}
+	
+	public void addPoints(int point) {
+		this.points += point;
+	}
+	
+	public void setPoints(int point) {
+		this.points = point;
 	}
 }

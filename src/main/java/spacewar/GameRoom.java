@@ -23,6 +23,7 @@ public class GameRoom {
 	
 	private Map<String, Player> players = new ConcurrentHashMap<>();
 	private Map<Integer, Projectile> projectiles = new ConcurrentHashMap<>();
+	
 	private AtomicInteger numPlayers = new AtomicInteger();
 
 	public GameRoom() {
@@ -109,6 +110,7 @@ public class GameRoom {
 				jsonPlayer.put("username", player.getUsername());
 				jsonPlayer.put("health", player.getHealth());
 				jsonPlayer.put("ammo", player.getAmmo());
+				jsonPlayer.put("points", player.getPoints());
 				jsonPlayer.put("death", player.getDeath());
 				jsonPlayer.put("posX", player.getPosX());
 				jsonPlayer.put("posY", player.getPosY());
@@ -125,6 +127,7 @@ public class GameRoom {
 					if ((projectile.getOwner().getPlayerId() != player.getPlayerId()) && player.intersect(projectile) && !player.getDeath()) {
 						// System.out.println("Player " + player.getPlayerId() + " was hit!!!");
 						projectile.setHit(true);
+						projectile.getOwner().addPoints(10);
 						player.addHealth(-10);
 						if (player.getHealth() <= 0) {
 							player.setDeath(true);

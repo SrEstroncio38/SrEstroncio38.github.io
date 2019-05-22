@@ -14,7 +14,8 @@ window.onload = function() {
 	}
 
 	// WEBSOCKET CONFIGURATOR
-	game.global.socket = new WebSocket("ws://25.58.144.174:8080/spacewar")
+	game.global.socket = new WebSocket("ws://127.0.0.1:8080/spacewar")
+	//game.global.socket = new WebSocket("ws://25.58.144.174:8080/spacewar")
 	
 	game.global.socket.onopen = () => {
 		if (game.global.DEBUG_MODE) {
@@ -75,6 +76,8 @@ window.onload = function() {
 						game.global.myPlayer.health1.scale.setTo(scale, 1)
 						game.global.myPlayer.health1.x = player.posX - 50
 						game.global.myPlayer.health1.y = player.posY
+						game.global.myPlayer.points = player.points
+						game.global.myPlayer.scoreText.setText(player.points)
 						if (player.death) {
 							game.global.myPlayer.image.alpha = 0.25
 							game.global.myPlayer.userNLabel.alpha = 0.0
