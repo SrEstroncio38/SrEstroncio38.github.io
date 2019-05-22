@@ -35,10 +35,26 @@ Spacewar.preloadState.prototype = {
 	},
 
 	create : function() {
-		game.state.start('nameState')
+		
+		var bg = game.add.sprite(game.world.centerX, game.world.centerY, 'background');
+    	bg.anchor.setTo(0.5,0.5);
+		
+		var window = game.add.sprite(game.world.centerX, game.world.centerY, 'window');
+        window.scale.setTo(0.5,0.5);
+        window.anchor.setTo(0.5,0.5);
+        
+        // connecting text
+		var style = { font: "24px Arial", fill: "#ffffff", align: "center" };
+		var text = game.add.text(game.world.centerX, game.world.centerY, "Conectando...", style);
+		text.anchor.set(0.5,0.5);
+		
 	},
 
 	update : function() {
 
+		if (typeof game.global.myPlayer.id !== 'undefined'){
+			game.state.start('nameState')
+		}
+		
 	}
 }
