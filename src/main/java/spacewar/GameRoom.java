@@ -16,34 +16,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-public class SpacewarGame {
-
-	public final static SpacewarGame INSTANCE = new SpacewarGame();
-
-	public final static int FPS = 30;
-	public final static long TICK_DELAY = 1000 / FPS;
-	public final static boolean DEBUG_MODE = true;
-	public final static boolean VERBOSE_MODE = true;
+public class GameRoom {
 
 	ObjectMapper mapper = new ObjectMapper();
 	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-
-	// GLOBAL GAME ROOM
+	
 	private Map<String, Player> players = new ConcurrentHashMap<>();
 	private Map<Integer, Projectile> projectiles = new ConcurrentHashMap<>();
 	private AtomicInteger numPlayers = new AtomicInteger();
-	
-	public Map<String,GameRoom> rooms = new ConcurrentHashMap<>();
 
-	private SpacewarGame() {
-		
-		rooms.put("Sala 1", new GameRoom());
-		rooms.put("Sala 2", new GameRoom());
+	public GameRoom() {
 
-	}
-	
-	public Collection<GameRoom> getRooms() {
-		return rooms.values();
 	}
 
 	public void addPlayer(Player player) {
@@ -51,7 +34,7 @@ public class SpacewarGame {
 
 		int count = numPlayers.getAndIncrement();
 		if (count == 0) {
-			//this.startGameLoop();
+			this.startGameLoop();
 		}
 	}
 
@@ -82,7 +65,7 @@ public class SpacewarGame {
 
 	public void startGameLoop() {
 		scheduler = Executors.newScheduledThreadPool(1);
-		scheduler.scheduleAtFixedRate(() -> tick(), TICK_DELAY, TICK_DELAY, TimeUnit.MILLISECONDS);
+		scheduler.scheduleAtFixedRate(() -> tick(), SpacewarGame.TICK_DELAY, SpacewarGame.TICK_DELAY, TimeUnit.MILLISECONDS);
 	}
 
 	public void stopGameLoop() {
@@ -184,4 +167,5 @@ public class SpacewarGame {
 	public void handleCollision() {
 
 	}
+
 }

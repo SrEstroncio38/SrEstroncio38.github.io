@@ -1,5 +1,7 @@
 package spacewar;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.web.socket.CloseStatus;
@@ -54,18 +56,34 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				player.getSession().sendMessage(new TextMessage(msg.toString()));
 				break;
 			case "JOIN ROOM":
-				msg.put("event", "NEW ROOM");
-				msg.put("room", "GLOBAL");
-				player.getSession().sendMessage(new TextMessage(msg.toString()));
+				String roomname = node.path("room").asText();
+				GameRoom room = game.rooms.get(roomname);
+				if (room != null) {
+					room.addPlayer(player);
+					msg.put("event", "NEW ROOM");
+					msg.put("room", roomname);
+					player.getSession().sendMessage(new TextMessage(msg.toString()));
+				} else {
+					msg.put("event", "NEW ROOM");
+					msg.put("room", "GLOBAL");
+					player.getSession().sendMessage(new TextMessage(msg.toString()));
+				}
 				break;
 			case "UPDATE MOVEMENT":
+				GameRoom currentRoom = null;
+				for (GameRoom croom : game.getRooms()) {
+					if (croom.getPlayers().contains(player)) {
+						currentRoom = croom;
+						break;
+					}
+				}
 				player.loadMovement(node.path("movement").get("thrust").asBoolean(),
 						node.path("movement").get("brake").asBoolean(),
 						node.path("movement").get("rotLeft").asBoolean(),
 						node.path("movement").get("rotRight").asBoolean());
 				if (node.path("bullet").asBoolean() && player.getDeath() == false) {
 					Projectile projectile = new Projectile(player, this.projectileId.incrementAndGet());
-					game.addProjectile(projectile.getId(), projectile);
+					currentRoom.addProjectile(projectile.getId(), projectile);
 					player.setAmmo(node.path("ammo").asInt());
 				}
 				break;

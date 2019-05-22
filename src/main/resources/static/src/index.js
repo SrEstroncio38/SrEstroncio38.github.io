@@ -5,7 +5,7 @@ window.onload = function() {
 	// GLOBAL VARIABLES
 	game.global = {
 		FPS : 30,
-		DEBUG_MODE : false,
+		DEBUG_MODE : true,
 		socket : null,
 		myPlayer : new Object(),
 		otherPlayers : [],
@@ -75,6 +75,7 @@ window.onload = function() {
 						game.global.myPlayer.health1.scale.setTo(scale, 1)
 						game.global.myPlayer.health1.x = player.posX - 50
 						game.global.myPlayer.health1.y = player.posY
+						game.global.myPlayer.userNLabel.setText(game.global.myPlayer.room.name);
 						if (player.death) {
 							game.global.myPlayer.image.alpha = 0.25
 							game.global.myPlayer.userNLabel.alpha = 0.0
