@@ -57,6 +57,10 @@ public class SpacewarGame {
 
 	public void removePlayer(Player player) {
 		players.remove(player.getSession().getId());
+		
+		for (GameRoom room : getRooms()) {
+			room.removePlayer(player);
+		}
 
 		this.numPlayers.decrementAndGet();
 	}

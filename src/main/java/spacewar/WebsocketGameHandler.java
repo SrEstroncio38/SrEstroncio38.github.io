@@ -1,6 +1,8 @@
 package spacewar;
 
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -18,13 +20,16 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 	private ObjectMapper mapper = new ObjectMapper();
 	private AtomicInteger playerId = new AtomicInteger(0);
 	private AtomicInteger projectileId = new AtomicInteger(0);
+	
+	private Lock sessionLock = new ReentrantLock();
 
 	@Override
-	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+	public void afterConnectionEstablished(WebSocketSession unprotectedSession) throws Exception {
+		sessionLock.lock();
+		WebSocketSession session = unprotectedSession;
+		sessionLock.unlock();
 		Player player = new Player(playerId.incrementAndGet(), session);
 		session.getAttributes().put(PLAYER_ATTRIBUTE, player);
-		
-		// TODO leer el nombre bien
 		
 		ObjectNode msg = mapper.createObjectNode();
 		msg.put("event", "JOIN");
@@ -38,7 +43,10 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 	}
 
 	@Override
-	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+	protected void handleTextMessage(WebSocketSession unprotectedSession, TextMessage message) throws Exception {
+		sessionLock.lock();
+		WebSocketSession session = unprotectedSession;
+		sessionLock.unlock();
 		try {
 			JsonNode node = mapper.readTree(message.getPayload());
 			ObjectNode msg = mapper.createObjectNode();
@@ -104,7 +112,10 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 	}
 
 	@Override
-	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+	public void afterConnectionClosed(WebSocketSession unprotectedSession, CloseStatus status) throws Exception {
+		sessionLock.lock();
+		WebSocketSession session = unprotectedSession;
+		sessionLock.unlock();
 		Player player = (Player) session.getAttributes().get(PLAYER_ATTRIBUTE);
 		game.removePlayer(player);
 

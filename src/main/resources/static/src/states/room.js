@@ -11,7 +11,7 @@ Spacewar.roomState.prototype = {
 	},
 
 	preload : function() {
-		var roomname = "Sala 2"
+		var roomname = "Sala 1"
 		if (game.global.DEBUG_MODE) {
 			console.log("[DEBUG] Joining room: '" + roomname + "'");
 		}

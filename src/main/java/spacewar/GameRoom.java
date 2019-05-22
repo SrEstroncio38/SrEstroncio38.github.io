@@ -43,11 +43,12 @@ public class GameRoom {
 	}
 
 	public void removePlayer(Player player) {
-		players.remove(player.getSession().getId());
+		if (players.remove(player.getSession().getId()) != null) {
 
-		int count = this.numPlayers.decrementAndGet();
-		if (count == 0) {
-			this.stopGameLoop();
+			int count = this.numPlayers.decrementAndGet();
+			if (count == 0) {
+				this.stopGameLoop();
+			}
 		}
 	}
 
@@ -79,9 +80,11 @@ public class GameRoom {
 			try {
 				player.getSession().sendMessage(new TextMessage(message.toString()));
 			} catch (Throwable ex) {
+				/*
 				System.err.println("Execption sending message to player " + player.getSession().getId());
 				ex.printStackTrace(System.err);
 				this.removePlayer(player);
+				*/
 			}
 		}
 	}
