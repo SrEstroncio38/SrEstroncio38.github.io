@@ -12,24 +12,37 @@ Spacewar.nameState.prototype = {
 	},
 
 	preload : function() {
+		game.load.image('background','assets/images/stars.png');
+		game.load.image('window','assets/images/window.png');
+		game.load.image('textinput','assets/images/textinput.png');
+		
 		this.enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 		this.backKey = game.input.keyboard.addKey(Phaser.Keyboard.BACKSPACE);
-		
-		// add your name
-		var style = { font: "24px Arial", fill: "#ffffaa", align: "center" };
-		var text = game.add.text(game.world.centerX, game.world.centerY, "Escribe tu nombre:", style);
-		text.anchor.set(0.5,0.75);
-		game.global.myPlayer.username = "";
-		style = { font: "24px Arial", fill: "#ffffff", align: "center" };
-		username = game.add.text(game.world.centerX, game.world.centerY, "< " + game.global.myPlayer.username + " >", style);
-		username.anchor.set(0.5,-0.75);
-		
-		deletingText = false;
-		
 		
 	},
 
 	create : function() {
+		
+		var bg = game.add.sprite(game.world.centerX, game.world.centerY, 'background');
+    	bg.anchor.setTo(0.5,0.5);
+		
+		var window = game.add.sprite(game.world.centerX, game.world.centerY, 'window');
+        window.scale.setTo(0.5,0.5);
+        window.anchor.setTo(0.5,0.5);
+        
+        var textbox = game.add.sprite(game.world.centerX, game.world.centerY + 20, 'textinput');
+        textbox.scale.setTo(1,0.5);
+        textbox.anchor.setTo(0.5,0.5);
+		
+		// add your name
+		var style = { font: "24px Arial", fill: "#ffffff", align: "center" };
+		var text = game.add.text(game.world.centerX, game.world.centerY - 50, "Escribe tu nombre:", style);
+		text.anchor.set(0.5,0.5);
+		game.global.myPlayer.username = "";
+		username = game.add.text(game.world.centerX, game.world.centerY + 20, game.global.myPlayer.username, style);
+		username.anchor.set(0.5,0.5);
+		
+		deletingText = false;
 
 	},
 
@@ -41,11 +54,12 @@ Spacewar.nameState.prototype = {
 			}
 		} else {
 			game.input.keyboard.addCallbacks(this, null, null, function (char) {
-				game.global.myPlayer.username += char;
+				if (game.global.myPlayer.username.length < 16)
+					game.global.myPlayer.username += char;
 			});
 			deletingText = false;
 		}
-		username.text = "< " + game.global.myPlayer.username + " >";
+		username.text = game.global.myPlayer.username;
 
 		if (this.enterKey.isDown && typeof game.global.myPlayer.id !== 'undefined'){
 			let message = {
