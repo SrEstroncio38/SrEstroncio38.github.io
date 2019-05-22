@@ -20,8 +20,8 @@ public class Player extends Spaceship {
 		this.playerId = playerId;
 		this.username = "Unknown";
 		this.health = 100.0f;
-		//Cambiar esta linea (hay que mandar el numero max de proyectiles)
-		this.ammo = 8;
+		// TODO Cambiar esta linea (hay que mandar el numero max de proyectiles)
+		this.ammo = 50;
 		this._dead = false;
 		
 		this.session = session;
@@ -97,5 +97,9 @@ public class Player extends Spaceship {
 
 	public void setAmmo(int ammo) {
 		this.ammo = ammo;
+	}
+	
+	public void addAmmo(int ammo) {
+		this.ammo += ammo;
 	}
 }
