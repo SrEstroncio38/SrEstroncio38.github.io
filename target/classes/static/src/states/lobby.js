@@ -54,16 +54,16 @@ Spacewar.lobbyState.prototype = {
         start.scale.setTo(0.6, 0.6);
         
         //Añadimos 4 botones de Room
-        lobby.addChild(room = game.add.sprite(-160,-130, 'roombg'));
+        lobby.addChild(room = game.add.button(-160,-130, 'roombg', null, this, 2, 1, 0));
         room.anchor.setTo(0.5, 0.5);
-        lobby.addChild(room = game.add.sprite(-160,-30, 'roombg'));
+        lobby.addChild(room = game.add.button(-160,-30, 'roombg', null, this, 2, 1, 0));
         room.anchor.setTo(0.5, 0.5);
-        lobby.addChild(room = game.add.sprite(-160,70, 'roombg'));
+        lobby.addChild(room = game.add.button(-160,70, 'roombg', null, this, 2, 1, 0));
         room.anchor.setTo(0.5, 0.5);
-        lobby.addChild(room = game.add.sprite(-160,170, 'roombg'));
+        lobby.addChild(room = game.add.button(-160,170, 'roombg', null, this, 2, 1, 0));
         room.anchor.setTo(0.5, 0.5);
         
-        //Añadimos el boton de Matchmaking
+        //Añadimos el boton de avanzar y retroceder
         lobby.addChild(forward = game.add.button(0,220, 'forward', null, this, 2, 1, 0));
         forward.scale.setTo(0.3, 0.3);
         lobby.addChild(backwards = game.add.button(-380,220, 'backwards', null , this, 2, 1, 0));
