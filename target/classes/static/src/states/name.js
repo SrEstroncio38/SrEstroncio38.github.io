@@ -39,7 +39,6 @@ Spacewar.nameState.prototype = {
 		username.anchor.set(0.5,0.5);
 		
 		deletingText = false;
-
 	},
 
 	update : function() {
@@ -57,7 +56,7 @@ Spacewar.nameState.prototype = {
 		}
 		username.text = game.global.myPlayer.username;
 
-		if (this.enterKey.isDown && typeof game.global.myPlayer.id !== 'undefined'){
+		if (this.enterKey.isDown){
 			let message = {
 					event : 'UPDATE NAME',
 					username: game.global.myPlayer.username
