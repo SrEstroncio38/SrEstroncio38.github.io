@@ -76,7 +76,7 @@ Spacewar.gameState.prototype = {
 		roomImg.anchor.set(1,1);
 		roomImg.fixedToCamera = true;
 		style = { font: "24px Arial", fill: "#ffffff", align: "center" };
-		game.global.myPlayer.roomLabel = game.add.text(1280 - 150,640 - 22, game.global.myPlayer.room.name, style);
+		game.global.myPlayer.roomLabel = game.add.text(1280 - 150,640 - 22, game.global.myPlayer.roomname, style);
 		game.global.myPlayer.roomLabel.anchor.set(0.5,0.5);
 		game.global.myPlayer.roomLabel.fixedToCamera = true;
 		

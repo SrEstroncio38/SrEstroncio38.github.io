@@ -14,6 +14,7 @@ public class Player extends Spaceship {
 	private float health;
 	private int ammo;
 	private int points;
+	private String roomname;
 	
 	private boolean _dead;
 
@@ -25,9 +26,13 @@ public class Player extends Spaceship {
 		this.ammo = 50;
 		this._dead = false;
 		this.points = 0;
-		
+		this.roomname = "";
 		this.session = session;
 		this.shipType = this.getRandomShipType();
+	}
+	
+	public String getRoomname() {
+		return this.roomname;
 	}
 
 	public int getPlayerId() {

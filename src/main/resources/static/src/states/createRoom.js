@@ -1,13 +1,13 @@
-Spacewar.nameState = function(game) {
-	this.username
+Spacewar.createRoom = function(game) {
+	this.roomname
 	this.deletingText
 }
 
-Spacewar.nameState.prototype = {
+Spacewar.createRoom.prototype = {
 
 	init : function() {
 		if (game.global.DEBUG_MODE) {
-			console.log("[DEBUG] Entering **Name** state");
+			console.log("[DEBUG] Entering **createRoom** state");
 		}
 	},
 
@@ -18,6 +18,7 @@ Spacewar.nameState.prototype = {
 	},
 
 	create : function() {
+		
 		
 		var bg = game.add.sprite(game.world.centerX, game.world.centerY, 'background');
     	bg.anchor.setTo(0.5,0.5);
@@ -30,13 +31,13 @@ Spacewar.nameState.prototype = {
         textbox.scale.setTo(1,0.5);
         textbox.anchor.setTo(0.5,0.5);
 		
-		// add your name
+		// add room name
 		var style = { font: "24px Arial", fill: "#ffffff", align: "center" };
-		var text = game.add.text(game.world.centerX, game.world.centerY - 50, "Escribe tu nombre:", style);
+		var text = game.add.text(game.world.centerX, game.world.centerY - 50, "Escribe nombre de sala:", style);
 		text.anchor.set(0.5,0.5);
-		game.global.myPlayer.username = "";
-		username = game.add.text(game.world.centerX, game.world.centerY + 20, game.global.myPlayer.username, style);
-		username.anchor.set(0.5,0.5);
+		game.global.myPlayer.roomname = "";
+		roomname = game.add.text(game.world.centerX, game.world.centerY + 20, game.global.myPlayer.roomname, style);
+		roomname.anchor.set(0.5,0.5);
 		
 		deletingText = false;
 	},
@@ -44,26 +45,42 @@ Spacewar.nameState.prototype = {
 	update : function() {
 		if (this.backKey.isDown){
 			if (!deletingText) {
-				game.global.myPlayer.username = game.global.myPlayer.username.substring(0,game.global.myPlayer.username.length-1);
+				game.global.myPlayer.roomname = game.global.myPlayer.roomname.substring(0,game.global.myPlayer.roomname.length-1);
 				deletingText = true;
 			}
 		} else {
 			game.input.keyboard.addCallbacks(this, null, null, function (char) {
-				if (game.global.myPlayer.username.length < 16)
-					game.global.myPlayer.username += char;
+				if (game.global.myPlayer.roomname.length < 16)
+					game.global.myPlayer.roomname += char;
 			});
 			deletingText = false;
 		}
-		username.text = game.global.myPlayer.username;
+		roomname.text = game.global.myPlayer.roomname;
 
 		if (this.enterKey.isDown){
 			let message = {
-					event : 'UPDATE NAME',
-					username: game.global.myPlayer.username
+					event : 'CREATE ROOM',
+					roomname: game.global.myPlayer.roomname
 				}
 				game.global.socket.send(JSON.stringify(message))
 		
-			game.state.start('menuState');
+				
+		/*game.global.socket.onmessage = (message) => {
+		var msg = JSON.parse(message.data)
+		switch (msg.event) {
+		case 'GO TO ROOM':
+			if (game.global.DEBUG_MODE) {
+				console.log('[DEBUG] GO TO ROOM message recieved')
+				console.dir(msg)
+			}
+			game.global.myPlayer.roomname = msg.roomname
+			game.state.start('roomState')
+			break;
+		default:
+			break;
+		}
+		}*/
+				game.state.start('roomState');
 		}
 	}
 }

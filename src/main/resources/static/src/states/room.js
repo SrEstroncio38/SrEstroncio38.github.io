@@ -11,13 +11,12 @@ Spacewar.roomState.prototype = {
 	},
 
 	preload : function() {
-		var roomname = "Sala 1"
 		if (game.global.DEBUG_MODE) {
 			console.log("[DEBUG] Joining room: '" + roomname + "'");
 		}
 		let message = {
 			event : 'JOIN ROOM',
-			room: roomname
+			room: game.global.myPlayer.roomname
 		}
 		game.global.socket.send(JSON.stringify(message))
 	},

@@ -37,6 +37,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 		msg.put("shipType", player.getShipType());
 		msg.put("username", player.getUsername());
 		msg.put("ammo", player.getAmmo());
+		msg.put("roomname", player.getRoomname());
 		player.getSession().sendMessage(new TextMessage(msg.toString()));
 		
 		game.addPlayer(player);
@@ -101,6 +102,11 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					}
 				}
 				break;
+			case "CREATE ROOM":
+				game.addRoom(node.path("roomname").asText());
+				/*msg.put("event", "GO TO ROOM");
+				msg.put("roomname", node.path("roomname").asText());
+				player.getSession().sendMessage(new TextMessage(msg.toString()));*/
 			default:
 				break;
 			}

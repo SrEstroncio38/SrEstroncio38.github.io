@@ -31,14 +31,27 @@ public class SpacewarGame {
 	// GLOBAL GAME ROOM
 	private Map<String, Player> players = new ConcurrentHashMap<>();
 	private AtomicInteger numPlayers = new AtomicInteger();
-	
+	private AtomicInteger numRooms = new AtomicInteger();
 	public Map<String,GameRoom> rooms = new ConcurrentHashMap<>();
-
+	
 	private SpacewarGame() {
-		
+		this.numRooms.getAndSet(-1);
 		rooms.put("Sala 1", new GameRoom());
 		rooms.put("Sala 2", new GameRoom());
 
+	}
+	
+	public void removeRoom(String name) {
+		if(rooms.remove(name) != null) {
+			numRooms.getAndDecrement();
+		}
+	}
+	
+	public void addRoom(String name) {
+		if(rooms.putIfAbsent(name, new GameRoom()) == null) {
+			numRooms.getAndIncrement();
+		} 
+		
 	}
 	
 	public Collection<GameRoom> getRooms() {

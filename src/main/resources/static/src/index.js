@@ -15,7 +15,12 @@ window.onload = function() {
 
 	// WEBSOCKET CONFIGURATOR
 	//game.global.socket = new WebSocket("ws://127.0.0.1:8080/spacewar")
-	game.global.socket = new WebSocket("ws://25.58.144.174:8080/spacewar")
+	//Carlos
+	//game.global.socket = new WebSocket("ws://25.58.144.174:8080/spacewar")
+	//Fonti
+	game.global.socket = new WebSocket("ws://25.58.231.19:8080/spacewar")
+	//Javi
+	//
 	
 	game.global.socket.onopen = () => {
 		if (game.global.DEBUG_MODE) {
@@ -42,6 +47,7 @@ window.onload = function() {
 			game.global.myPlayer.shipType = msg.shipType
 			game.global.myPlayer.username = msg.username
 			game.global.myPlayer.ammo = msg.ammo
+			game.global.myPlayer.roomname = msg.roomname
 			if (game.global.DEBUG_MODE) {
 				console.log('[DEBUG] ID assigned to player: ' + game.global.myPlayer.id)
 			}
@@ -78,7 +84,7 @@ window.onload = function() {
 						game.global.myPlayer.health1.y = player.posY
 						game.global.myPlayer.points = player.points
 						game.global.myPlayer.scoreText.setText(player.points)
-						game.global.myPlayer.roomLabel.setText(game.global.myPlayer.room.name)
+						game.global.myPlayer.roomLabel.setText(game.global.myPlayer.roomname)
 						if (player.death) {
 							game.global.myPlayer.image.alpha = 0.25
 							game.global.myPlayer.userNLabel.alpha = 0.0
@@ -169,6 +175,7 @@ window.onload = function() {
 	game.state.add('preloadState', Spacewar.preloadState)
 	game.state.add('menuState', Spacewar.menuState)
 	game.state.add('lobbyState', Spacewar.lobbyState)
+	game.state.add('createRoom', Spacewar.createRoom)
 	game.state.add('nameState', Spacewar.nameState)
 	game.state.add('matchmakingState', Spacewar.matchmakingState)
 	game.state.add('roomState', Spacewar.roomState)

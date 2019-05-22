@@ -10,7 +10,7 @@ function enterMatchMaking(){
 
 function goToRoom(){
 
-	game.state.start('roomState');
+	game.state.start('createRoom');
 }
 
 

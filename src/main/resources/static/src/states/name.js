@@ -7,7 +7,7 @@ Spacewar.nameState.prototype = {
 
 	init : function() {
 		if (game.global.DEBUG_MODE) {
-			console.log("[DEBUG] Entering **MENU** state");
+			console.log("[DEBUG] Entering **Name** state");
 		}
 	},
 
