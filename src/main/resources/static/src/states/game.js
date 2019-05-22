@@ -20,8 +20,6 @@ Spacewar.gameState.prototype = {
 	},
 
 	preload : function() {
-		game.load.image('ammo','assets/images/ammo.png');
-		game.load.image('score','assets/images/Score.png');
 		
 		// We create a procedural starfield background
 		for (var i = 0; i < this.numStars; i++) {
@@ -64,6 +62,23 @@ Spacewar.gameState.prototype = {
 		game.global.myPlayer.health1.anchor.set(0,3.5);
 		game.global.myPlayer.health1.scale.setTo(1,1);
 		
+		// print points
+		var style = { font: "16px Arial", fill: "#ffffff", align: "center" };
+		var scoreImg = game.add.sprite(1100,10,'score');
+		scoreImg.scale.setTo(0.3,0.3)	
+		scoreImg.fixedToCamera = true;
+		game.global.myPlayer.scoreText = game.add.text(1180,8, game.global.myPlayer.points, style);
+		game.global.myPlayer.scoreText.fixedToCamera = true;
+		
+		// print room name
+		var roomImg = game.add.sprite(1280,640,'roomnamewindow');
+		roomImg.scale.setTo(0.4,0.4);
+		roomImg.anchor.set(1,1);
+		roomImg.fixedToCamera = true;
+		style = { font: "24px Arial", fill: "#ffffff", align: "center" };
+		game.global.myPlayer.roomLabel = game.add.text(1280 - 150,640 - 22, game.global.myPlayer.room.name, style);
+		game.global.myPlayer.roomLabel.anchor.set(0.5,0.5);
+		game.global.myPlayer.roomLabel.fixedToCamera = true;
 		
 	},
 
@@ -104,22 +119,12 @@ Spacewar.gameState.prototype = {
 		ammoButton.fixedToCamera = true;
 		ammoButton.scale.setTo(0.6,0.6);
 		
-		//print points
-		var style = { font: "16px Arial", fill: "#ffffff", align: "center" };
-		var scoreImg = game.add.sprite(1100,10,'score');
-		scoreImg.scale.setTo(0.3,0.3)	
-		scoreImg.fixedToCamera = true;
-		game.global.myPlayer.scoreText = game.add.text(1180,8, game.global.points, style);
-		game.global.myPlayer.scoreText.fixedToCamera = true;
-		
-		//print death message
+		// print death message
 		style = { font: "128px Arial", fill: "#ff4444", align: "center" };
 		game.global.deathText = game.add.text(640, 320, "Git Gud", style);
 		game.global.deathText.alpha = 0.0;
 		game.global.deathText.anchor.set(0.5,1.5);
 		game.global.deathText.fixedToCamera = true;
-		
-		
 		
 	},
 

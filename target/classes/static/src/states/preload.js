@@ -18,8 +18,6 @@ Spacewar.preloadState.prototype = {
 				'assets/atlas/explosion.json',
 				Phaser.Loader.TEXTURE_ATLAS_JSON_HASH)
 		
-		game.load.image('health2','assets/spaceship/hp_bar_2.png');
-		game.load.image('health1','assets/spaceship/hp_bar_1.png');
 		//Imagenes del lobby
 		game.load.image('lobby','assets/images/lobby.png');
         game.load.image('+','assets/buttons/Play_BTN.png');
@@ -27,11 +25,19 @@ Spacewar.preloadState.prototype = {
         game.load.image('start','assets/buttons/Start_BTN.png');
         //game.load.image('+A','assets/buttons/Play_BTN_act.png');
         //game.load.image('-A','assets/buttons/Close_BTN_act.png');
+        
         //Imagenes de name
         game.load.image('background','assets/images/stars.png');
         game.load.image('roombg','assets/images/buttongbg.png');
 		game.load.image('window','assets/images/window.png');
 		game.load.image('textinput','assets/images/textinput.png');
+		
+		//Imagenes de game
+		game.load.image('ammo','assets/images/ammo.png');
+		game.load.image('score','assets/images/Score.png');
+		game.load.image('roomnamewindow','assets/images/roomname.png');
+		game.load.image('health2','assets/spaceship/hp_bar_2.png');
+		game.load.image('health1','assets/spaceship/hp_bar_1.png');
 	},
 
 	create : function() {
