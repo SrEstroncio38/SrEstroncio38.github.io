@@ -27,8 +27,11 @@ Spacewar.preloadState.prototype = {
         game.load.image('start','assets/buttons/Start_BTN.png');
         //game.load.image('+A','assets/buttons/Play_BTN_act.png');
         //game.load.image('-A','assets/buttons/Close_BTN_act.png');
+        //Imagenes de name
         game.load.image('background','assets/images/stars.png');
         game.load.image('roombg','assets/images/buttongbg.png');
+		game.load.image('window','assets/images/window.png');
+		game.load.image('textinput','assets/images/textinput.png');
 	},
 
 	create : function() {

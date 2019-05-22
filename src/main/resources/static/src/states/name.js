@@ -11,11 +11,7 @@ Spacewar.nameState.prototype = {
 		}
 	},
 
-	preload : function() {
-		game.load.image('background','assets/images/stars.png');
-		game.load.image('window','assets/images/window.png');
-		game.load.image('textinput','assets/images/textinput.png');
-		
+	preload : function() {		
 		this.enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 		this.backKey = game.input.keyboard.addKey(Phaser.Keyboard.BACKSPACE);
 		
