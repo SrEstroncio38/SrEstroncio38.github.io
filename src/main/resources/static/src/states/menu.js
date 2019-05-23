@@ -63,9 +63,13 @@ Spacewar.menuState.prototype = {
 		deletingText = false;
 		
 		// chat text
-		style = { font: "24px Arial", fill: "#ffffff", align: "left" };
-		game.global.chat = game.add.text(50, game.world.centerY + 160, currentinputtext, style);
-		game.global.chat.anchor.set(0,1);
+		style = { font: "24px Arial", fill: "#aaaaaa", align: "left", wordWrap: true, wordWrapWidth: 600 };
+		game.global.chat.element = game.add.text(50, game.world.centerY + 140, game.global.chat.text, style);
+		game.global.chat.element.anchor.set(0,1);
+		let mask = game.add.graphics(0, 100);
+		mask.beginFill(0xffffff);
+		mask.drawCircle(100, 100, 100);
+		game.global.chat.element.mask = mask;
 	},
 
 	update : function() {
@@ -76,7 +80,7 @@ Spacewar.menuState.prototype = {
 			}
 		} else {
 			game.input.keyboard.addCallbacks(this, null, null, function (char) {
-				if (currentinputtext.length < 32)
+				if (currentinputtext.length < 200)
 					currentinputtext += char;
 			});
 			deletingText = false;

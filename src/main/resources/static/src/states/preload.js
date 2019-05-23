@@ -63,6 +63,8 @@ Spacewar.preloadState.prototype = {
         window.scale.setTo(0.5,0.5);
         window.anchor.setTo(0.5,0.5);
         
+        game.global.chat.text = "Unido al chat global.";
+        
         // connecting text
 		var style = { font: "24px Arial", fill: "#ffffff", align: "center" };
 		var text = game.add.text(game.world.centerX, game.world.centerY, "Conectando...", style);

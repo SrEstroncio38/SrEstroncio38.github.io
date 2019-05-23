@@ -7,7 +7,7 @@ window.onload = function() {
 		FPS : 30,
 		DEBUG_MODE : connectionData.debug,
 		socket : null,
-		chat : "",
+		chat : new Object,
 		projectiles : [],
 		myPlayer : new Object(),
 		otherPlayers : [],
@@ -164,7 +164,12 @@ window.onload = function() {
 			delete game.global.otherPlayers[msg.id]
 			break;
 		case 'PRINT GLOBAL CHAT' :
-			game.global.chat.setText(msg.text);
+			let currentpos = game.global.chat.text.length;
+			let endingpos = currentpos + msg.username.length + 3;
+			game.global.chat.text += "\n[" + msg.username + "]: " + msg.text;
+			game.global.chat.element.setText(game.global.chat.text);
+			game.global.chat.element.addColor('#ffff44', currentpos);
+			game.global.chat.element.addColor('#ffffff', endingpos);
 			break;
 		default :
 			console.dir(msg)
