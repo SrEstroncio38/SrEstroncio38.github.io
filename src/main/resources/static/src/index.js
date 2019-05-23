@@ -5,7 +5,7 @@ window.onload = function() {
 	// GLOBAL VARIABLES
 	game.global = {
 		FPS : 30,
-		DEBUG_MODE : false,
+		DEBUG_MODE : connectionData.debug,
 		socket : null,
 		myPlayer : new Object(),
 		otherPlayers : [],
@@ -14,13 +14,7 @@ window.onload = function() {
 	}
 
 	// WEBSOCKET CONFIGURATOR
-	//game.global.socket = new WebSocket("ws://127.0.0.1:8080/spacewar")
-	//Carlos
-	//game.global.socket = new WebSocket("ws://25.58.144.174:8080/spacewar")
-	//Fonti
-	game.global.socket = new WebSocket("ws://25.58.231.19:8080/spacewar")
-	//Javi
-	//
+	game.global.socket = new WebSocket("ws://" + connectionData.IPaddress + ":" + connectionData.port + "/spacewar")
 	
 	game.global.socket.onopen = () => {
 		if (game.global.DEBUG_MODE) {
