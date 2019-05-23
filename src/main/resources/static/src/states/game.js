@@ -80,6 +80,7 @@ Spacewar.gameState.prototype = {
 		game.global.ui.roomLabel.anchor.set(0.5,0.5);
 		game.global.ui.roomLabel.fixedToCamera = true;
 		
+		
 	},
 
 	create : function() {
@@ -111,13 +112,21 @@ Spacewar.gameState.prototype = {
 
 		game.camera.follow(game.global.myPlayer.image);
 		
-		game.global.ui.ammoButton = game.add.sprite(10,10, 'ammo');
+		//print ammo icon
+		game.global.ui.ammoButton = game.add.sprite(10,500, 'ammo');
 		var style = { fontSize: "48px", fill: "#ff0000"};
 		game.global.ui.ammoButton.addChild(this.ammoText = game.add.text(110,110, game.global.myPlayer.ammo, style));
 		this.ammoText.anchor.set(0.5,0.5);
 		game.global.ui.ammoButton.inputEnabled = true;		
 		game.global.ui.ammoButton.fixedToCamera = true;
 		game.global.ui.ammoButton.scale.setTo(0.6,0.6);
+		
+		//print ui health bar
+		game.global.ui.healthBar = game.add.sprite(10,10, 'healthbar');
+		game.global.ui.healthBar.fixedToCamera = true;
+		game.global.ui.healthBar.scale.setTo(0.7,0.7);
+		game.global.ui.healthBar.addChild(currentHealth = game.add.sprite(10,10,'health1'));
+		currentHealth.scale.setTo(3.22,5);
 		
 		// print death message
 		style = { font: "128px Arial", fill: "#ff4444", align: "center" };

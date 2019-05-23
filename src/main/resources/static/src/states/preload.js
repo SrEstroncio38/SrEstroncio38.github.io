@@ -41,6 +41,7 @@ Spacewar.preloadState.prototype = {
 		game.load.image('roomnamewindow','assets/images/roomname.png');
 		game.load.image('health2','assets/spaceship/hp_bar_2.png');
 		game.load.image('health1','assets/spaceship/hp_bar_1.png');
+		game.load.image('healthbar','assets/images/healthbar.png');
 	},
 
 	create : function() {

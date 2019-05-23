@@ -1,5 +1,5 @@
 connectionData = {
 	"debug" : false,
-	"IPaddress" : "127.0.0.1",
+	"IPaddress" : "25.32.57.184",
 	"port" : "8080"
 };
