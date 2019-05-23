@@ -7,13 +7,14 @@ window.onload = function() {
 		FPS : 30,
 		DEBUG_MODE : connectionData.debug,
 		socket : null,
+		projectiles : [],
 		myPlayer : new Object(),
 		otherPlayers : [],
-		projectiles : [],
-		deathText : null
+		ui : new Object()
 	}
 
 	// WEBSOCKET CONFIGURATOR
+	// Si estas buscando la IP no esta aquí, mira en connectionData.json
 	game.global.socket = new WebSocket("ws://" + connectionData.IPaddress + ":" + connectionData.port + "/spacewar")
 	
 	game.global.socket.onopen = () => {
@@ -77,14 +78,14 @@ window.onload = function() {
 						game.global.myPlayer.health1.x = player.posX - 50
 						game.global.myPlayer.health1.y = player.posY
 						game.global.myPlayer.points = player.points
-						game.global.myPlayer.scoreText.setText(player.points)
-						game.global.myPlayer.roomLabel.setText(game.global.myPlayer.roomname)
+						game.global.ui.scoreText.setText(player.points)
+						game.global.ui.roomLabel.setText(game.global.myPlayer.roomname)
 						if (player.death) {
 							game.global.myPlayer.image.alpha = 0.25
 							game.global.myPlayer.userNLabel.alpha = 0.0
 							game.global.myPlayer.health2.alpha = 0.0
 							game.global.myPlayer.health1.alpha = 0.0
-							game.global.deathText.alpha = 1.0
+							game.global.ui.deathText.alpha = 1.0
 						}
 					} else {
 						if (typeof game.global.otherPlayers[player.id] == 'undefined') {

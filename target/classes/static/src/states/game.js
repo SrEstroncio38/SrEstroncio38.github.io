@@ -64,21 +64,21 @@ Spacewar.gameState.prototype = {
 		
 		// print points
 		var style = { font: "16px Arial", fill: "#ffffff", align: "center" };
-		var scoreImg = game.add.sprite(1100,10,'score');
-		scoreImg.scale.setTo(0.3,0.3)	
-		scoreImg.fixedToCamera = true;
-		game.global.myPlayer.scoreText = game.add.text(1180,8, game.global.myPlayer.points, style);
-		game.global.myPlayer.scoreText.fixedToCamera = true;
+		game.global.ui.scoreImg = game.add.sprite(1100,10,'score');
+		game.global.ui.scoreImg.scale.setTo(0.3,0.3)	
+		game.global.ui.scoreImg.fixedToCamera = true;
+		game.global.ui.scoreText = game.add.text(1180,8, game.global.myPlayer.points, style);
+		game.global.ui.scoreText.fixedToCamera = true;
 		
 		// print room name
-		var roomImg = game.add.sprite(1280,640,'roomnamewindow');
-		roomImg.scale.setTo(0.4,0.4);
-		roomImg.anchor.set(1,1);
-		roomImg.fixedToCamera = true;
+		game.global.ui.roomImg = game.add.sprite(1280,640,'roomnamewindow');
+		game.global.ui.roomImg.scale.setTo(0.4,0.4);
+		game.global.ui.roomImg.anchor.set(1,1);
+		game.global.ui.roomImg.fixedToCamera = true;
 		style = { font: "24px Arial", fill: "#ffffff", align: "center" };
-		game.global.myPlayer.roomLabel = game.add.text(1280 - 150,640 - 22, game.global.myPlayer.roomname, style);
-		game.global.myPlayer.roomLabel.anchor.set(0.5,0.5);
-		game.global.myPlayer.roomLabel.fixedToCamera = true;
+		game.global.ui.roomLabel = game.add.text(1280 - 150,640 - 22, game.global.myPlayer.roomname, style);
+		game.global.ui.roomLabel.anchor.set(0.5,0.5);
+		game.global.ui.roomLabel.fixedToCamera = true;
 		
 	},
 
@@ -111,20 +111,20 @@ Spacewar.gameState.prototype = {
 
 		game.camera.follow(game.global.myPlayer.image);
 		
-		ammoButton = game.add.sprite(10,10, 'ammo');
+		game.global.ui.ammoButton = game.add.sprite(10,10, 'ammo');
 		var style = { fontSize: "48px", fill: "#ff0000"};
-		ammoButton.addChild(this.ammoText = game.add.text(110,110, game.global.myPlayer.ammo, style));
+		game.global.ui.ammoButton.addChild(this.ammoText = game.add.text(110,110, game.global.myPlayer.ammo, style));
 		this.ammoText.anchor.set(0.5,0.5);
-		ammoButton.inputEnabled = true;		
-		ammoButton.fixedToCamera = true;
-		ammoButton.scale.setTo(0.6,0.6);
+		game.global.ui.ammoButton.inputEnabled = true;		
+		game.global.ui.ammoButton.fixedToCamera = true;
+		game.global.ui.ammoButton.scale.setTo(0.6,0.6);
 		
 		// print death message
 		style = { font: "128px Arial", fill: "#ff4444", align: "center" };
-		game.global.deathText = game.add.text(640, 320, "Git Gud", style);
-		game.global.deathText.alpha = 0.0;
-		game.global.deathText.anchor.set(0.5,1.5);
-		game.global.deathText.fixedToCamera = true;
+		game.global.ui.deathText = game.add.text(640, 320, "Git Gud", style);
+		game.global.ui.deathText.alpha = 0.0;
+		game.global.ui.deathText.anchor.set(0.5,1.5);
+		game.global.ui.deathText.fixedToCamera = true;
 		
 	},
 
