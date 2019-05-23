@@ -36,7 +36,8 @@ Spacewar.roomState.prototype = {
         GameRoom.scale.setTo(0.8,0.8);
         GameRoom.anchor.setTo(0.5,0.5);
         
-        //Cargamos imagen de nave
+        //Cargamos imagen de nave y su marco
+        frameShip = game.add.sprite(20 , 50, 'frame', game.global.myPlayer.shipType);
         spaceShip = game.add.sprite(0, 0, 'spacewar',game.global.myPlayer.shipType);
         
         //Cargamos boton empezar
