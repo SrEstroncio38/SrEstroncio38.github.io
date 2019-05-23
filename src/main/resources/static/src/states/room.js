@@ -32,18 +32,50 @@ Spacewar.roomState.prototype = {
     	bg.anchor.setTo(0.5,0.5);
     	
     	//Cargamos imagen GameRoom
-    	GameRoom = game.add.sprite(game.world.centerX, game.world.centerY, 'lobby');
+    	GameRoom = game.add.sprite(5, 10, 'lobby');
         GameRoom.scale.setTo(0.8,0.8);
-        GameRoom.anchor.setTo(0.5,0.5);
+        //GameRoom.anchor.setTo(0.5,0.5);
+        
+        //Cargamos titulo de hangar
+        hangar = game.add.sprite(385, 80, 'hangar')
+        hangar.scale.setTo(0.5,0.5)
+        hangar.anchor.setTo(0.5,0.5)
         
         //Cargamos imagen de nave y su marco
-        frameShip = game.add.sprite(20 , 50, 'frame', game.global.myPlayer.shipType);
-        spaceShip = game.add.sprite(0, 0, 'spacewar',game.global.myPlayer.shipType);
+        frameShip = game.add.sprite(95, 70, 'frame');
+        frameShip.anchor.setTo(0.8,0.8)
+        frameShip.scale.setTo(1.1,1.1)
+        spaceShip = game.add.sprite(73, 46, 'spacewar',game.global.myPlayer.shipType);
+        frameShip.anchor.setTo(0.5,0.5)
         
         //Cargamos boton empezar
-        ship = game.add.button(640,580, 'ship', goToGame, this, 2, 1, 0);
-        ship.scale.setTo(0.6, 0.6);
+        ship = game.add.button(640, 560, 'ship', goToGame, this, 2, 1, 0);
+        ship.scale.setTo(0.5, 0.5);
         ship.anchor.setTo(0.5,0.5);
+        
+        //Cargamos fondo del chat
+        chatroombg = game.add.sprite(800,15, 'chatroombg' )
+        chatroombg.scale.setTo(1.25,1)
+        
+        //Cargamos barra de texto
+        textbox = game.add.sprite(830, 570, 'textinput');
+        textbox.scale.setTo(1.25,0.5);
+        textbox.anchor.setTo(0,0.5)
+        
+        //Cargamos texto de nombre de sala
+        var style = { font: "35px Arial", fill: "#ffffff", align: "center" };
+        game.add.text(73, 155, "Sala:",style)
+        roomname = game.add.text(173, 155, game.global.myPlayer.roomname , style)
+        
+        //Cargamos texto de jugadores
+        game.add.text(73, 215, "Jugadores:", style)
+        roomplayers = game.add.text(253,215, "x/x",style)
+        
+        //Cargamos texto de modo de juego
+        game.add.text(73, 275, "Modo de juego:", style)
+        roomplayers = game.add.text(323,275, "XXXXX",style)
+        
+        
 	},
 
 	update : function() {

@@ -51,6 +51,7 @@ Spacewar.preloadState.prototype = {
 		game.load.image('ship','assets/buttons/Ship_BTN.png');
 		game.load.image('hangar','assets/images/hangar.png');
 		game.load.image('frame','assets/images/frame.png');
+		game.load.image('chatroombg','assets/images/chat_room.png')
 	},
 
 	create : function() {
