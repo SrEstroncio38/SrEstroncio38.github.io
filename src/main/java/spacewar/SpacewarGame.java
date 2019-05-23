@@ -55,8 +55,8 @@ public class SpacewarGame {
 		}
 	}
 	
-	public void addRoom(String name) {
-		if(rooms.putIfAbsent(name, new GameRoom()) == null) {
+	public void addRoom(String name, String gameMode) {
+		if(rooms.putIfAbsent(name, new GameRoom(gameMode)) == null) {
 			numRooms.getAndIncrement();
 		} 
 		

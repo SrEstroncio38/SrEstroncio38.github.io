@@ -23,19 +23,33 @@ public class GameRoom {
 	
 	private Map<String, Player> players = new ConcurrentHashMap<>();
 	private Map<Integer, Projectile> projectiles = new ConcurrentHashMap<>();
-	
+	private final int MAXPLAYERS;
+	private final String GameMode;
 	private AtomicInteger numPlayers = new AtomicInteger();
 
-	public GameRoom() {
-
+	public GameRoom(String GameModeRef) {
+		this.GameMode = GameModeRef;
+		switch (GameMode) {
+			case "Classic":
+				MAXPLAYERS = 2;
+				break;
+			case "BattleRoyal":
+				MAXPLAYERS = 20;
+				break;
+			default:
+				MAXPLAYERS = 4;
+		}
 	}
 
 	public void addPlayer(Player player) {
-		players.put(player.getSession().getId(), player);
-
-		int count = numPlayers.getAndIncrement();
-		if (count == 0) {
-			this.startGameLoop();
+		//Revisa que quepan los jugadores antes de agregarlo
+		if(numPlayers.get() < MAXPLAYERS) {
+			players.put(player.getSession().getId(), player);
+	
+			int count = numPlayers.getAndIncrement();
+			if (count == 0) {
+				this.startGameLoop();
+			}
 		}
 	}
 

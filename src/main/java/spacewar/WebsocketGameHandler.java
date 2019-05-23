@@ -109,7 +109,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				break;
 			//Mensaje que se llama cuando se crea una nueva sala para recibir su nombre
 			case "CREATE ROOM":
-				game.addRoom(node.path("roomname").asText());
+				game.addRoom(node.path("roomname").asText(),node.path("gamemode").asText());
 				/*msg.put("event", "GO TO ROOM");
 				msg.put("roomname", node.path("roomname").asText());
 				player.getSession().sendMessage(new TextMessage(msg.toString()));*/
