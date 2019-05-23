@@ -14,7 +14,7 @@ public class Player extends Spaceship {
 	private float health;
 	private int ammo;
 	private int points;
-	private int thrust;
+	private float thrust;
 	private String roomname;
 	
 	private boolean _dead;
@@ -25,7 +25,7 @@ public class Player extends Spaceship {
 		this.health = 100.0f;
 		// TODO Cambiar esta linea (hay que mandar el numero max de proyectiles)
 		this.ammo = 50;
-		this.thrust = 100;
+		this.thrust = 99.0f;
 		this._dead = false;
 		this.points = 0;
 		this.roomname = "";
@@ -91,9 +91,14 @@ public class Player extends Spaceship {
 			if (thrust && this.thrust>0) {
 				this.thrust--;				
 			}
-			else if (!thrust && this.thrust<100)
-				this.thrust++;
-			System.out.println("THRUST ACTUAL: " + this.thrust);
+			else if (!thrust && this.thrust<99) {
+				if (this.thrust<1) 
+					this.thrust = this.thrust + 0.1f;
+				else if (this.thrust<50) 
+					this.thrust = this.thrust + 0.4f;				
+				else
+					this.thrust = this.thrust + 0.3f;
+			}
 			if (thrust && this.thrust<=0) {
 				thrust = false;
 				brake = true;
@@ -138,7 +143,7 @@ public class Player extends Spaceship {
 		this.points = point;
 	}
 
-	public int getThrust() {
+	public float getThrust() {
 		return thrust;
 	}
 

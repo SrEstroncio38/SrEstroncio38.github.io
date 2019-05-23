@@ -67,6 +67,7 @@ window.onload = function() {
 			if (typeof game.global.myPlayer.image !== 'undefined') {
 				for (var player of msg.players) {
 					if (game.global.myPlayer.id == player.id) {
+						game.global.myPlayer.thrust = player.thrust
 						game.global.myPlayer.image.x = player.posX
 						game.global.myPlayer.image.y = player.posY
 						game.global.myPlayer.image.angle = player.facingAngle
@@ -81,6 +82,21 @@ window.onload = function() {
 						game.global.myPlayer.health1.y = player.posY
 						game.global.ui.currentHealth.scale.setTo(2.23*scale, 3.42)
 						game.global.myPlayer.points = player.points
+						if(player.thrust>50)
+							game.global.ui.thrustButtonG.alpha = 1;						
+						else if (player.thrust>25){
+							game.global.ui.thrustButtonG.alpha = 0;
+							game.global.ui.thrustButtonY.alpha = 1;
+						}
+						else if (player.thrust>1){
+							game.global.ui.thrustButtonY.alpha = 0;
+							game.global.ui.thrustButtonR.alpha = 1;
+						}
+						else{
+							game.global.ui.thrustButtonR.alpha = 0;
+							game.global.ui.thrustButton.alpha = 1;
+						}
+						
 						game.global.ui.scoreText.setText(player.points)
 						game.global.ui.roomLabel.setText(game.global.myPlayer.roomname)
 						if (player.death) {

@@ -6,6 +6,7 @@ Spacewar.gameState = function(game) {
 	this.playerAmmo
 	this.ammoButton
 	this.ammoText
+	this.thrustText
 	this.bulletIsFired = false
 }
 
@@ -122,17 +123,18 @@ Spacewar.gameState.prototype = {
 		game.global.ui.ammoButton.scale.setTo(0.5,0.5);
 		
 		//print thrust icon
-		game.global.ui.thrustButton = game.add.sprite(138,530, 'thrust');
+		game.global.ui.thrustButton = game.add.sprite(138,520, 'thrust');
 		game.global.ui.thrustButton.fixedToCamera = true;
-		game.global.ui.thrustButtonR = game.add.sprite(138,530, 'thrustR');
+		game.global.ui.thrustButtonR = game.add.sprite(138,520, 'thrustR');
 		game.global.ui.thrustButtonR.fixedToCamera = true;
-		game.global.ui.thrustButtonY = game.add.sprite(138,530, 'thrustY');
+		game.global.ui.thrustButtonY = game.add.sprite(138,520, 'thrustY');
 		game.global.ui.thrustButtonY.fixedToCamera = true;
-		game.global.ui.thrustButtonG = game.add.sprite(138,530, 'thrustG');
+		game.global.ui.thrustButtonG = game.add.sprite(138,520, 'thrustG');
 		game.global.ui.thrustButtonG.fixedToCamera = true;
-		var style2 = { fontSize: "48px", fill: "#ff0000"};
-		game.global.ui.thrustButtonG.addChild(this.thrustText = game.add.text(110,110, game.global.myPlayer.thrust, style2));
-		this.ammoText.anchor.set(0.5,0.5);
+		var style2 = {fontSize: "24px", fill: "#ffffff", align: "center"};
+		this.thrustText = game.add.text(188,572, game.global.myPlayer.thrust, style2);
+		this.thrustText.fixedToCamera = true;
+		this.thrustText.anchor.set(0.5,0.5);
 		
 		
 		//print ui health bar
@@ -178,11 +180,26 @@ Spacewar.gameState.prototype = {
 			msg.ammo = this.playerAmmo;
 		}
 
-		//update ammo icon
+		//update ammo text
 		if (this.bulletIsFired){
 			this.ammoText.setText(game.global.myPlayer.ammo.toString())
 		}
 
+		//update thrust text
+		if (game.global.myPlayer.thrust>1){
+			this.thrustText.setText(Math.trunc(game.global.myPlayer.thrust).toString())
+			if (game.global.myPlayer.thrust>50)
+				this.thrustText.setStyle({fontSize: "24px", fill: "#ffffff", align: "center"} )
+			else if (game.global.myPlayer.thrust>25)
+				this.thrustText.setStyle({fontSize: "24px", fill: "#0000ff", align: "center"} )
+			else
+				this.thrustText.setStyle({fontSize: "24px", fill: "#000000", align: "center"} )
+		}
+		else{
+			this.thrustText.setText("NO\n FUEL")
+			this.thrustText.setStyle({fontSize: "18px", fill: "#ff0000", align: "center"} )
+		}
+			
 		if (game.global.DEBUG_MODE) {
 			console.log("[DEBUG] Sending UPDATE MOVEMENT message to server")
 		}

@@ -43,7 +43,7 @@ Spacewar.preloadState.prototype = {
 		game.load.image('health1','assets/spaceship/hp_bar_1.png');
 		game.load.image('healthbar','assets/images/healthbar.png');
 		game.load.image('thrust','assets/images/thrustIcon.png');
-		game.load.image('thrustR','assets/images/thrustIconEmpty.png');
+		game.load.image('thrustR','assets/images/thrustIconLow.png');
 		game.load.image('thrustY','assets/images/thrustIconAlert.png');
 		game.load.image('thrustG','assets/images/thrustIconFull.png');
 		
