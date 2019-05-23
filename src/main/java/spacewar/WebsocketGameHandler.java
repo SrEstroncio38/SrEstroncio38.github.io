@@ -112,6 +112,13 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				/*msg.put("event", "GO TO ROOM");
 				msg.put("roomname", node.path("roomname").asText());
 				player.getSession().sendMessage(new TextMessage(msg.toString()));*/
+				break;
+			case "POST GLOBAL CHAT":
+				game.addChatEntry(node.path("username").asText(), node.path("text").asText());
+				msg.put("event", "PRINT GLOBAL CHAT");
+				msg.put("text", game.getChatText());
+				game.broadcast(msg.toString());
+				break;
 			default:
 				break;
 			}

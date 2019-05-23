@@ -61,6 +61,11 @@ Spacewar.menuState.prototype = {
 		currentinput.anchor.set(0,0.5);
 		
 		deletingText = false;
+		
+		// chat text
+		style = { font: "24px Arial", fill: "#ffffff", align: "left" };
+		game.global.chat = game.add.text(50, game.world.centerY + 160, currentinputtext, style);
+		game.global.chat.anchor.set(0,1);
 	},
 
 	update : function() {
@@ -78,15 +83,13 @@ Spacewar.menuState.prototype = {
 		}
 		currentinput.text = currentinputtext;
 
-		if (this.enterKey.isDown){
-			// TODO send message
-			/*
+		if (this.enterKey.isDown && currentinputtext.length > 0){
 			let message = {
-				event : 'UPDATE NAME',
-				username: game.global.myPlayer.username
+				event : 'POST GLOBAL CHAT',
+				username: game.global.myPlayer.username,
+				text: currentinputtext
 			}
 			game.global.socket.send(JSON.stringify(message))
-			*/
 			currentinputtext = "";
 		}
 	},		

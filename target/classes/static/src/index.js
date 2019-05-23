@@ -7,6 +7,7 @@ window.onload = function() {
 		FPS : 30,
 		DEBUG_MODE : connectionData.debug,
 		socket : null,
+		chat : "",
 		projectiles : [],
 		myPlayer : new Object(),
 		otherPlayers : [],
@@ -159,6 +160,10 @@ window.onload = function() {
 			game.global.otherPlayers[msg.id].health2.destroy()
 			game.global.otherPlayers[msg.id].health1.destroy()
 			delete game.global.otherPlayers[msg.id]
+			break;
+		case 'PRINT GLOBAL CHAT' :
+			game.global.chat.setText(msg.text);
+			break;
 		default :
 			console.dir(msg)
 			break

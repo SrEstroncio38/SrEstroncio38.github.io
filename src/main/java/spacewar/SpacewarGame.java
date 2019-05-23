@@ -1,20 +1,17 @@
 package spacewar;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.springframework.web.socket.TextMessage;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class SpacewarGame {
 
@@ -26,7 +23,6 @@ public class SpacewarGame {
 	public final static boolean VERBOSE_MODE = true;
 
 	ObjectMapper mapper = new ObjectMapper();
-	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
 	// GLOBAL GAME ROOM
 	private Map<String, Player> players = new ConcurrentHashMap<>();
@@ -34,11 +30,25 @@ public class SpacewarGame {
 	private AtomicInteger numRooms = new AtomicInteger();
 	public Map<String,GameRoom> rooms = new ConcurrentHashMap<>();
 	
+	// Chat
+	private Lock chatLock = new ReentrantLock();
+	private String chat = "";
+	
 	private SpacewarGame() {
 		this.numRooms.getAndSet(-1);
 		/*rooms.put("Sala 1", new GameRoom());
 		rooms.put("Sala 2", new GameRoom());*/
 
+	}
+	
+	public void addChatEntry(String username, String text) {
+		chatLock.lock();
+		chat += "[" + username + "]: " + text + "\n";
+		chatLock.unlock();
+	}
+	
+	public String getChatText() {
+		return chat;
 	}
 	
 	public void removeRoom(String name) {
