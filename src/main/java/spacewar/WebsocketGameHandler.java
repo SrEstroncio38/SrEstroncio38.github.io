@@ -37,6 +37,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 		msg.put("shipType", player.getShipType());
 		msg.put("username", player.getUsername());
 		msg.put("ammo", player.getAmmo());
+		msg.put("thrust", player.getThrust());
 		msg.put("roomname", player.getRoomname());
 		player.getSession().sendMessage(new TextMessage(msg.toString()));
 		

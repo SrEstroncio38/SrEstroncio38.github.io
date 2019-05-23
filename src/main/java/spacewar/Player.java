@@ -14,6 +14,7 @@ public class Player extends Spaceship {
 	private float health;
 	private int ammo;
 	private int points;
+	private int thrust;
 	private String roomname;
 	
 	private boolean _dead;
@@ -24,6 +25,7 @@ public class Player extends Spaceship {
 		this.health = 100.0f;
 		// TODO Cambiar esta linea (hay que mandar el numero max de proyectiles)
 		this.ammo = 50;
+		this.thrust = 100;
 		this._dead = false;
 		this.points = 0;
 		this.roomname = "";
@@ -86,6 +88,16 @@ public class Player extends Spaceship {
 	@Override
 	public void loadMovement(boolean thrust, boolean brake, boolean rotLeft, boolean rotRight) {
 		if (_dead == false) {
+			if (thrust && this.thrust>0) {
+				this.thrust--;				
+			}
+			else if (!thrust && this.thrust<100)
+				this.thrust++;
+			System.out.println("THRUST ACTUAL: " + this.thrust);
+			if (thrust && this.thrust<=0) {
+				thrust = false;
+				brake = true;
+			}
 			super.loadMovement(thrust, brake, rotLeft, rotRight);
 		}
 	}
@@ -124,5 +136,13 @@ public class Player extends Spaceship {
 	
 	public void setPoints(int point) {
 		this.points = point;
+	}
+
+	public int getThrust() {
+		return thrust;
+	}
+
+	public void setThrust(int thrust) {
+		this.thrust = thrust;
 	}
 }

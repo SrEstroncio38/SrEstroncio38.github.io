@@ -130,14 +130,18 @@ Spacewar.gameState.prototype = {
 		game.global.ui.thrustButtonY.fixedToCamera = true;
 		game.global.ui.thrustButtonG = game.add.sprite(138,530, 'thrustG');
 		game.global.ui.thrustButtonG.fixedToCamera = true;
+		var style2 = { fontSize: "48px", fill: "#ff0000"};
+		game.global.ui.thrustButtonG.addChild(this.thrustText = game.add.text(110,110, game.global.myPlayer.thrust, style2));
+		this.ammoText.anchor.set(0.5,0.5);
 		
 		
 		//print ui health bar
 		game.global.ui.healthBar = game.add.sprite(10,10, 'healthbar');
 		game.global.ui.healthBar.fixedToCamera = true;
 		game.global.ui.healthBar.scale.setTo(0.7,0.7);
-		game.global.ui.healthBar.addChild(currentHealth = game.add.sprite(10,10,'health1'));
-		currentHealth.scale.setTo(3.22,5);
+		game.global.ui.currentHealth = game.add.sprite(18,18,'health1');
+		game.global.ui.currentHealth.fixedToCamera = true;
+		game.global.ui.currentHealth.scale.setTo(1,1);
 		
 		// print death message
 		style = { font: "128px Arial", fill: "#ff4444", align: "center" };

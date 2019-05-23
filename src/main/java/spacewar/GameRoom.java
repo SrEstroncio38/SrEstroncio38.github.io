@@ -109,6 +109,7 @@ public class GameRoom {
 				jsonPlayer.put("username", player.getUsername());
 				jsonPlayer.put("health", player.getHealth());
 				jsonPlayer.put("ammo", player.getAmmo());
+				jsonPlayer.put("thrust", player.getThrust());
 				jsonPlayer.put("points", player.getPoints());
 				jsonPlayer.put("death", player.getDeath());
 				jsonPlayer.put("posX", player.getPosX());

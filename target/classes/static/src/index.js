@@ -43,6 +43,7 @@ window.onload = function() {
 			game.global.myPlayer.shipType = msg.shipType
 			game.global.myPlayer.username = msg.username
 			game.global.myPlayer.ammo = msg.ammo
+			game.global.myPlayer.thrust = msg.thrust;
 			game.global.myPlayer.roomname = msg.roomname
 			if (game.global.DEBUG_MODE) {
 				console.log('[DEBUG] ID assigned to player: ' + game.global.myPlayer.id)
@@ -78,6 +79,7 @@ window.onload = function() {
 						game.global.myPlayer.health1.scale.setTo(scale, 1)
 						game.global.myPlayer.health1.x = player.posX - 50
 						game.global.myPlayer.health1.y = player.posY
+						game.global.ui.currentHealth.scale.setTo(2.23*scale, 3.42)
 						game.global.myPlayer.points = player.points
 						game.global.ui.scoreText.setText(player.points)
 						game.global.ui.roomLabel.setText(game.global.myPlayer.roomname)
