@@ -66,9 +66,9 @@ Spacewar.menuState.prototype = {
 		style = { font: "24px Arial", fill: "#aaaaaa", align: "left", wordWrap: true, wordWrapWidth: 600 };
 		game.global.chat.element = game.add.text(50, game.world.centerY + 140, game.global.chat.text, style);
 		game.global.chat.element.anchor.set(0,1);
-		let mask = game.add.graphics(0, 100);
+		let mask = game.add.graphics(0, 0);
 		mask.beginFill(0xffffff);
-		mask.drawCircle(100, 100, 100);
+		mask.drawRect(0,110,1280,640);
 		game.global.chat.element.mask = mask;
 	},
 
