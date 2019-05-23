@@ -113,13 +113,24 @@ Spacewar.gameState.prototype = {
 		game.camera.follow(game.global.myPlayer.image);
 		
 		//print ammo icon
-		game.global.ui.ammoButton = game.add.sprite(10,500, 'ammo');
-		var style = { fontSize: "48px", fill: "#ff0000"};
+		game.global.ui.ammoButton = game.add.sprite(10,520, 'ammo');
+		var style = { fontSize: "56px", fill: "#ff0000"};
 		game.global.ui.ammoButton.addChild(this.ammoText = game.add.text(110,110, game.global.myPlayer.ammo, style));
 		this.ammoText.anchor.set(0.5,0.5);
 		game.global.ui.ammoButton.inputEnabled = true;		
 		game.global.ui.ammoButton.fixedToCamera = true;
-		game.global.ui.ammoButton.scale.setTo(0.6,0.6);
+		game.global.ui.ammoButton.scale.setTo(0.5,0.5);
+		
+		//print thrust icon
+		game.global.ui.thrustButton = game.add.sprite(138,530, 'thrust');
+		game.global.ui.thrustButton.fixedToCamera = true;
+		game.global.ui.thrustButtonR = game.add.sprite(138,530, 'thrustR');
+		game.global.ui.thrustButtonR.fixedToCamera = true;
+		game.global.ui.thrustButtonY = game.add.sprite(138,530, 'thrustY');
+		game.global.ui.thrustButtonY.fixedToCamera = true;
+		game.global.ui.thrustButtonG = game.add.sprite(138,530, 'thrustG');
+		game.global.ui.thrustButtonG.fixedToCamera = true;
+		
 		
 		//print ui health bar
 		game.global.ui.healthBar = game.add.sprite(10,10, 'healthbar');

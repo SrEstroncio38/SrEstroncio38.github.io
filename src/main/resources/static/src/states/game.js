@@ -130,8 +130,6 @@ Spacewar.gameState.prototype = {
 		game.global.ui.thrustButtonY.fixedToCamera = true;
 		game.global.ui.thrustButtonG = game.add.sprite(138,530, 'thrustG');
 		game.global.ui.thrustButtonG.fixedToCamera = true;
-
-
 		
 		
 		//print ui health bar
