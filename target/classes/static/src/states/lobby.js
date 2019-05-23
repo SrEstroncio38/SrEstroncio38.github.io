@@ -5,13 +5,18 @@ Spacewar.lobbyState = function(game) {
 //Funcion para entrarEnMatchMaking
 function enterMatchMaking(){
 
-    game.state.start('matchmakingState');
+    //game.state.start('matchmakingState');
 }
 
 //Funcion que te entra en una sala
 function CreateRoom(){
 
 	game.state.start('createRoom');
+}
+
+function goToMenu(){
+
+	game.state.start('menuState');
 }
 
 
@@ -46,7 +51,7 @@ Spacewar.lobbyState.prototype = {
         addRoom.scale.setTo(0.6, 0.6);
         
         //Añadimos el boton de cerrar (sin funcion aun)
-        lobby.addChild( close = game.add.button(0+150,0+240, 'exit', null , this, 2, 1, 0));
+        lobby.addChild( close = game.add.button(0+150,0+240, 'exit', goToMenu , this, 2, 1, 0));
         close.scale.setTo(0.6, 0.6);
         
         //Añadimos el boton de Matchmaking

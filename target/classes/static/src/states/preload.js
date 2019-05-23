@@ -19,6 +19,7 @@ Spacewar.preloadState.prototype = {
 				Phaser.Loader.TEXTURE_ATLAS_JSON_HASH)
 		
 		//Imagenes del lobby
+		game.load.image('global_chat','assets/images/global_chat.png');
 		game.load.image('lobby','assets/images/lobby.png');
         game.load.image('addroom','assets/buttons/Map_BTN.png');
         game.load.image('exit','assets/buttons/Exit_BTN.png');
