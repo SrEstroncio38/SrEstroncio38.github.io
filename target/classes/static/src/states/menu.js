@@ -59,24 +59,37 @@ Spacewar.menuState.prototype = {
         textbox.anchor.setTo(0,0.5)
         
         // chat input text
-		var style = { font: "24px Arial", fill: "#ffffff", align: "center" };
+		var style = { font: "24px Arial", fill: "#ffffff", align: "center", boundsAlignH: 'left' };
 		currentinputtext = "";
-		currentinput = game.add.text(50, game.world.centerY + 180, currentinputtext, style);
+		currentinput = game.add.text(44, game.world.centerY + 180, currentinputtext, style);
 		currentinput.anchor.set(0,0.5);
+		let mask = game.add.graphics(0, 0);
+		mask.beginFill(0xffffff);
+		mask.drawRect(44,0,566,640);
+		currentinput.mask = mask;
+		currentinput.setTextBounds(0,0,566,640);
 		
 		deletingText = false;
 		
 		// chat text
 		style = { font: "24px Arial", fill: "#aaaaaa", align: "left", wordWrap: true, wordWrapWidth: 600 };
-		game.global.chat.element = game.add.text(50, game.world.centerY + 140, game.global.chat.text, style);
+		game.global.chat.element = game.add.text(32, game.world.centerY + 140, game.global.chat.text, style);
 		game.global.chat.element.anchor.set(0,1);
-		let mask = game.add.graphics(0, 0);
+		mask = game.add.graphics(0, 0);
 		mask.beginFill(0xffffff);
 		mask.drawRect(0,110,1280,640);
 		game.global.chat.element.mask = mask;
 	},
 
 	update : function() {
+		
+		// Position currentinput correctly
+		if (currentinput.width > 566){
+			currentinput.boundsAlignH = 'right';
+		} else {
+			currentinput.boundsAlignH = 'left';
+		}
+		
 		if (this.backKey.isDown){
 			if (!deletingText) {
 				currentinputtext = currentinputtext.substring(0,currentinputtext.length-1);
@@ -84,7 +97,7 @@ Spacewar.menuState.prototype = {
 			}
 		} else {
 			game.input.keyboard.addCallbacks(this, null, null, function (char) {
-				if (currentinputtext.length < 200)
+				if (currentinputtext.length < 256)
 					currentinputtext += char;
 			});
 			deletingText = false;

@@ -22,6 +22,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 	private AtomicInteger projectileId = new AtomicInteger(0);
 	
 	private Lock sessionLock = new ReentrantLock();
+	private Lock chatLock = new ReentrantLock();
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession unprotectedSession) throws Exception {
@@ -114,11 +115,14 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				msg.put("roomname", node.path("roomname").asText());
 				player.getSession().sendMessage(new TextMessage(msg.toString()));*/
 				break;
+			//Mensaje que imprime una cadena de texto nueva en el chat global (a todo el mundo conectado)
 			case "POST GLOBAL CHAT":
+				chatLock.lock();
 				msg.put("event", "PRINT GLOBAL CHAT");
 				msg.put("username", node.path("username").asText());
 				msg.put("text", node.path("text").asText());
 				game.broadcast(msg.toString());
+				chatLock.unlock();
 				break;
 			default:
 				break;
