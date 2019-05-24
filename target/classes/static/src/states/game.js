@@ -3,6 +3,7 @@ Spacewar.gameState = function(game) {
 	this.fireBullet
 	this.numStars = 100 // Should be canvas size dependant
 	this.maxProjectiles = 800 // 8 per player
+	this.maxRecharges = 300 
 	this.playerAmmo
 	this.ammoButton
 	this.ammoText
@@ -40,6 +41,17 @@ Spacewar.gameState.prototype = {
 			game.global.projectiles[i].image.visible = false
 		}
 
+		// We preload the recharge sprites
+		game.global.recharges = new Array(this.maxRecharges)
+		for (var i = 0; i < this.maxRecharges; i++) {
+			game.global.recharges[i] = {
+				image : game.add.sprite(0, 0, 'recharge'),
+				liveTime : 0
+			}
+			game.global.recharges[i].image.anchor.setTo(0.5, 0.5)
+			game.global.recharges[i].image.visible = false
+		}
+		
 		// we load a random ship
 		let random = [ 'blue', 'darkgrey', 'green', 'metalic', 'orange',
 				'purple', 'red' ]
@@ -80,7 +92,6 @@ Spacewar.gameState.prototype = {
 		game.global.ui.roomLabel = game.add.text(1280 - 150,640 - 22, game.global.myPlayer.roomname, style);
 		game.global.ui.roomLabel.anchor.set(0.5,0.5);
 		game.global.ui.roomLabel.fixedToCamera = true;
-		
 		
 	},
 
@@ -134,8 +145,7 @@ Spacewar.gameState.prototype = {
 		var style2 = {fontSize: "24px", fill: "#ffffff", align: "center"};
 		this.thrustText = game.add.text(188,572, game.global.myPlayer.thrust, style2);
 		this.thrustText.fixedToCamera = true;
-		this.thrustText.anchor.set(0.5,0.5);
-		
+		this.thrustText.anchor.set(0.5,0.5);		
 		
 		//print ui health bar
 		game.global.ui.healthBar = game.add.sprite(10,10, 'healthbar');
@@ -167,6 +177,28 @@ Spacewar.gameState.prototype = {
 
 		msg.bullet = false
 
+		//Spawn random recharges
+		let rnd = game.rnd.integerInRange(0, 1000);
+		if (rnd > 950){
+			if (!game.global.recharges[game.global.rechargesIdx].image.visible){
+				game.global.recharges[game.global.rechargesIdx].image.visible = true;
+				game.global.recharges[game.global.rechargesIdx].liveTime = 100;
+				game.global.recharges[game.global.rechargesIdx].image.x = game.world.randomX;
+				game.global.recharges[game.global.rechargesIdx].image.y = game.world.randomY;
+			}
+			game.global.rechargesIdx = (game.global.rechargesIdx + 1)% this.maxRecharges;
+		}
+		
+		for(var i = 0; i<this.maxRecharges;i++){
+			if (game.global.recharges[i].image.visible){
+				if (game.global.recharges[i].liveTime<=0)
+					game.global.recharges[i].image.visible = false;
+				else
+					game.global.recharges[i].liveTime--;
+			}
+		}
+		
+		
 		if (this.wKey.isDown)
 			msg.movement.thrust = true;
 		if (this.sKey.isDown)

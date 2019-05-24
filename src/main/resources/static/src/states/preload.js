@@ -43,6 +43,7 @@ Spacewar.preloadState.prototype = {
 		
 		//Imagenes de game
 		game.load.image('ammo','assets/images/ammo.png');
+		game.load.image('recharge','assets/images/recharge.png');
 		game.load.image('score','assets/images/Score.png');
 		game.load.image('roomnamewindow','assets/images/roomname.png');
 		game.load.image('health2','assets/spaceship/hp_bar_2.png');
