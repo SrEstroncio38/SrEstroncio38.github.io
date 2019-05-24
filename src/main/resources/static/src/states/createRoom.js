@@ -68,6 +68,9 @@ Spacewar.createRoom.prototype = {
 		t2.anchor.setTo(0.5,0.5)
 		
 		//Texto modo de juego
+		gamemodebg = game.add.sprite(game.world.centerX , game.world.centerY + 250, 'gamemodebg');
+		gamemodebg.anchor.setTo(0.5,0.5)
+		gamemodebg.scale.setTo(0.5,0.5)
 		t3 = game.add.text(game.world.centerX, game.world.centerY + 235, "Modo elegido:" , style);
 		t3.anchor.setTo(0.5,0.5)
 		t3 = game.add.text(game.world.centerX, game.world.centerY + 265, game.global.myPlayer.gamemode , style);

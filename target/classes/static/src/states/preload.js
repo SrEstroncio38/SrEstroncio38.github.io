@@ -31,13 +31,15 @@ Spacewar.preloadState.prototype = {
         //game.load.image('-A','assets/buttons/Close_BTN_act.png');
         
         //Imagenes de rating
-        game.load.image('ratingtable','assets/images/rating_window2.png');        
+        game.load.image('ratingtable','assets/images/rating_window2.png');
+        game.load.image('ratinglogo','assets/images/rating.png'); 
         
         //Imagenes de name y createRoom
         game.load.image('background','assets/images/stars.png');
         game.load.image('roombg','assets/images/buttongbg.png');
 		game.load.image('window','assets/images/window.png');
 		game.load.image('textinput','assets/images/textinput.png');
+		game.load.image('gamemodebg','assets/images/gamemode.png'); 
 		
 		//Imagenes de game
 		game.load.image('ammo','assets/images/ammo.png');

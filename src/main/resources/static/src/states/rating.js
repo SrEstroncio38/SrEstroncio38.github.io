@@ -45,9 +45,9 @@ Spacewar.ratingState.prototype = {
         backwards.scale.setTo(0.3, 0.3);
         
         //Añadimos las palabras rating
-        var style = { font: "45px Arial", fill: "#ffffff", align: "center" };
-        rating.addChild(lText = game.add.text(0, -310, "RATING", style));
-        lText.anchor.setTo(0.5,0.5);
+        rating.addChild(ratinglogo = game.add.sprite(0, -310, 'ratinglogo'));
+        ratinglogo.anchor.setTo(0.5,0.5);
+        ratinglogo.scale.setTo(0.8,0.8)
 	},
 
 	update : function() {
