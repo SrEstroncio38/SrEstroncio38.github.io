@@ -90,7 +90,13 @@ Spacewar.menuState.prototype = {
     	var pcon = game.add.sprite(game.world.centerX+290, game.world.centerY-20, 'playersconexion');
     	pcon.scale.setTo(0.65,0.6)
     	pcon.anchor.setTo(0.5,0.5);
-		
+    	ptextbg = game.add.sprite(game.world.centerX+295, game.world.centerY-250, 'gamemodebg');
+    	ptextbg.scale.setTo(0.5,0.25)
+    	ptextbg.anchor.setTo(0.5,0.5);
+    	var style2 = { font: "24px Arial", fill: "#ffffff", align: "center", boundsAlignH: 'left' };
+    	ptexted = game.add.text(game.world.centerX+295, game.world.centerY-250, "Playing", style2);
+		ptexted.anchor.setTo(0.5,0.5)
+    	
     	// playing players list
     	style = { font: "24px Arial", fill: "#ffffff", align: "left"};
     	game.global.playingPlayers = game.add.text(game.world.centerX+190, game.world.centerY-220, "", style);

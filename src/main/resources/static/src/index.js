@@ -10,6 +10,8 @@ window.onload = function() {
 		chat : new Object,
 		playingPlayers : null,
 		projectiles : [],
+		recharges : [],
+		rechargesIdx : 0,
 		myPlayer : new Object(),
 		otherPlayers : [],
 		ui : new Object()
