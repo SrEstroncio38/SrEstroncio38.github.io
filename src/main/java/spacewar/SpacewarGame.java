@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.springframework.web.socket.TextMessage;
 
@@ -30,6 +32,7 @@ public class SpacewarGame {
 	
 	private Map<String, Player> playingPlayers = new ConcurrentHashMap<>();
 	private AtomicInteger numPlayingPlayers = new AtomicInteger();
+	private Lock playingPlayersLock = new ReentrantLock();
 	
 	private SpacewarGame() {
 		this.numRooms.getAndSet(-1);
@@ -77,12 +80,14 @@ public class SpacewarGame {
 	}
 	
 	public void addPlayingPlayer(Player player) {
+		playingPlayersLock.lock();
 		playingPlayers.put(player.getSession().getId(), player);
 		numPlayingPlayers.getAndIncrement();
 		notifyPlayingPlayers();
 	}
 
 	public void removePlayingPlayer(Player player) {
+		playingPlayersLock.lock();
 		playingPlayers.remove(player.getSession().getId());
 		this.numPlayingPlayers.decrementAndGet();
 		notifyPlayingPlayers();
@@ -110,6 +115,29 @@ public class SpacewarGame {
 		} catch (Throwable ex) {
 
 		}
+		playingPlayersLock.unlock();
+	}
+	
+	public void notifyPlayingPlayers(Player msgPlayer) {
+		playingPlayersLock.lock();
+		ObjectNode json = mapper.createObjectNode();
+		ArrayNode arrayNodePlayers = mapper.createArrayNode();
+		
+		try {
+			for (Player player : getPlayingPlayers()) {
+				ObjectNode jsonPlayer = mapper.createObjectNode();
+				jsonPlayer.put("id", player.getPlayerId());
+				jsonPlayer.put("username", player.getUsername());
+				arrayNodePlayers.addPOJO(jsonPlayer);
+			}
+			json.put("event", "UPDATE PLAYING PLAYERS");
+			json.putPOJO("players", arrayNodePlayers);
+
+			msgPlayer.getSession().sendMessage(new TextMessage(json.toString()));
+		} catch (Throwable ex) {
+
+		}
+		playingPlayersLock.unlock();
 	}
 
 	public void broadcast(String message) {
