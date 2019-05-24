@@ -94,6 +94,10 @@ Spacewar.menuState.prototype = {
     	// playing players list
     	style = { font: "24px Arial", fill: "#ffffff", align: "left"};
     	game.global.playingPlayers = game.add.text(game.world.centerX+190, game.world.centerY-220, "", style);
+    	mask = game.add.graphics(0, 0);
+    	mask.beginFill(0xffffff);
+		mask.drawRect(game.world.centerX+190,game.world.centerY-220,1280,395);
+		game.global.playingPlayers.mask = mask;
     	let message = {
 			event : 'ASK PLAYING PLAYERS'
 		}
