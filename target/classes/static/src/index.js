@@ -17,6 +17,10 @@ window.onload = function() {
 		otherPlayers : [],
 		ui : new Object()
 	}
+	
+	game.global.myPlayer.roomcurrentplayers = 0;
+	game.global.myPlayer.roommaxplayers = 0;
+	game.global.myPlayer.gamemode = "";
 
 	// WEBSOCKET CONFIGURATOR
 	// Si estas buscando la IP no esta aquí, mira en connectionData.json
@@ -192,6 +196,11 @@ window.onload = function() {
 			break;
 		case 'SEND TO GAME' :
 			game.state.start('gameState');
+			break;
+		case 'NUM PLAYERS IN ROOM' :
+			game.global.myPlayer.roomcurrentplayers = msg.numplayers;
+			game.global.myPlayer.roommaxplayers = msg.maxplayers;
+			game.global.myPlayer.gamemode = msg.gamemode;
 			break;
 		case 'UPDATE PLAYING PLAYERS' :
 			let text = "";

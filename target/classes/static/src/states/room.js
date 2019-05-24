@@ -4,6 +4,8 @@ Spacewar.roomState = function(game) {
 	this.deletingText
 	
 	this.ship
+	this.roomplayers
+	this.roommode
 }
 
 function goToGame(){
@@ -101,7 +103,7 @@ Spacewar.roomState.prototype = {
         
         //Cargamos texto de modo de juego
         game.add.text(73, 275, "Modo de juego:", style)
-        roomplayers = game.add.text(323,275, game.global.myPlayer.gamemode ,style)
+        roommode = game.add.text(323,275, game.global.myPlayer.gamemode ,style)
         
         // chat input text
 		var style = { font: "24px Arial", fill: "#ffffff", align: "center", boundsAlignH: 'left' };
@@ -137,6 +139,9 @@ Spacewar.roomState.prototype = {
 			ship.x = -500;
 			ship.y = -500;
 		}
+		
+		roomplayers.setText(game.global.myPlayer.roomcurrentplayers + "/" + game.global.myPlayer.roommaxplayers);
+		roommode.setText(game.global.myPlayer.gamemode);
 
     	// Position currentinput correctly
 		if (currentinput.width > 350){

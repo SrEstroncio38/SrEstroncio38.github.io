@@ -58,6 +58,12 @@ public class GameRoom {
 				roomCreator = player;
 			}
 		}
+		ObjectNode msg = mapper.createObjectNode();
+		msg.put("event", "NUM PLAYERS IN ROOM");
+		msg.put("numplayers", numPlayers.get());
+		msg.put("maxplayers", MAXPLAYERS);
+		msg.put("gamemode", GameMode);
+		broadcast(msg.toString());
 	}
 
 	public Collection<Player> getPlayers() {
