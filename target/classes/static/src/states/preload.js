@@ -24,10 +24,14 @@ Spacewar.preloadState.prototype = {
         game.load.image('addroom','assets/buttons/Map_BTN.png');
         game.load.image('exit','assets/buttons/Exit_BTN.png');
         game.load.image('start','assets/buttons/Start_BTN.png');
+        game.load.image('rating','assets/buttons/Rating_BTN.png');
         game.load.image('backwards','assets/buttons/Backward_BTN.png');
         game.load.image('forward','assets/buttons/Forward_BTN.png');
         //game.load.image('+A','assets/buttons/Play_BTN_act.png');
         //game.load.image('-A','assets/buttons/Close_BTN_act.png');
+        
+        //Imagenes de rating
+        game.load.image('ratingtable','assets/images/rating_window2.png');        
         
         //Imagenes de name y createRoom
         game.load.image('background','assets/images/stars.png');

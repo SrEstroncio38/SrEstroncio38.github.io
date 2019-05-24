@@ -9,6 +9,11 @@ function goToLobby(){
 	game.state.start('lobbyState');
 }
 
+function goToRating(){
+	
+	game.state.start('ratingState');
+}
+
 Spacewar.menuState.prototype = {
 
 	init : function() {
@@ -47,6 +52,11 @@ Spacewar.menuState.prototype = {
     	var start = game.add.button(game.world.centerX + 300,game.world.centerY + 250, 'start', goToLobby , this, 2, 1, 0);
     	start.anchor.setTo(0.5,0.5);
     	start.scale.setTo(0.6, 0.6);
+    	
+    	// rating button
+    	var start = game.add.button(game.world.centerX + 500,game.world.centerY + 250, 'rating', goToRating , this, 2, 1, 0);
+    	start.anchor.setTo(0.5,0.5);
+    	start.scale.setTo(0.4, 0.4);
     	
     	// chat window
     	var chatwindow = game.add.sprite(0, game.world.centerY, 'global_chat');

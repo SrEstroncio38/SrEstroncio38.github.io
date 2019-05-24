@@ -198,6 +198,7 @@ window.onload = function() {
 	game.state.add('preloadState', Spacewar.preloadState)
 	game.state.add('menuState', Spacewar.menuState)
 	game.state.add('lobbyState', Spacewar.lobbyState)
+	game.state.add('ratingState', Spacewar.ratingState)	
 	game.state.add('createRoom', Spacewar.createRoom)
 	game.state.add('nameState', Spacewar.nameState)
 	game.state.add('matchmakingState', Spacewar.matchmakingState)
