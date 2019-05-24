@@ -52,7 +52,7 @@ Spacewar.menuState.prototype = {
     	// rating button
     	var start = game.add.button(game.world.centerX + 500,game.world.centerY + 250, 'rating', goToRating , this, 2, 1, 0);
     	start.anchor.setTo(0.5,0.5);
-    	start.scale.setTo(0.4, 0.4);
+    	start.scale.setTo(0.3, 0.3);
     	
     	// chat window
     	var chatwindow = game.add.sprite(0, game.world.centerY, 'global_chat');
