@@ -183,6 +183,9 @@ window.onload = function() {
 			game.global.otherPlayers[msg.id].health1.destroy()
 			delete game.global.otherPlayers[msg.id]
 			break;
+		case 'FORCE LEAVING ROOM' :
+			game.state.start('menuState');
+			break;
 		case 'UPDATE PLAYING PLAYERS' :
 			let text = "";
 			for (var player of msg.players) {

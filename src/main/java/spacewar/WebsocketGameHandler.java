@@ -56,7 +56,8 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 			ObjectNode msg = mapper.createObjectNode();
 			Player player = (Player) session.getAttributes().get(PLAYER_ATTRIBUTE);
 			
-			GameRoom currentRoom = null;
+			GameRoom room = null;
+			String roomname;
 
 			switch (node.get("event").asText()) {
 			//Mensaje que se activa cuando se entra en la aplicacion
@@ -73,8 +74,8 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				break;
 			//Mensaje que permite entrar a la sala pasada en "room", en caso de null entra en una default, GLOBAL
 			case "JOIN ROOM":
-				String roomname = node.path("room").asText();
-				GameRoom room = game.rooms.get(roomname);
+				roomname = node.path("room").asText();
+				room = game.rooms.get(roomname);
 				if (room != null) {
 					room.addPlayer(player);
 					game.addPlayingPlayer(player);
@@ -87,12 +88,25 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					player.getSession().sendMessage(new TextMessage(msg.toString()));
 				}
 				break;
+			case "LEAVE ROOM":
+				roomname = node.path("room").asText();
+				room = game.rooms.get(roomname);
+				game.removePlayingPlayer(player);
+				if (room.removePlayer(player)) {
+					for (Player cplayer : room.getPlayers()) {
+						game.removePlayingPlayer(cplayer);
+						msg.put("event", "FORCE LEAVING ROOM");
+						cplayer.getSession().sendMessage(new TextMessage(msg.toString()));
+					}
+					game.removeRoom(roomname);
+				}
+				break;
 			//Mensaje para actualizar la posicion del jugador
 			case "UPDATE MOVEMENT":
-				currentRoom = null;
+				room = null;
 				for (GameRoom croom : game.getRooms()) {
 					if (croom.getPlayers().contains(player)) {
-						currentRoom = croom;
+						room = croom;
 						break;
 					}
 				}
@@ -102,7 +116,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 						node.path("movement").get("rotRight").asBoolean());
 				if (node.path("bullet").asBoolean() && player.getDeath() == false) {
 					Projectile projectile = new Projectile(player, this.projectileId.incrementAndGet());
-					currentRoom.addProjectile(projectile.getId(), projectile);
+					room.addProjectile(projectile.getId(), projectile);
 					player.setAmmo(node.path("ammo").asInt());
 				}
 				break;
@@ -134,18 +148,18 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 			//Mensaje que imprime una cadena de texto nueva en el chat local (a todo el mundo en tu partida)
 			case "POST ROOM CHAT":
 				roomChatLock.lock();
-				currentRoom = null;
+				room = null;
 				for (GameRoom croom : game.getRooms()) {
 					if (croom.getPlayers().contains(player)) {
-						currentRoom = croom;
+						room = croom;
 						break;
 					}
 				}
-				if (currentRoom != null) {
+				if (room != null) {
 					msg.put("event", "PRINT ROOM CHAT");
 					msg.put("username", node.path("username").asText());
 					msg.put("text", node.path("text").asText());
-					currentRoom.broadcast(msg.toString());
+					room.broadcast(msg.toString());
 				}
 				roomChatLock.unlock();
 				break;

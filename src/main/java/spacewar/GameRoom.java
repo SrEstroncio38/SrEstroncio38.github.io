@@ -26,6 +26,8 @@ public class GameRoom {
 	private final int MAXPLAYERS;
 	private final String GameMode;
 	private AtomicInteger numPlayers = new AtomicInteger();
+	
+	private Player roomCreator;
 
 	public GameRoom(String GameModeRef) {
 		this.GameMode = GameModeRef;
@@ -45,10 +47,8 @@ public class GameRoom {
 		//Revisa que quepan los jugadores antes de agregarlo
 		if(numPlayers.get() < MAXPLAYERS) {
 			players.put(player.getSession().getId(), player);
-	
-			int count = numPlayers.getAndIncrement();
-			if (count == 0) {
-				this.startGameLoop();
+			if (numPlayers.getAndIncrement() < 1) {
+				roomCreator = player;
 			}
 		}
 	}
@@ -57,14 +57,18 @@ public class GameRoom {
 		return players.values();
 	}
 
-	public void removePlayer(Player player) {
+	public boolean removePlayer(Player player) {
 		if (players.remove(player.getSession().getId()) != null) {
 
 			int count = this.numPlayers.decrementAndGet();
 			if (count == 0) {
-				this.stopGameLoop();
+				return true;
+			}
+			if (player.getPlayerId() == roomCreator.getPlayerId()) {
+				return true;
 			}
 		}
+		return false;
 	}
 
 	public void addProjectile(int id, Projectile projectile) {

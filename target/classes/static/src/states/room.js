@@ -9,17 +9,13 @@ function goToGame(){
 }
 
 function exitGame(){
+	let message = {
+		event : 'LEAVE ROOM',
+		roomname : game.global.myPlayer.gameroom
+	}
 	game.global.myPlayer.gamemode = ""
 	game.global.myPlayer.gameroom = ""
-	//FALTA MANEJAR SALIR DE SALA CON ALGUN MENSAJE
-	//SI ADEMAS ERES EL LIDER ECHAS AL RESTO LES GUSTE O NO
-	//ESTO AUN NO SE PUEDE HACER PORQUE FALTAN COSAS QUE IMPLEMENTAR Y TENGO SUEÑO
-	
-	/*
-	 * Muchas gracias señor Fontela, pero si vas a hacer un comenatario de varias
-	 * lineas ponmelo asi por favor.
-	 * Y si es comentando una cosa que queda por hacer se le pone al principio 'TODO'.
-	 */
+	game.global.socket.send(JSON.stringify(message))
 	game.state.start('menuState')
 }
 
@@ -115,7 +111,7 @@ Spacewar.roomState.prototype = {
 		deletingText = false;
 		
 		// chat text
-		style = { font: "24px Arial", fill: "#aaaaaa", align: "left", wordWrap: true, wordWrapWidth: 400 };
+		style = { font: "24px Arial", fill: "#aaaaaa", align: "left", wordWrap: true, wordWrapWidth: 410 };
 		game.global.myPlayer.chattext = "Unido al chat de " + game.global.myPlayer.roomname + ".";
 		game.global.myPlayer.chat = game.add.text(840, game.world.centerY + 215, game.global.myPlayer.chattext, style);
 		game.global.myPlayer.chat.anchor.set(0,1);
@@ -123,7 +119,6 @@ Spacewar.roomState.prototype = {
 		mask.beginFill(0xffffff);
 		mask.drawRect(0,40,1280,640);
 		game.global.myPlayer.chat.mask = mask;
-        
         
 	},
 
