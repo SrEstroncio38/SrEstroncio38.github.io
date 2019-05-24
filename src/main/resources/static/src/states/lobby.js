@@ -1,5 +1,5 @@
 Spacewar.lobbyState = function(game) {
-
+	
 }
 
 //Funcion para entrarEnMatchMaking
@@ -82,8 +82,7 @@ Spacewar.lobbyState.prototype = {
     },
 
     update : function() {
-
-
+    	
     },
 
 

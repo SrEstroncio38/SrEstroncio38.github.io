@@ -1,5 +1,7 @@
 Spacewar.roomState = function(game) {
-
+	this.currentinput
+	this.currentinputtext
+	this.deletingText
 }
 
 function goToGame(){
@@ -12,6 +14,12 @@ function exitGame(){
 	//FALTA MANEJAR SALIR DE SALA CON ALGUN MENSAJE
 	//SI ADEMAS ERES EL LIDER ECHAS AL RESTO LES GUSTE O NO
 	//ESTO AUN NO SE PUEDE HACER PORQUE FALTAN COSAS QUE IMPLEMENTAR Y TENGO SUEÑO
+	
+	/*
+	 * Muchas gracias señor Fontela, pero si vas a hacer un comenatario de varias
+	 * lineas ponmelo asi por favor.
+	 * Y si es comentando una cosa que queda por hacer se le pone al principio 'TODO'.
+	 */
 	game.state.start('menuState')
 }
 
@@ -24,6 +32,10 @@ Spacewar.roomState.prototype = {
 	},
 
 	preload : function() {
+		
+		this.enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+		this.backKey = game.input.keyboard.addKey(Phaser.Keyboard.BACKSPACE);
+		
 		if (game.global.DEBUG_MODE) {
 			console.log("[DEBUG] Joining room: '" + roomname + "'");
 		}
@@ -89,10 +101,63 @@ Spacewar.roomState.prototype = {
         game.add.text(73, 275, "Modo de juego:", style)
         roomplayers = game.add.text(323,275, game.global.myPlayer.gamemode ,style)
         
+        // chat input text
+		var style = { font: "24px Arial", fill: "#ffffff", align: "center", boundsAlignH: 'left' };
+		currentinputtext = "";
+		currentinput = game.add.text(44, game.world.centerY + 180, currentinputtext, style);
+		currentinput.anchor.set(0,0.5);
+		let mask = game.add.graphics(0, 0);
+		mask.beginFill(0xffffff);
+		mask.drawRect(44,0,566,640);
+		currentinput.mask = mask;
+		currentinput.setTextBounds(0,0,566,640);
+		
+		deletingText = false;
+		
+		// chat text
+		style = { font: "24px Arial", fill: "#aaaaaa", align: "left", wordWrap: true, wordWrapWidth: 600 };
+		game.global.myPlayer.chattext = "Unido al chat de " + game.global.myPlayer.roomname + ".";
+		game.global.myPlayer.chat = game.add.text(32, game.world.centerY + 140, game.global.myPlayer.chattext, style);
+		game.global.myPlayer.chat.anchor.set(0,1);
+		mask = game.add.graphics(0, 0);
+		mask.beginFill(0xffffff);
+		mask.drawRect(0,110,1280,640);
+		game.global.myPlayer.chat.mask = mask;
+        
         
 	},
 
 	update : function() {
-		//game.state.start('gameState')
+
+    	// Position currentinput correctly
+		if (currentinput.width > 566){
+			currentinput.boundsAlignH = 'right';
+		} else {
+			currentinput.boundsAlignH = 'left';
+		}
+		
+		if (this.backKey.isDown){
+			if (!deletingText) {
+				currentinputtext = currentinputtext.substring(0,currentinputtext.length-1);
+				deletingText = true;
+			}
+		} else {
+			game.input.keyboard.addCallbacks(this, null, null, function (char) {
+				if (currentinputtext.length < 256)
+					currentinputtext += char;
+			});
+			deletingText = false;
+		}
+		currentinput.text = currentinputtext;
+
+		if (this.enterKey.isDown && currentinputtext.length > 0){
+			let message = {
+				event : 'POST ROOM CHAT',
+				username: game.global.myPlayer.username,
+				text: currentinputtext
+			}
+			game.global.socket.send(JSON.stringify(message))
+			currentinputtext = "";
+		}
 	}
 }

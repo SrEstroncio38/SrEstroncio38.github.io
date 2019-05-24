@@ -23,6 +23,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 	
 	private Lock sessionLock = new ReentrantLock();
 	private Lock chatLock = new ReentrantLock();
+	private Lock roomChatLock = new ReentrantLock();
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession unprotectedSession) throws Exception {
@@ -54,6 +55,8 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 			JsonNode node = mapper.readTree(message.getPayload());
 			ObjectNode msg = mapper.createObjectNode();
 			Player player = (Player) session.getAttributes().get(PLAYER_ATTRIBUTE);
+			
+			GameRoom currentRoom = null;
 
 			switch (node.get("event").asText()) {
 			//Mensaje que se activa cuando se entra en la aplicacion
@@ -86,7 +89,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				break;
 			//Mensaje para actualizar la posicion del jugador
 			case "UPDATE MOVEMENT":
-				GameRoom currentRoom = null;
+				currentRoom = null;
 				for (GameRoom croom : game.getRooms()) {
 					if (croom.getPlayers().contains(player)) {
 						currentRoom = croom;
@@ -127,6 +130,24 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				msg.put("text", node.path("text").asText());
 				game.broadcast(msg.toString());
 				chatLock.unlock();
+				break;
+			//Mensaje que imprime una cadena de texto nueva en el chat local (a todo el mundo en tu partida)
+			case "POST ROOM CHAT":
+				roomChatLock.lock();
+				currentRoom = null;
+				for (GameRoom croom : game.getRooms()) {
+					if (croom.getPlayers().contains(player)) {
+						currentRoom = croom;
+						break;
+					}
+				}
+				if (currentRoom != null) {
+					msg.put("event", "PRINT ROOM CHAT");
+					msg.put("username", node.path("username").asText());
+					msg.put("text", node.path("text").asText());
+					currentRoom.broadcast(msg.toString());
+				}
+				roomChatLock.unlock();
 				break;
 			default:
 				break;

@@ -34,6 +34,9 @@ window.onload = function() {
 	game.global.socket.onmessage = (message) => {
 		var msg = JSON.parse(message.data)
 		
+		let currentpos
+		let endingpos
+		
 		switch (msg.event) {
 		case 'JOIN':
 			if (game.global.DEBUG_MODE) {
@@ -188,12 +191,20 @@ window.onload = function() {
 			game.global.playingPlayers.setText(text);
 			break;
 		case 'PRINT GLOBAL CHAT' :
-			let currentpos = game.global.chat.text.length;
-			let endingpos = currentpos + msg.username.length + 3;
+			currentpos = game.global.chat.text.length;
+			endingpos = currentpos + msg.username.length + 3;
 			game.global.chat.text += "\n[" + msg.username + "]: " + msg.text;
 			game.global.chat.element.setText(game.global.chat.text);
 			game.global.chat.element.addColor('#ffff44', currentpos);
 			game.global.chat.element.addColor('#ffffff', endingpos);
+			break;
+		case 'PRINT ROOM CHAT' :
+			currentpos = game.global.myPlayer.chattext.length;
+			endingpos = currentpos + msg.username.length + 3;
+			game.global.myPlayer.chattext += "\n[" + msg.username + "]: " + msg.text;
+			game.global.myPlayer.chat.setText(game.global.myPlayer.chattext);
+			game.global.myPlayer.chat.addColor('#ffff44', currentpos);
+			game.global.myPlayer.chat.addColor('#ffffff', endingpos);
 			break;
 		default :
 			console.dir(msg)
