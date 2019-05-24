@@ -2,10 +2,16 @@ Spacewar.roomState = function(game) {
 	this.currentinput
 	this.currentinputtext
 	this.deletingText
+	
+	this.ship
 }
 
 function goToGame(){
-	game.state.start('gameState')
+	let message = {
+		event : 'START GAME',
+		room : game.global.myPlayer.roomname
+	}
+	game.global.socket.send(JSON.stringify(message))
 }
 
 function exitGame(){
@@ -71,9 +77,9 @@ Spacewar.roomState.prototype = {
         ship.anchor.setTo(0.5,0.5);
         
         //Cargamos boton de volver al menu
-        ship = game.add.button(135, 560, 'exit', exitGame, this, 2, 1, 0);
-        ship.scale.setTo(0.5, 0.5);
-        ship.anchor.setTo(0.5,0.5);
+        exit = game.add.button(135, 560, 'exit', exitGame, this, 2, 1, 0);
+        exit.scale.setTo(0.5, 0.5);
+        exit.anchor.setTo(0.5,0.5);
         
         //Cargamos fondo del chat
         chatroombg = game.add.sprite(800,15, 'chatroombg' )
@@ -123,6 +129,14 @@ Spacewar.roomState.prototype = {
 	},
 
 	update : function() {
+		
+		if (game.global.myPlayer.isRoomOwner) {
+			ship.x = 640;
+			ship.y = 560;
+		} else {
+			ship.x = -500;
+			ship.y = -500;
+		}
 
     	// Position currentinput correctly
 		if (currentinput.width > 350){

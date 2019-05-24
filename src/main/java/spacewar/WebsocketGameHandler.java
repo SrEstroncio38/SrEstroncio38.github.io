@@ -82,10 +82,12 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					game.addPlayingPlayer(player);
 					msg.put("event", "NEW ROOM");
 					msg.put("room", roomname);
+					msg.put("boss", room.isRoomOwner(player));
 					player.getSession().sendMessage(new TextMessage(msg.toString()));
 				} else {
 					msg.put("event", "NEW ROOM");
 					msg.put("room", "GLOBAL");
+					msg.put("boss", false);
 					player.getSession().sendMessage(new TextMessage(msg.toString()));
 				}
 				break;
@@ -139,6 +141,17 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				/*msg.put("event", "GO TO ROOM");
 				msg.put("roomname", node.path("roomname").asText());
 				player.getSession().sendMessage(new TextMessage(msg.toString()));*/
+				break;
+			case "START GAME":
+				roomname = node.path("room").asText();
+				leaveRoomLock.lock();
+				room = game.rooms.get(roomname);
+				if (room.getPlayers().size() > 1) {
+					room.startGameLoop();
+					msg.put("event", "SEND TO GAME");
+					room.broadcast(msg.toString());
+				}
+				leaveRoomLock.unlock();
 				break;
 			//Mensaje que imprime una cadena de texto nueva en el chat global (a todo el mundo conectado)
 			case "POST GLOBAL CHAT":

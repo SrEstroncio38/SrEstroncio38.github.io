@@ -9,6 +9,7 @@ window.onload = function() {
 		socket : null,
 		chat : new Object,
 		playingPlayers : null,
+		rooms : [],
 		projectiles : [],
 		recharges : [],
 		rechargesIdx : 0,
@@ -63,6 +64,7 @@ window.onload = function() {
 			game.global.myPlayer.room = {
 					name : msg.room
 			}
+			game.global.myPlayer.isRoomOwner = msg.boss;
 			break
 		case 'GAME STATE UPDATE' :
 			if (game.global.DEBUG_MODE) {
@@ -187,6 +189,9 @@ window.onload = function() {
 			break;
 		case 'FORCE LEAVING ROOM' :
 			game.state.start('menuState');
+			break;
+		case 'SEND TO GAME' :
+			game.state.start('gameState');
 			break;
 		case 'UPDATE PLAYING PLAYERS' :
 			let text = "";

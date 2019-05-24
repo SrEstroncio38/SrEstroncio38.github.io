@@ -42,6 +42,13 @@ public class GameRoom {
 				MAXPLAYERS = 4;
 		}
 	}
+	
+	public boolean isRoomOwner(Player player) {
+		if (roomCreator.getPlayerId() == player.getPlayerId()) {
+			return true;
+		}
+		return false;
+	}
 
 	public void addPlayer(Player player) {
 		//Revisa que quepan los jugadores antes de agregarlo
