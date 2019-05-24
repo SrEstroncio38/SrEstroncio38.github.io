@@ -11,10 +11,10 @@ function goToGame(){
 function exitGame(){
 	let message = {
 		event : 'LEAVE ROOM',
-		roomname : game.global.myPlayer.gameroom
+		room : game.global.myPlayer.roomname
 	}
 	game.global.myPlayer.gamemode = ""
-	game.global.myPlayer.gameroom = ""
+	game.global.myPlayer.roomname = ""
 	game.global.socket.send(JSON.stringify(message))
 	game.state.start('menuState')
 }

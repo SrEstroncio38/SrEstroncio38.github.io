@@ -24,6 +24,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 	private Lock sessionLock = new ReentrantLock();
 	private Lock chatLock = new ReentrantLock();
 	private Lock roomChatLock = new ReentrantLock();
+	private Lock leaveRoomLock = new ReentrantLock();
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession unprotectedSession) throws Exception {
@@ -90,7 +91,9 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				break;
 			case "LEAVE ROOM":
 				roomname = node.path("room").asText();
+				leaveRoomLock.lock();
 				room = game.rooms.get(roomname);
+				if (room == null) break;
 				game.removePlayingPlayer(player);
 				if (room.removePlayer(player)) {
 					for (Player cplayer : room.getPlayers()) {
@@ -100,6 +103,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					}
 					game.removeRoom(roomname);
 				}
+				leaveRoomLock.unlock();
 				break;
 			//Mensaje para actualizar la posicion del jugador
 			case "UPDATE MOVEMENT":
