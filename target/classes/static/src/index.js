@@ -8,6 +8,7 @@ window.onload = function() {
 		DEBUG_MODE : connectionData.debug,
 		socket : null,
 		chat : new Object,
+		playingPlayers : null,
 		projectiles : [],
 		myPlayer : new Object(),
 		otherPlayers : [],
@@ -178,6 +179,13 @@ window.onload = function() {
 			game.global.otherPlayers[msg.id].health2.destroy()
 			game.global.otherPlayers[msg.id].health1.destroy()
 			delete game.global.otherPlayers[msg.id]
+			break;
+		case 'UPDATE PLAYING PLAYERS' :
+			let text = "";
+			for (var player of msg.players) {
+				text += player.username + "\n";
+			}
+			game.global.playingPlayers.setText(text);
 			break;
 		case 'PRINT GLOBAL CHAT' :
 			let currentpos = game.global.chat.text.length;
