@@ -104,24 +104,24 @@ Spacewar.roomState.prototype = {
         // chat input text
 		var style = { font: "24px Arial", fill: "#ffffff", align: "center", boundsAlignH: 'left' };
 		currentinputtext = "";
-		currentinput = game.add.text(44, game.world.centerY + 180, currentinputtext, style);
+		currentinput = game.add.text(856, 570, currentinputtext, style);
 		currentinput.anchor.set(0,0.5);
 		let mask = game.add.graphics(0, 0);
 		mask.beginFill(0xffffff);
-		mask.drawRect(44,0,566,640);
+		mask.drawRect(856,0,350,640);
 		currentinput.mask = mask;
-		currentinput.setTextBounds(0,0,566,640);
+		currentinput.setTextBounds(0,0,350,640);
 		
 		deletingText = false;
 		
 		// chat text
-		style = { font: "24px Arial", fill: "#aaaaaa", align: "left", wordWrap: true, wordWrapWidth: 600 };
+		style = { font: "24px Arial", fill: "#aaaaaa", align: "left", wordWrap: true, wordWrapWidth: 400 };
 		game.global.myPlayer.chattext = "Unido al chat de " + game.global.myPlayer.roomname + ".";
-		game.global.myPlayer.chat = game.add.text(32, game.world.centerY + 140, game.global.myPlayer.chattext, style);
+		game.global.myPlayer.chat = game.add.text(840, game.world.centerY + 215, game.global.myPlayer.chattext, style);
 		game.global.myPlayer.chat.anchor.set(0,1);
 		mask = game.add.graphics(0, 0);
 		mask.beginFill(0xffffff);
-		mask.drawRect(0,110,1280,640);
+		mask.drawRect(0,40,1280,640);
 		game.global.myPlayer.chat.mask = mask;
         
         
@@ -130,7 +130,7 @@ Spacewar.roomState.prototype = {
 	update : function() {
 
     	// Position currentinput correctly
-		if (currentinput.width > 566){
+		if (currentinput.width > 350){
 			currentinput.boundsAlignH = 'right';
 		} else {
 			currentinput.boundsAlignH = 'left';
