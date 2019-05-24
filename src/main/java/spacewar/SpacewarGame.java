@@ -8,6 +8,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.web.socket.TextMessage;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class SpacewarGame {
 
@@ -20,11 +22,14 @@ public class SpacewarGame {
 
 	ObjectMapper mapper = new ObjectMapper();
 
-	// GLOBAL GAME ROOM
 	private Map<String, Player> players = new ConcurrentHashMap<>();
 	private AtomicInteger numPlayers = new AtomicInteger();
+	
 	private AtomicInteger numRooms = new AtomicInteger();
 	public Map<String,GameRoom> rooms = new ConcurrentHashMap<>();
+	
+	private Map<String, Player> playingPlayers = new ConcurrentHashMap<>();
+	private AtomicInteger numPlayingPlayers = new AtomicInteger();
 	
 	private SpacewarGame() {
 		this.numRooms.getAndSet(-1);
@@ -62,12 +67,49 @@ public class SpacewarGame {
 
 	public void removePlayer(Player player) {
 		players.remove(player.getSession().getId());
+		removePlayingPlayer(player);
 		
 		for (GameRoom room : getRooms()) {
 			room.removePlayer(player);
 		}
 
 		this.numPlayers.decrementAndGet();
+	}
+	
+	public void addPlayingPlayer(Player player) {
+		playingPlayers.put(player.getSession().getId(), player);
+		numPlayingPlayers.getAndIncrement();
+		notifyPlayingPlayers();
+	}
+
+	public void removePlayingPlayer(Player player) {
+		playingPlayers.remove(player.getSession().getId());
+		this.numPlayingPlayers.decrementAndGet();
+		notifyPlayingPlayers();
+	}
+
+	public Collection<Player> getPlayingPlayers() {
+		return playingPlayers.values();
+	}
+	
+	public void notifyPlayingPlayers() {
+		ObjectNode json = mapper.createObjectNode();
+		ArrayNode arrayNodePlayers = mapper.createArrayNode();
+		
+		try {
+			for (Player player : getPlayingPlayers()) {
+				ObjectNode jsonPlayer = mapper.createObjectNode();
+				jsonPlayer.put("id", player.getPlayerId());
+				jsonPlayer.put("username", player.getUsername());
+				arrayNodePlayers.addPOJO(jsonPlayer);
+			}
+			json.put("event", "UPDATE PLAYING PLAYERS");
+			json.putPOJO("players", arrayNodePlayers);
+
+			this.broadcast(json.toString());
+		} catch (Throwable ex) {
+
+		}
 	}
 
 	public void broadcast(String message) {

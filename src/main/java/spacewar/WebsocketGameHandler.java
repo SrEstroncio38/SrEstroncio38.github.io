@@ -65,12 +65,16 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				msg.put("ammo", player.getAmmo());
 				player.getSession().sendMessage(new TextMessage(msg.toString()));
 				break;
+			case "ASK PLAYING PLAYERS":
+				game.notifyPlayingPlayers();
+				break;
 			//Mensaje que permite entrar a la sala pasada en "room", en caso de null entra en una default, GLOBAL
 			case "JOIN ROOM":
 				String roomname = node.path("room").asText();
 				GameRoom room = game.rooms.get(roomname);
 				if (room != null) {
 					room.addPlayer(player);
+					game.addPlayingPlayer(player);
 					msg.put("event", "NEW ROOM");
 					msg.put("room", roomname);
 					player.getSession().sendMessage(new TextMessage(msg.toString()));
