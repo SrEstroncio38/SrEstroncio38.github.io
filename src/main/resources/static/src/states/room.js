@@ -6,6 +6,15 @@ function goToGame(){
 	game.state.start('gameState')
 }
 
+function exitGame(){
+	game.global.myPlayer.gamemode = ""
+	game.global.myPlayer.gameroom = ""
+	//FALTA MANEJAR SALIR DE SALA CON ALGUN MENSAJE
+	//SI ADEMAS ERES EL LIDER ECHAS AL RESTO LES GUSTE O NO
+	//ESTO AUN NO SE PUEDE HACER PORQUE FALTAN COSAS QUE IMPLEMENTAR Y TENGO SUEÑO
+	game.state.start('menuState')
+}
+
 Spacewar.roomState.prototype = {
 
 	init : function() {
@@ -53,6 +62,11 @@ Spacewar.roomState.prototype = {
         ship.scale.setTo(0.5, 0.5);
         ship.anchor.setTo(0.5,0.5);
         
+        //Cargamos boton de volver al menu
+        ship = game.add.button(135, 560, 'exit', exitGame, this, 2, 1, 0);
+        ship.scale.setTo(0.5, 0.5);
+        ship.anchor.setTo(0.5,0.5);
+        
         //Cargamos fondo del chat
         chatroombg = game.add.sprite(800,15, 'chatroombg' )
         chatroombg.scale.setTo(1.25,1)
@@ -73,7 +87,7 @@ Spacewar.roomState.prototype = {
         
         //Cargamos texto de modo de juego
         game.add.text(73, 275, "Modo de juego:", style)
-        roomplayers = game.add.text(323,275, "XXXXX",style)
+        roomplayers = game.add.text(323,275, game.global.myPlayer.gamemode ,style)
         
         
 	},

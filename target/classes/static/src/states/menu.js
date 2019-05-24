@@ -39,8 +39,12 @@ Spacewar.menuState.prototype = {
 		var bg = game.add.sprite(game.world.centerX, game.world.centerY, 'background');
     	bg.anchor.setTo(0.5,0.5);
     	
+    	var pcon = game.add.sprite(game.world.centerX+290, game.world.centerY-20, 'playersconexion');
+    	pcon.scale.setTo(0.65,0.6)
+    	pcon.anchor.setTo(0.5,0.5);
+    	
     	// play button
-    	var start = game.add.button(game.world.centerX + 300,game.world.centerY - 50, 'start', goToLobby , this, 2, 1, 0);
+    	var start = game.add.button(game.world.centerX + 300,game.world.centerY + 250, 'start', goToLobby , this, 2, 1, 0);
     	start.anchor.setTo(0.5,0.5);
     	start.scale.setTo(0.6, 0.6);
     	
