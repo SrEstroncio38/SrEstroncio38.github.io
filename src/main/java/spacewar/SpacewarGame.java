@@ -49,11 +49,13 @@ public class SpacewarGame {
 		}
 	}
 	
-	public void addRoom(String name, String gameMode) {
+	public boolean addRoom(String name, String gameMode) {
 		if(rooms.putIfAbsent(name, new GameRoom(name, gameMode)) == null) {
 			numRooms.getAndIncrement();
 			notifyRoomList();
+			return true;
 		}
+		return false;
 		
 	}
 	

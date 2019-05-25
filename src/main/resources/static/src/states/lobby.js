@@ -18,9 +18,18 @@ function returnPage() {
 	currentpage -= 1;
 }
 
+function joinRoom(item) {
+	if (item.variable != "") {
+		let message = {
+				event : 'JOIN ROOM',
+				room: item.variable
+			}
+		game.global.socket.send(JSON.stringify(message))
+	}
+}
+
 //Funcion que te entra en una sala
 function CreateRoom(){
-	console.log("Hola");
 	game.state.start('createRoom');
 }
 
@@ -71,19 +80,23 @@ Spacewar.lobbyState.prototype = {
         
         //Añadimos 4 botones de Room
         var style = { font: "20px Arial", fill: "#ffffff", align: "center" };
-        lobby.addChild(this.room[0] = game.add.button(-160,-130, 'roombg', null, this, 2, 1, 0));
+        lobby.addChild(this.room[0] = game.add.button(-160,-130, 'roombg', joinRoom, this, 2, 1, 0));
+        this.room[0].variable = "";
         this.room[0].anchor.setTo(0.5, 0.5);
         this.room[0].addChild(this.roomtext[0] = game.add.text(0, 0, "", style));
         this.roomtext[0].anchor.set(0.5,0.5);
-        lobby.addChild(this.room[1] = game.add.button(-160,-30, 'roombg', null, this, 2, 1, 0));
+        lobby.addChild(this.room[1] = game.add.button(-160,-30, 'roombg', joinRoom, this, 2, 1, 0));
+        this.room[1].variable = "";
         this.room[1].anchor.setTo(0.5, 0.5);
         this.room[1].addChild(this.roomtext[1] = game.add.text(0, 0, "", style));
         this.roomtext[1].anchor.set(0.5,0.5);
-        lobby.addChild(this.room[2] = game.add.button(-160,70, 'roombg', null, this, 2, 1, 0));
+        lobby.addChild(this.room[2] = game.add.button(-160,70, 'roombg', joinRoom, this, 2, 1, 0));
+        this.room[2].variable = "";
         this.room[2].anchor.setTo(0.5, 0.5);
         this.room[2].addChild(this.roomtext[2] = game.add.text(0, 0, "", style));
         this.roomtext[2].anchor.set(0.5,0.5);
-        lobby.addChild(this.room[3] = game.add.button(-160,170, 'roombg', null, this, 2, 1, 0));
+        lobby.addChild(this.room[3] = game.add.button(-160,170, 'roombg', joinRoom, this, 2, 1, 0));
+        this.room[3].variable = "";
         this.room[3].anchor.setTo(0.5, 0.5);
         this.room[3].addChild(this.roomtext[3] = game.add.text(0, 0, "", style));
         this.roomtext[3].anchor.set(0.5,0.5);
@@ -118,9 +131,11 @@ Spacewar.lobbyState.prototype = {
 			if (numberRooms > index) {
 				this.room[i].x = -160;
 				this.roomtext[i].setText(game.global.rooms[index]);
+				this.room[i].variable = game.global.rooms[index];
 			} else {
 				this.room[i].x = -5000;
 				this.roomtext[i].setText("");
+				this.room[i].variable = "";
 			}
     	}
     	

@@ -10,6 +10,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.springframework.web.socket.TextMessage;
 
@@ -23,13 +25,16 @@ public class GameRoom {
 	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	
 	private Map<String, Player> players = new ConcurrentHashMap<>();
-	private Map<Integer, Projectile> projectiles = new ConcurrentHashMap<>();
+	private AtomicInteger numPlayers = new AtomicInteger();
 	private final int MAXPLAYERS;
+	private Lock playersLock = new ReentrantLock();
+	
+	private Map<Integer, Projectile> projectiles = new ConcurrentHashMap<>();
+	
 	private final String roomName;
 	private final String GameMode;
-	private AtomicInteger numPlayers = new AtomicInteger();
-	
 	private Player roomCreator;
+	
 	private AtomicBoolean isActive = new AtomicBoolean(false);
 
 	public GameRoom(String roomName, String GameModeRef) {
@@ -63,20 +68,25 @@ public class GameRoom {
 		return false;
 	}
 
-	public void addPlayer(Player player) {
+	public boolean addPlayer(Player player) {
+		boolean result = false;
 		//Revisa que quepan los jugadores antes de agregarlo
+		playersLock.lock();
 		if(numPlayers.get() < MAXPLAYERS) {
 			players.put(player.getSession().getId(), player);
 			if (numPlayers.getAndIncrement() < 1) {
 				roomCreator = player;
 			}
+			result = true;
 		}
+		playersLock.unlock();
 		ObjectNode msg = mapper.createObjectNode();
 		msg.put("event", "NUM PLAYERS IN ROOM");
 		msg.put("numplayers", numPlayers.get());
 		msg.put("maxplayers", MAXPLAYERS);
 		msg.put("gamemode", GameMode);
 		broadcast(msg.toString());
+		return result;
 	}
 
 	public Collection<Player> getPlayers() {
@@ -84,17 +94,26 @@ public class GameRoom {
 	}
 
 	public boolean removePlayer(Player player) {
+		boolean result = false;
+		playersLock.lock();
 		int count = this.numPlayers.get();
 		if(players.remove(player.getSession().getId()) != null) {
 			count = this.numPlayers.decrementAndGet();
 		}
+		playersLock.unlock();
 		if (count <= 0) {
-			return true;
+			result = true;
 		}
 		if (player.getPlayerId() == roomCreator.getPlayerId()) {
-			return true;
+			result = true;
 		}
-		return false;
+		ObjectNode msg = mapper.createObjectNode();
+		msg.put("event", "NUM PLAYERS IN ROOM");
+		msg.put("numplayers", numPlayers.get());
+		msg.put("maxplayers", MAXPLAYERS);
+		msg.put("gamemode", GameMode);
+		broadcast(msg.toString());
+		return result;
 	}
 
 	public void addProjectile(int id, Projectile projectile) {

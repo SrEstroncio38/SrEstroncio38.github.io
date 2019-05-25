@@ -44,12 +44,13 @@ window.onload = function() {
 		let currentpos
 		let endingpos
 		
+		if (game.global.DEBUG_MODE) {
+			console.log('[DEBUG] ' + msg.event + ' message recieved')
+			console.dir(msg)
+		}
+		
 		switch (msg.event) {
 		case 'JOIN':
-			if (game.global.DEBUG_MODE) {
-				console.log('[DEBUG] JOIN message recieved')
-				console.dir(msg)
-			}
 			game.global.myPlayer.id = msg.id
 			game.global.myPlayer.shipType = msg.shipType
 			game.global.myPlayer.username = msg.username
@@ -61,21 +62,12 @@ window.onload = function() {
 			}
 			break
 		case 'NEW ROOM' :
-			if (game.global.DEBUG_MODE) {
-				console.log('[DEBUG] NEW ROOM message recieved')
-				console.dir(msg)
-			}
 			game.global.myPlayer.room = {
 					name : msg.room
 			}
 			game.global.myPlayer.isRoomOwner = msg.boss;
 			break
 		case 'GAME STATE UPDATE' :
-			if (game.global.DEBUG_MODE) {
-				console.log('[DEBUG] GAME STATE UPDATE message recieved')
-				console.dir(msg)
-			}
-			
 			if (typeof game.global.myPlayer.image !== 'undefined') {
 				for (var player of msg.players) {
 					if (game.global.myPlayer.id == player.id) {
@@ -180,11 +172,12 @@ window.onload = function() {
 				}
 			}
 			break
+		case 'SEND TO ROOM' :
+			game.global.myPlayer.roomname = msg.room;
+			game.global.myPlayer.isRoomOwner = msg.boss;
+			game.state.start('roomState');
+			break;
 		case 'REMOVE PLAYER' :
-			if (game.global.DEBUG_MODE) {
-				console.log('[DEBUG] REMOVE PLAYER message recieved')
-				console.dir(msg.players)
-			}
 			if (typeof game.global.otherPlayers[msg.id] != 'undefined'){
 				game.global.otherPlayers[msg.id].image.destroy()
 				game.global.otherPlayers[msg.id].userNLabel.destroy()
@@ -194,6 +187,7 @@ window.onload = function() {
 			}
 			break;
 		case 'FORCE LEAVING ROOM' :
+			game.world.setBounds(0, 0, 1280, 640);
 			game.state.start('menuState');
 			break;
 		case 'SEND TO GAME' :
@@ -216,7 +210,6 @@ window.onload = function() {
 			for (var room of msg.rooms) {
 				game.global.rooms[room.index] = room.name;
 			}
-			console.log(game.global.rooms);
 			break;
 		case 'PRINT GLOBAL CHAT' :
 			currentpos = game.global.chat.text.length;

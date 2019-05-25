@@ -82,17 +82,13 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				roomname = node.path("room").asText();
 				room = game.rooms.get(roomname);
 				if (room != null) {
-					room.addPlayer(player);
-					game.addPlayingPlayer(player);
-					msg.put("event", "NEW ROOM");
-					msg.put("room", roomname);
-					msg.put("boss", room.isRoomOwner(player));
-					player.getSession().sendMessage(new TextMessage(msg.toString()));
-				} else {
-					msg.put("event", "NEW ROOM");
-					msg.put("room", "GLOBAL");
-					msg.put("boss", false);
-					player.getSession().sendMessage(new TextMessage(msg.toString()));
+					if (room.addPlayer(player)) {
+						game.addPlayingPlayer(player);
+						msg.put("event", "SEND TO ROOM");
+						msg.put("room", roomname);
+						msg.put("boss", room.isRoomOwner(player));
+						player.getSession().sendMessage(new TextMessage(msg.toString()));
+					}
 				}
 				break;
 			case "LEAVE ROOM":
@@ -143,12 +139,23 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				break;
 			//Mensaje que se llama cuando se crea una nueva sala para recibir su nombre
 			case "CREATE ROOM":
+				roomname = node.path("roomname").asText();
+				boolean isRoomCreated;
 				roomListLock.lock();
-				game.addRoom(node.path("roomname").asText(),node.path("gamemode").asText());
+				isRoomCreated = game.addRoom(roomname,node.path("gamemode").asText());
 				roomListLock.unlock();
-				/*msg.put("event", "GO TO ROOM");
-				msg.put("roomname", node.path("roomname").asText());
-				player.getSession().sendMessage(new TextMessage(msg.toString()));*/
+				if (isRoomCreated) {
+					room = game.rooms.get(roomname);
+					if (room != null) {
+						if (room.addPlayer(player)) {
+							game.addPlayingPlayer(player);
+							msg.put("event", "SEND TO ROOM");
+							msg.put("room", roomname);
+							msg.put("boss", room.isRoomOwner(player));
+							player.getSession().sendMessage(new TextMessage(msg.toString()));
+						}
+					}
+				}
 				break;
 			case "START GAME":
 				roomname = node.path("room").asText();

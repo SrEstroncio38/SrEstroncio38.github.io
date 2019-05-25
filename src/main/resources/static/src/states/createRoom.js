@@ -98,29 +98,11 @@ Spacewar.createRoom.prototype = {
 
 		if (this.enterKey.isDown && game.global.myPlayer.gamemode != ""){
 			let message = {
-					event : 'CREATE ROOM',
-					roomname: game.global.myPlayer.roomname,
-					gamemode: game.global.myPlayer.gamemode
-				}
-				game.global.socket.send(JSON.stringify(message))
-		
-				
-		/*game.global.socket.onmessage = (message) => {
-		var msg = JSON.parse(message.data)
-		switch (msg.event) {
-		case 'GO TO ROOM':
-			if (game.global.DEBUG_MODE) {
-				console.log('[DEBUG] GO TO ROOM message recieved')
-				console.dir(msg)
+				event : 'CREATE ROOM',
+				roomname: game.global.myPlayer.roomname,
+				gamemode: game.global.myPlayer.gamemode
 			}
-			game.global.myPlayer.roomname = msg.roomname
-			game.state.start('roomState')
-			break;
-		default:
-			break;
-		}
-		}*/
-				game.state.start('roomState');
+			game.global.socket.send(JSON.stringify(message))
 		}
 	}
 }
