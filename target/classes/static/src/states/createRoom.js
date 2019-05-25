@@ -16,6 +16,15 @@ function exitCreateRoom(){
 	game.state.start('lobbyState')
 }
 
+function reCreateRoom(){
+	let message = {
+			event : 'CREATE ROOM',
+			roomname: game.global.myPlayer.roomname,
+			gamemode: game.global.myPlayer.gamemode
+		}
+		game.global.socket.send(JSON.stringify(message))
+}
+
 Spacewar.createRoom.prototype = {
 
 	init : function() {
@@ -48,9 +57,16 @@ Spacewar.createRoom.prototype = {
         textbox.anchor.setTo(0.5,0.5);
         
         //Cargamos boton de volver al menu
-        exit = game.add.button(game.world.centerX, game.world.centerY + 70, 'exit', exitCreateRoom, this, 2, 1, 0);
+        exit = game.add.button(game.world.centerX-50, game.world.centerY + 70, 'exit', exitCreateRoom, this, 2, 1, 0);
         exit.scale.setTo(0.3, 0.3);
         exit.anchor.setTo(0.5,0.5);
+        
+        //Cargamos boton de create room
+        create = game.add.button(game.world.centerX+60, game.world.centerY + 70, 'ship', reCreateRoom, this, 2, 1, 0);
+        create.scale.setTo(0.3, 0.3);
+        create.anchor.setTo(0.5,0.5);
+        create.visible = false;
+        create.inputEnabled = false;
 		
 		// add room name
 		var style = { font: "24px Arial", fill: "#ffffff", align: "center" };
@@ -90,6 +106,11 @@ Spacewar.createRoom.prototype = {
 	},
 
 	update : function() {
+		if (game.global.myPlayer.roomname == ""){
+			create.visible = false;
+	        create.inputEnabled = false;
+		}
+		
 		t3.text = game.global.myPlayer.gamemode
 		if (this.backKey.isDown){
 			if (!deletingText) {
@@ -105,13 +126,11 @@ Spacewar.createRoom.prototype = {
 		}
 		roomname.text = game.global.myPlayer.roomname;
 
-		if (this.enterKey.isDown && game.global.myPlayer.gamemode != ""){
-			let message = {
-				event : 'CREATE ROOM',
-				roomname: game.global.myPlayer.roomname,
-				gamemode: game.global.myPlayer.gamemode
-			}
-			game.global.socket.send(JSON.stringify(message))
+		if (game.global.myPlayer.roomname !== "" && game.global.myPlayer.gamemode !== ""){
+			
+			create.visible = true;
+	        create.inputEnabled = true;
+			
 		}
 	}
 }

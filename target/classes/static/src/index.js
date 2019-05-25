@@ -188,7 +188,7 @@ window.onload = function() {
 			break;
 		case 'FORCE LEAVING ROOM' :
 			game.world.setBounds(0, 0, 1280, 640);
-			game.state.start('menuState');
+			game.state.start('lobbyState');
 			break;
 		case 'SEND TO GAME' :
 			game.state.start('gameState');

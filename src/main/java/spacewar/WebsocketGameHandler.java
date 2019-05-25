@@ -93,6 +93,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 						player.getSession().sendMessage(new TextMessage(msg.toString()));
 					}
 				}
+				game.notifyRoomList();
 				break;
 			case "LEAVE ROOM":
 				roomname = node.path("room").asText();
@@ -111,6 +112,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					roomListLock.unlock();
 				}
 				leaveRoomLock.unlock();
+				game.notifyRoomList();
 				break;
 			//Mensaje para actualizar la posicion del jugador
 			case "UPDATE MOVEMENT":

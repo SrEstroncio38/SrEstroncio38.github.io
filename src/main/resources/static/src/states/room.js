@@ -24,7 +24,7 @@ function exitGame(){
 	game.global.myPlayer.gamemode = ""
 	game.global.myPlayer.roomname = ""
 	game.global.socket.send(JSON.stringify(message))
-	game.state.start('menuState')
+	game.state.start('lobbyState')
 }
 
 Spacewar.roomState.prototype = {
