@@ -74,11 +74,15 @@ public class SpacewarGame {
 		ObjectNode json = mapper.createObjectNode();
 		ArrayNode arrayNodeRooms = mapper.createArrayNode();
 		
+		int index = 0;
+		
 		try {
 			for (GameRoom room : getUnstartedRooms()) {
 				ObjectNode jsonRoom = mapper.createObjectNode();
+				jsonRoom.put("index", index);
 				jsonRoom.put("name", room.getRoomName());
 				arrayNodeRooms.addPOJO(jsonRoom);
+				index++;
 			}
 			json.put("event", "UPDATE ROOM LIST");
 			json.putPOJO("rooms", arrayNodeRooms);
@@ -93,11 +97,15 @@ public class SpacewarGame {
 		ObjectNode json = mapper.createObjectNode();
 		ArrayNode arrayNodeRooms = mapper.createArrayNode();
 		
+		int index = 0;
+		
 		try {
 			for (GameRoom room : getUnstartedRooms()) {
 				ObjectNode jsonRoom = mapper.createObjectNode();
+				jsonRoom.put("index", index);
 				jsonRoom.put("name", room.getRoomName());
 				arrayNodeRooms.addPOJO(jsonRoom);
+				index++;
 			}
 			json.put("event", "UPDATE ROOM LIST");
 			json.putPOJO("rooms", arrayNodeRooms);
@@ -195,7 +203,7 @@ public class SpacewarGame {
 			try {
 				player.getSession().sendMessage(new TextMessage(message.toString()));
 			} catch (Throwable ex) {
-				System.err.println("Execption sending message to player " + player.getSession().getId());
+				System.err.println("Execption sending message to player " + player.getSession().getId() + "[" + player.getUsername() + "]");
 				ex.printStackTrace(System.err);
 				this.removePlayer(player);
 			}

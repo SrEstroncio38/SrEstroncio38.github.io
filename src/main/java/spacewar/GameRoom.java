@@ -84,15 +84,15 @@ public class GameRoom {
 	}
 
 	public boolean removePlayer(Player player) {
-		if (players.remove(player.getSession().getId()) != null) {
-
-			int count = this.numPlayers.decrementAndGet();
-			if (count == 0) {
-				return true;
-			}
-			if (player.getPlayerId() == roomCreator.getPlayerId()) {
-				return true;
-			}
+		int count = this.numPlayers.get();
+		if(players.remove(player.getSession().getId()) != null) {
+			count = this.numPlayers.decrementAndGet();
+		}
+		if (count <= 0) {
+			return true;
+		}
+		if (player.getPlayerId() == roomCreator.getPlayerId()) {
+			return true;
 		}
 		return false;
 	}
@@ -126,11 +126,9 @@ public class GameRoom {
 			try {
 				player.getSession().sendMessage(new TextMessage(message.toString()));
 			} catch (Throwable ex) {
-				/*
-				System.err.println("Execption sending message to player " + player.getSession().getId());
+				System.err.println("Execption sending message to player " + player.getSession().getId() + "[" + player.getUsername() + "]");
 				ex.printStackTrace(System.err);
 				this.removePlayer(player);
-				*/
 			}
 		}
 	}

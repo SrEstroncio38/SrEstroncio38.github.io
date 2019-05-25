@@ -185,11 +185,13 @@ window.onload = function() {
 				console.log('[DEBUG] REMOVE PLAYER message recieved')
 				console.dir(msg.players)
 			}
-			game.global.otherPlayers[msg.id].image.destroy()
-			game.global.otherPlayers[msg.id].userNLabel.destroy()
-			game.global.otherPlayers[msg.id].health2.destroy()
-			game.global.otherPlayers[msg.id].health1.destroy()
-			delete game.global.otherPlayers[msg.id]
+			if (typeof game.global.otherPlayers[msg.id] != 'undefined'){
+				game.global.otherPlayers[msg.id].image.destroy()
+				game.global.otherPlayers[msg.id].userNLabel.destroy()
+				game.global.otherPlayers[msg.id].health2.destroy()
+				game.global.otherPlayers[msg.id].health1.destroy()
+				delete game.global.otherPlayers[msg.id]
+			}
 			break;
 		case 'FORCE LEAVING ROOM' :
 			game.state.start('menuState');
@@ -208,6 +210,13 @@ window.onload = function() {
 				text += player.username + "\n";
 			}
 			game.global.playingPlayers.setText(text);
+			break;
+		case 'UPDATE ROOM LIST' :
+			game.global.rooms = [];
+			for (var room of msg.rooms) {
+				game.global.rooms[room.index] = room.name;
+			}
+			console.log(game.global.rooms);
 			break;
 		case 'PRINT GLOBAL CHAT' :
 			currentpos = game.global.chat.text.length;

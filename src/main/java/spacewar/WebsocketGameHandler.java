@@ -207,9 +207,33 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 		WebSocketSession session = unprotectedSession;
 		sessionLock.unlock();
 		Player player = (Player) session.getAttributes().get(PLAYER_ATTRIBUTE);
-		game.removePlayer(player);
 
 		ObjectNode msg = mapper.createObjectNode();
+		
+		// Delete room (in case he was in one)
+		GameRoom room = null;
+		for (GameRoom croom : game.getRooms()) {
+			if (croom.getPlayers().contains(player)) {
+				room = croom;
+				break;
+			}
+		}
+		game.removePlayer(player);
+		if (room != null) {
+			game.removePlayingPlayer(player);
+			if (room.removePlayer(player)) {
+				for (Player cplayer : room.getPlayers()) {
+					game.removePlayingPlayer(cplayer);
+					msg.put("event", "FORCE LEAVING ROOM");
+					cplayer.getSession().sendMessage(new TextMessage(msg.toString()));
+				}
+				roomListLock.lock();
+				game.removeRoom(room.getRoomName());
+				roomListLock.unlock();
+			}
+		}
+		
+		// Notify the missing player
 		msg.put("event", "REMOVE PLAYER");
 		msg.put("id", player.getPlayerId());
 		game.broadcast(msg.toString());

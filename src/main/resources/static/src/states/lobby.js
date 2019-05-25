@@ -1,5 +1,7 @@
 Spacewar.lobbyState = function(game) {
-	
+	this.room = [null, null, null, null];
+	this.roomtext = [null, null, null, null];
+	this.currentpage;
 }
 
 //Funcion para entrarEnMatchMaking
@@ -8,9 +10,17 @@ function enterMatchMaking(){
     //game.state.start('matchmakingState');
 }
 
+function advancePage() {
+	currentpage += 1;
+}
+
+function returnPage() {
+	currentpage -= 1;
+}
+
 //Funcion que te entra en una sala
 function CreateRoom(){
-
+	console.log("Hola");
 	game.state.start('createRoom');
 }
 
@@ -31,7 +41,8 @@ Spacewar.lobbyState.prototype = {
     },
 
     preload : function() {
-    	
+
+    	currentpage = 0;
 
     },
 
@@ -59,29 +70,59 @@ Spacewar.lobbyState.prototype = {
         start.scale.setTo(0.6, 0.6);
         
         //Añadimos 4 botones de Room
-        lobby.addChild(room = game.add.button(-160,-130, 'roombg', null, this, 2, 1, 0));
-        room.anchor.setTo(0.5, 0.5);
-        lobby.addChild(room = game.add.button(-160,-30, 'roombg', null, this, 2, 1, 0));
-        room.anchor.setTo(0.5, 0.5);
-        lobby.addChild(room = game.add.button(-160,70, 'roombg', null, this, 2, 1, 0));
-        room.anchor.setTo(0.5, 0.5);
-        lobby.addChild(room = game.add.button(-160,170, 'roombg', null, this, 2, 1, 0));
-        room.anchor.setTo(0.5, 0.5);
+        var style = { font: "20px Arial", fill: "#ffffff", align: "center" };
+        lobby.addChild(this.room[0] = game.add.button(-160,-130, 'roombg', null, this, 2, 1, 0));
+        this.room[0].anchor.setTo(0.5, 0.5);
+        this.room[0].addChild(this.roomtext[0] = game.add.text(0, 0, "", style));
+        this.roomtext[0].anchor.set(0.5,0.5);
+        lobby.addChild(this.room[1] = game.add.button(-160,-30, 'roombg', null, this, 2, 1, 0));
+        this.room[1].anchor.setTo(0.5, 0.5);
+        this.room[1].addChild(this.roomtext[1] = game.add.text(0, 0, "", style));
+        this.roomtext[1].anchor.set(0.5,0.5);
+        lobby.addChild(this.room[2] = game.add.button(-160,70, 'roombg', null, this, 2, 1, 0));
+        this.room[2].anchor.setTo(0.5, 0.5);
+        this.room[2].addChild(this.roomtext[2] = game.add.text(0, 0, "", style));
+        this.roomtext[2].anchor.set(0.5,0.5);
+        lobby.addChild(this.room[3] = game.add.button(-160,170, 'roombg', null, this, 2, 1, 0));
+        this.room[3].anchor.setTo(0.5, 0.5);
+        this.room[3].addChild(this.roomtext[3] = game.add.text(0, 0, "", style));
+        this.roomtext[3].anchor.set(0.5,0.5);
         
         //Añadimos el boton de avanzar y retroceder
-        lobby.addChild(forward = game.add.button(0,220, 'forward', null, this, 2, 1, 0));
+        lobby.addChild(forward = game.add.button(0,220, 'forward', advancePage, this));
         forward.scale.setTo(0.3, 0.3);
-        lobby.addChild(backwards = game.add.button(-380,220, 'backwards', null , this, 2, 1, 0));
+        lobby.addChild(backwards = game.add.button(-380,220, 'backwards', returnPage, this));
         backwards.scale.setTo(0.3, 0.3);
         
         //Añadimos las palabras lobby
-        var style = { font: "45px Arial", fill: "#ffffff", align: "center" };
+        style = { font: "45px Arial", fill: "#ffffff", align: "center" };
         lobby.addChild(lText = game.add.text(0, -310, "LOBBY", style));
         lText.anchor.setTo(0.5,0.5);
 
     },
 
     update : function() {
+    	
+    	if (currentpage >= parseInt((game.global.rooms.length-1) / 4)) {
+    		currentpage = parseInt((game.global.rooms.length-1) / 4);
+    	}
+    	if (currentpage < 0) {
+    		currentpage = 0;
+    	}
+    	
+    	let numberRooms = game.global.rooms.length
+    	let index = 0;
+    	
+    	for (var i = 0; i < 4; i++) {
+	    	index = currentpage * 4 + i;
+			if (numberRooms > index) {
+				this.room[i].x = -160;
+				this.roomtext[i].setText(game.global.rooms[index]);
+			} else {
+				this.room[i].x = -5000;
+				this.roomtext[i].setText("");
+			}
+    	}
     	
     },
 
