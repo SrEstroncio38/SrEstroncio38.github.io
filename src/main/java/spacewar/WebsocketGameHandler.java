@@ -24,6 +24,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 	private Lock sessionLock = new ReentrantLock();
 	private Lock chatLock = new ReentrantLock();
 	private Lock roomChatLock = new ReentrantLock();
+	private Lock roomListLock = new ReentrantLock();
 	private Lock leaveRoomLock = new ReentrantLock();
 
 	@Override
@@ -45,7 +46,9 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 		player.getSession().sendMessage(new TextMessage(msg.toString()));
 		
 		game.addPlayer(player);
+		roomListLock.lock();
 		game.notifyRoomList(player);
+		roomListLock.unlock();
 	}
 
 	@Override
@@ -104,7 +107,9 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 						msg.put("event", "FORCE LEAVING ROOM");
 						cplayer.getSession().sendMessage(new TextMessage(msg.toString()));
 					}
+					roomListLock.lock();
 					game.removeRoom(roomname);
+					roomListLock.unlock();
 				}
 				leaveRoomLock.unlock();
 				break;
@@ -138,7 +143,9 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				break;
 			//Mensaje que se llama cuando se crea una nueva sala para recibir su nombre
 			case "CREATE ROOM":
+				roomListLock.lock();
 				game.addRoom(node.path("roomname").asText(),node.path("gamemode").asText());
+				roomListLock.unlock();
 				/*msg.put("event", "GO TO ROOM");
 				msg.put("roomname", node.path("roomname").asText());
 				player.getSession().sendMessage(new TextMessage(msg.toString()));*/
@@ -149,6 +156,9 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				room = game.rooms.get(roomname);
 				if (room.getPlayers().size() > 1) {
 					room.startGameLoop();
+					roomListLock.lock();
+					game.notifyRoomList();
+					roomListLock.unlock();
 					msg.put("event", "SEND TO GAME");
 					room.broadcast(msg.toString());
 				}

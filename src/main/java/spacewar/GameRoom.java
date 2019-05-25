@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.web.socket.TextMessage;
@@ -29,12 +30,12 @@ public class GameRoom {
 	private AtomicInteger numPlayers = new AtomicInteger();
 	
 	private Player roomCreator;
-	private boolean isActive;
+	private AtomicBoolean isActive;
 
 	public GameRoom(String roomName, String GameModeRef) {
 		this.roomName = roomName;
 		this.GameMode = GameModeRef;
-		this.isActive = false;
+		this.isActive.set(false);
 		switch (GameMode) {
 			case "Classic":
 				MAXPLAYERS = 2;
@@ -52,7 +53,7 @@ public class GameRoom {
 	}
 	
 	public boolean isRoomActive() {
-		return isActive;
+		return isActive.get();
 	}
 	
 	public boolean isRoomOwner(Player player) {
@@ -109,7 +110,7 @@ public class GameRoom {
 	}
 
 	public void startGameLoop() {
-		this.isActive = true;
+		this.isActive.set(true);
 		scheduler = Executors.newScheduledThreadPool(1);
 		scheduler.scheduleAtFixedRate(() -> tick(), SpacewarGame.TICK_DELAY, SpacewarGame.TICK_DELAY, TimeUnit.MILLISECONDS);
 	}

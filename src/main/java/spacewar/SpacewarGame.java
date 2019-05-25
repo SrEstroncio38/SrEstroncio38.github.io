@@ -30,7 +30,6 @@ public class SpacewarGame {
 	
 	private AtomicInteger numRooms = new AtomicInteger();
 	public Map<String,GameRoom> rooms = new ConcurrentHashMap<>();
-	private Lock roomsLock = new ReentrantLock();
 	
 	private Map<String, Player> playingPlayers = new ConcurrentHashMap<>();
 	private AtomicInteger numPlayingPlayers = new AtomicInteger();
@@ -44,22 +43,16 @@ public class SpacewarGame {
 	}
 	
 	public void removeRoom(String name) {
-		roomsLock.lock();
 		if(rooms.remove(name) != null) {
 			numRooms.getAndDecrement();
 			notifyRoomList();
-		} else {
-			roomsLock.unlock();
 		}
 	}
 	
 	public void addRoom(String name, String gameMode) {
-		roomsLock.lock();
 		if(rooms.putIfAbsent(name, new GameRoom(name, gameMode)) == null) {
 			numRooms.getAndIncrement();
 			notifyRoomList();
-		} else {
-			roomsLock.unlock();
 		}
 		
 	}
@@ -94,14 +87,12 @@ public class SpacewarGame {
 		} catch (Throwable ex) {
 
 		}
-		roomsLock.unlock();
 	}
 	
 	public void notifyRoomList(Player msgPlayer) {
 		ObjectNode json = mapper.createObjectNode();
 		ArrayNode arrayNodeRooms = mapper.createArrayNode();
 		
-		roomsLock.lock();
 		try {
 			for (GameRoom room : getUnstartedRooms()) {
 				ObjectNode jsonRoom = mapper.createObjectNode();
@@ -115,7 +106,6 @@ public class SpacewarGame {
 		} catch (Throwable ex) {
 
 		}
-		roomsLock.unlock();
 	}
 
 	public void addPlayer(Player player) {
