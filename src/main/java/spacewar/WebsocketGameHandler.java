@@ -45,6 +45,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 		player.getSession().sendMessage(new TextMessage(msg.toString()));
 		
 		game.addPlayer(player);
+		game.notifyRoomList(player);
 	}
 
 	@Override

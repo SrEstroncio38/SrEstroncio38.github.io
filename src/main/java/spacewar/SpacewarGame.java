@@ -1,6 +1,7 @@
 package spacewar;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -29,6 +30,7 @@ public class SpacewarGame {
 	
 	private AtomicInteger numRooms = new AtomicInteger();
 	public Map<String,GameRoom> rooms = new ConcurrentHashMap<>();
+	private Lock roomsLock = new ReentrantLock();
 	
 	private Map<String, Player> playingPlayers = new ConcurrentHashMap<>();
 	private AtomicInteger numPlayingPlayers = new AtomicInteger();
@@ -42,20 +44,78 @@ public class SpacewarGame {
 	}
 	
 	public void removeRoom(String name) {
+		roomsLock.lock();
 		if(rooms.remove(name) != null) {
 			numRooms.getAndDecrement();
+			notifyRoomList();
+		} else {
+			roomsLock.unlock();
 		}
 	}
 	
 	public void addRoom(String name, String gameMode) {
-		if(rooms.putIfAbsent(name, new GameRoom(gameMode)) == null) {
+		roomsLock.lock();
+		if(rooms.putIfAbsent(name, new GameRoom(name, gameMode)) == null) {
 			numRooms.getAndIncrement();
-		} 
+			notifyRoomList();
+		} else {
+			roomsLock.unlock();
+		}
 		
 	}
 	
 	public Collection<GameRoom> getRooms() {
 		return rooms.values();
+	}
+	
+	public Collection<GameRoom> getUnstartedRooms() {
+		Collection<GameRoom> unstartedRooms = new HashSet<>();
+		for (GameRoom room : getRooms()) {
+			if (!room.isRoomActive())
+				unstartedRooms.add(room);
+		}
+		return unstartedRooms;
+	}
+	
+	public void notifyRoomList() {
+		ObjectNode json = mapper.createObjectNode();
+		ArrayNode arrayNodeRooms = mapper.createArrayNode();
+		
+		try {
+			for (GameRoom room : getUnstartedRooms()) {
+				ObjectNode jsonRoom = mapper.createObjectNode();
+				jsonRoom.put("name", room.getRoomName());
+				arrayNodeRooms.addPOJO(jsonRoom);
+			}
+			json.put("event", "UPDATE ROOM LIST");
+			json.putPOJO("rooms", arrayNodeRooms);
+
+			this.broadcast(json.toString());
+		} catch (Throwable ex) {
+
+		}
+		roomsLock.unlock();
+	}
+	
+	public void notifyRoomList(Player msgPlayer) {
+		ObjectNode json = mapper.createObjectNode();
+		ArrayNode arrayNodeRooms = mapper.createArrayNode();
+		
+		roomsLock.lock();
+		try {
+			for (GameRoom room : getUnstartedRooms()) {
+				ObjectNode jsonRoom = mapper.createObjectNode();
+				jsonRoom.put("name", room.getRoomName());
+				arrayNodeRooms.addPOJO(jsonRoom);
+			}
+			json.put("event", "UPDATE ROOM LIST");
+			json.putPOJO("rooms", arrayNodeRooms);
+
+			msgPlayer.getSession().sendMessage(new TextMessage(json.toString()));
+		} catch (Throwable ex) {
+
+		}
+		roomsLock.unlock();
 	}
 
 	public void addPlayer(Player player) {

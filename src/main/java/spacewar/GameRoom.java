@@ -24,13 +24,17 @@ public class GameRoom {
 	private Map<String, Player> players = new ConcurrentHashMap<>();
 	private Map<Integer, Projectile> projectiles = new ConcurrentHashMap<>();
 	private final int MAXPLAYERS;
+	private final String roomName;
 	private final String GameMode;
 	private AtomicInteger numPlayers = new AtomicInteger();
 	
 	private Player roomCreator;
+	private boolean isActive;
 
-	public GameRoom(String GameModeRef) {
+	public GameRoom(String roomName, String GameModeRef) {
+		this.roomName = roomName;
 		this.GameMode = GameModeRef;
+		this.isActive = false;
 		switch (GameMode) {
 			case "Classic":
 				MAXPLAYERS = 2;
@@ -41,6 +45,14 @@ public class GameRoom {
 			default:
 				MAXPLAYERS = 4;
 		}
+	}
+	
+	public String getRoomName() {
+		return roomName;
+	}
+	
+	public boolean isRoomActive() {
+		return isActive;
 	}
 	
 	public boolean isRoomOwner(Player player) {
@@ -97,6 +109,7 @@ public class GameRoom {
 	}
 
 	public void startGameLoop() {
+		this.isActive = true;
 		scheduler = Executors.newScheduledThreadPool(1);
 		scheduler.scheduleAtFixedRate(() -> tick(), SpacewarGame.TICK_DELAY, SpacewarGame.TICK_DELAY, TimeUnit.MILLISECONDS);
 	}

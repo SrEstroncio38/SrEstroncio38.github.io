@@ -119,7 +119,7 @@ Spacewar.roomState.prototype = {
 		deletingText = false;
 		
 		// chat text
-		style = { font: "24px Arial", fill: "#aaaaaa", align: "left", wordWrap: true, wordWrapWidth: 410 };
+		style = { font: "20px Arial", fill: "#aaaaaa", align: "left", wordWrap: true, wordWrapWidth: 410 };
 		game.global.myPlayer.chattext = "Unido al chat de " + game.global.myPlayer.roomname + ".";
 		game.global.myPlayer.chat = game.add.text(840, game.world.centerY + 215, game.global.myPlayer.chattext, style);
 		game.global.myPlayer.chat.anchor.set(0,1);
