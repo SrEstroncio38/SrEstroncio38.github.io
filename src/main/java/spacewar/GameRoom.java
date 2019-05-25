@@ -53,6 +53,10 @@ public class GameRoom {
 		}
 	}
 	
+	public int getNumPlayers() {
+		return numPlayers.get();
+	}
+	
 	public String getRoomName() {
 		return roomName;
 	}
@@ -68,6 +72,10 @@ public class GameRoom {
 		return false;
 	}
 
+	public int getMaxPlayers() {
+		return this.MAXPLAYERS;
+	}
+	
 	public boolean addPlayer(Player player) {
 		boolean result = false;
 		//Revisa que quepan los jugadores antes de agregarlo

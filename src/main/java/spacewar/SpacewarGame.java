@@ -83,6 +83,8 @@ public class SpacewarGame {
 				ObjectNode jsonRoom = mapper.createObjectNode();
 				jsonRoom.put("index", index);
 				jsonRoom.put("name", room.getRoomName());
+				jsonRoom.put("maxplayers", room.getMaxPlayers());
+				jsonRoom.put("currentplayers", room.getNumPlayers());
 				arrayNodeRooms.addPOJO(jsonRoom);
 				index++;
 			}
@@ -106,6 +108,8 @@ public class SpacewarGame {
 				ObjectNode jsonRoom = mapper.createObjectNode();
 				jsonRoom.put("index", index);
 				jsonRoom.put("name", room.getRoomName());
+				jsonRoom.put("maxplayers", room.getMaxPlayers());
+				jsonRoom.put("currentplayers", room.getNumPlayers());
 				arrayNodeRooms.addPOJO(jsonRoom);
 				index++;
 			}

@@ -9,7 +9,7 @@ window.onload = function() {
 		socket : null,
 		chat : new Object,
 		playingPlayers : null,
-		rooms : [],
+		rooms : {"name":[],"maxplayers":[],"currentplayers":[]},
 		projectiles : [],
 		recharges : [],
 		rechargesIdx : 0,
@@ -206,9 +206,14 @@ window.onload = function() {
 			game.global.playingPlayers.setText(text);
 			break;
 		case 'UPDATE ROOM LIST' :
-			game.global.rooms = [];
+            game.global.rooms["name"] = [];
+            game.global.rooms["maxplayers"] = [];
+            game.global.rooms["currentplayers"] = [];
 			for (var room of msg.rooms) {
-				game.global.rooms[room.index] = room.name;
+                game.global.rooms["name"][room.index]= room.name;
+                game.global.rooms["maxplayers"][room.index]= room.maxplayers;
+                game.global.rooms["currentplayers"][room.index]= room.currentplayers;
+                console.log(game.global.rooms)
 			}
 			break;
 		case 'PRINT GLOBAL CHAT' :

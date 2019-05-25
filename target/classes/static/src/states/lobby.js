@@ -116,22 +116,23 @@ Spacewar.lobbyState.prototype = {
 
     update : function() {
     	
-    	if (currentpage >= parseInt((game.global.rooms.length-1) / 4)) {
-    		currentpage = parseInt((game.global.rooms.length-1) / 4);
+    	if (currentpage >= parseInt((game.global.rooms["name"].length-1) / 4)) {
+    		currentpage = parseInt((game.global.rooms["name"].length-1) / 4);
     	}
     	if (currentpage < 0) {
     		currentpage = 0;
     	}
     	
-    	let numberRooms = game.global.rooms.length
+    	let numberRooms = game.global.rooms["name"].length
     	let index = 0;
     	
     	for (var i = 0; i < 4; i++) {
 	    	index = currentpage * 4 + i;
 			if (numberRooms > index) {
 				this.room[i].x = -160;
-				this.roomtext[i].setText(game.global.rooms[index]);
-				this.room[i].variable = game.global.rooms[index];
+                this.roomtext[i].setText("Sala: "+game.global.rooms["name"][index] +
+                    "   "+game.global.rooms["currentplayers"][index]+"/"+game.global.rooms["maxplayers"][index]);
+				this.room[i].variable = game.global.rooms["name"][index];
 			} else {
 				this.room[i].x = -5000;
 				this.roomtext[i].setText("");

@@ -108,6 +108,11 @@ Spacewar.menuState.prototype = {
 			event : 'ASK PLAYING PLAYERS'
 		}
 		game.global.socket.send(JSON.stringify(message))
+		
+		let message2 = {
+			event : 'ASK ROOM LIST'
+		}
+		game.global.socket.send(JSON.stringify(message))
 	},
 
 	update : function() {

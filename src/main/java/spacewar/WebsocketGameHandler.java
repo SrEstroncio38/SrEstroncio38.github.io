@@ -77,6 +77,9 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 			case "ASK PLAYING PLAYERS":
 				game.notifyPlayingPlayers(player);
 				break;
+			case "ASK ROOM LIST":
+				game.notifyRoomList(player);
+				break;
 			//Mensaje que permite entrar a la sala pasada en "room", en caso de null entra en una default, GLOBAL
 			case "JOIN ROOM":
 				roomname = node.path("room").asText();
@@ -156,6 +159,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 						}
 					}
 				}
+				game.notifyRoomList();
 				break;
 			case "START GAME":
 				roomname = node.path("room").asText();
