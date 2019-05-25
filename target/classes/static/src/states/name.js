@@ -56,7 +56,7 @@ Spacewar.nameState.prototype = {
 		}
 		username.text = game.global.myPlayer.username;
 
-		if (this.enterKey.isDown){
+		if (this.enterKey.isDown && game.global.myPlayer.username !== ""){
 			let message = {
 					event : 'UPDATE NAME',
 					username: game.global.myPlayer.username
