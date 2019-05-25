@@ -30,7 +30,7 @@ public class GameRoom {
 	private AtomicInteger numPlayers = new AtomicInteger();
 	
 	private Player roomCreator;
-	private AtomicBoolean isActive;
+	private AtomicBoolean isActive = new AtomicBoolean(false);
 
 	public GameRoom(String roomName, String GameModeRef) {
 		this.roomName = roomName;
