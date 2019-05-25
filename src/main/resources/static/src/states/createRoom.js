@@ -12,6 +12,10 @@ function selectBattleRoyal(){
 	game.global.myPlayer.gamemode = "BattleRoyal"
 }
 
+function exitCreateRoom(){
+	game.state.start('lobbyState')
+}
+
 Spacewar.createRoom.prototype = {
 
 	init : function() {
@@ -42,6 +46,11 @@ Spacewar.createRoom.prototype = {
         var textbox = game.add.sprite(game.world.centerX, game.world.centerY + 20, 'textinput');
         textbox.scale.setTo(1,0.5);
         textbox.anchor.setTo(0.5,0.5);
+        
+        //Cargamos boton de volver al menu
+        exit = game.add.button(game.world.centerX, game.world.centerY + 70, 'exit', exitCreateRoom, this, 2, 1, 0);
+        exit.scale.setTo(0.3, 0.3);
+        exit.anchor.setTo(0.5,0.5);
 		
 		// add room name
 		var style = { font: "24px Arial", fill: "#ffffff", align: "center" };
