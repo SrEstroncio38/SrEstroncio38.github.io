@@ -345,13 +345,13 @@ public class GameRoom {
 			//Update recharges
 			for (Recharge recharge : getRecharges()) {
 				//Handle collision
-				for (Player player : getPlayers()) {
+			for (Player player : getPlayers()) {
 					if (player.intersect(recharge) && !player.getDeath()) {
-						// System.out.println("Player " + player.getPlayerId() + " got bullets!!!");
-						player.fillAmmo();
+						//System.out.println("Player " + player.getPlayerId() + " got bullets!!!");
+						player.addAmmo(10);
 						recharge.setHit(true);
 						break;
-					}
+					}	
 				}
 				ObjectNode jsonRecharge = mapper.createObjectNode();
 				jsonRecharge.put("id", recharge.getId());
