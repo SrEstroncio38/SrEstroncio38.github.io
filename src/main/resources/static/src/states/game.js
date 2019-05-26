@@ -10,6 +10,35 @@ Spacewar.gameState = function(game) {
 	this.bulletIsFired = false
 }
 
+function exitGameToLobby () {
+	for (var player of game.global.otherPlayers) {
+		if (typeof player != 'undefined'){
+			player.image.destroy()
+			player.userNLabel.destroy()
+			player.health2.destroy()
+			player.health1.destroy()
+			delete player
+		}
+	}
+	emptyArray = [];
+	game.global.otherPlayers = emptyArray;
+	let message = {
+        //Mensaje que se trata en WebsocketGameHandler.java
+		event : 'LEAVE ROOM',
+		room : game.global.myPlayer.roomname
+	}
+	game.global.myPlayer.gamemode = ""
+	game.global.myPlayer.roomname = ""
+	game.global.socket.send(JSON.stringify(message))
+	game.world.setBounds(0, 0, 1280, 640)
+	game.input.keyboard.removeKeyCapture(Phaser.Keyboard.W);
+	game.input.keyboard.removeKeyCapture(Phaser.Keyboard.A);
+	game.input.keyboard.removeKeyCapture(Phaser.Keyboard.S);
+	game.input.keyboard.removeKeyCapture(Phaser.Keyboard.D);
+	game.input.keyboard.removeKeyCapture(Phaser.Keyboard.SPACEBAR);
+	game.state.start('lobbyState')
+}
+
 Spacewar.gameState.prototype = {
 
 	init : function() {
@@ -90,6 +119,14 @@ Spacewar.gameState.prototype = {
 		game.global.ui.roomLabel = game.add.text(1280 - 150,640 - 22, game.global.myPlayer.roomname, style);
 		game.global.ui.roomLabel.anchor.set(0.5,0.5);
 		game.global.ui.roomLabel.fixedToCamera = true;
+		
+		//Cargamos boton de salir
+        game.global.ui.exitBtn = game.add.button(640, 600, 'exit', exitGameToLobby, this, 2, 1, 0);
+        game.global.ui.exitBtn.scale.setTo(0.5, 0.5);
+        game.global.ui.exitBtn.anchor.setTo(0.5,0.5);
+        game.global.ui.exitBtn.fixedToCamera = true;
+        game.global.ui.exitBtn.visible = false;
+        game.global.ui.exitBtn.inputEnabled = false;
 		
 	},
 

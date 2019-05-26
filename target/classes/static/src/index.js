@@ -184,7 +184,7 @@ window.onload = function() {
                 game.global.rooms["name"][room.index]= room.name;
                 game.global.rooms["maxplayers"][room.index]= room.maxplayers;
                 game.global.rooms["currentplayers"][room.index]= room.currentplayers;
-                console.log(game.global.rooms)
+                //console.log(game.global.rooms)
 			}
             break;
         
@@ -249,6 +249,10 @@ window.onload = function() {
 							game.global.myPlayer.health2.alpha = 0.0
 							game.global.myPlayer.health1.alpha = 0.0
 							game.global.ui.deathText.alpha = 1.0
+						}
+						if (player.death || player.win) {
+							game.global.ui.exitBtn.visible = true;
+					        game.global.ui.exitBtn.inputEnabled = true;
 						}
 					} else {
 						if (typeof game.global.otherPlayers[player.id] == 'undefined') {

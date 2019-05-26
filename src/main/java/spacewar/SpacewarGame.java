@@ -49,7 +49,9 @@ public class SpacewarGame {
 	
 	//Elimina una sala y manda lista de salas a TODOS los jugadores
 	public void removeRoom(String name) {
-		if(rooms.remove(name) != null) {
+		GameRoom removedRoom = rooms.remove(name);
+		if(removedRoom != null) {
+			removedRoom.stopGameLoop();
 			numRooms.getAndDecrement();
 			notifyRoomList();
 		}

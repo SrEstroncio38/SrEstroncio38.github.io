@@ -18,19 +18,30 @@ public class Player extends Spaceship {
 	private String roomname;
 	
 	private boolean _dead;
+	private boolean _win;
 
 	public Player(int playerId, WebSocketSession session) {
 		this.playerId = playerId;
 		this.username = "Unknown";
 		this.health = 100.0f;
-		// TODO Cambiar esta linea (hay que mandar el numero max de proyectiles)
 		this.ammo = 50;
 		this.thrust = 99.0f;
 		this._dead = false;
+		this._win = false;
 		this.points = 0;
 		this.roomname = "";
 		this.session = session;
 		this.shipType = this.getRandomShipType();
+	}
+	
+	public void resetValues() {
+		this.health = 100.0f;
+		this.ammo = 50;
+		this.thrust = 99.0f;
+		this._dead = false;
+		this._win = false;
+		this.points = 0;
+		this.roomname = "";
 	}
 	
 	public void setRoomname(String roomname) {
@@ -85,9 +96,17 @@ public class Player extends Spaceship {
 		return this._dead;
 	}
 	
+	public void setWin(boolean bool) {
+		this._win = bool;
+	}
+	
+	public boolean getWin() {
+		return this._win;
+	}
+	
 	@Override
 	public void loadMovement(boolean thrust, boolean brake, boolean rotLeft, boolean rotRight) {
-		if (_dead == false) {
+		if (_dead == false && _win == false) {
 			if (thrust && this.thrust>0) {
 				this.thrust = this.thrust - 0.5f;				
 			}

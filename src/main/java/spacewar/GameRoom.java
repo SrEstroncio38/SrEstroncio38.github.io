@@ -133,12 +133,20 @@ public class GameRoom {
 		if (count <= 0) {
 			result = true;
 		}
-		if (player.getPlayerId() == roomCreator.getPlayerId()) {
+		if (player.getPlayerId() == roomCreator.getPlayerId() && isActive.get() == false) {
 			result = true;
 		}
 		
-		//Este mensaje se recibe en index.js
 		ObjectNode msg = mapper.createObjectNode();
+		
+		if (isActive.get() == true) {
+			// Notify the missing player
+			msg.put("event", "REMOVE PLAYER");
+			msg.put("id", player.getPlayerId());
+			broadcast(msg.toString());
+		}
+		
+		//Este mensaje se recibe en index.js
 		msg.put("event", "NUM PLAYERS IN ROOM");
 		msg.put("numplayers", numPlayers.get());
 		msg.put("maxplayers", MAXPLAYERS);
@@ -279,6 +287,8 @@ public class GameRoom {
 		Set<Integer> recharges2Remove = new HashSet<>();
 		boolean removeBullets = false;
 		boolean removeRecharges = false;
+		
+		Set<Player> alivePlayers = new HashSet<>();
 
 		try {
 			// Update players
@@ -293,10 +303,24 @@ public class GameRoom {
 				jsonPlayer.put("thrust", player.getThrust());
 				jsonPlayer.put("points", player.getPoints());
 				jsonPlayer.put("death", player.getDeath());
+				jsonPlayer.put("win", player.getWin());
 				jsonPlayer.put("posX", player.getPosX());
 				jsonPlayer.put("posY", player.getPosY());
 				jsonPlayer.put("facingAngle", player.getFacingAngle());
 				arrayNodePlayers.addPOJO(jsonPlayer);
+				
+				if (!player.getDeath()) {
+					alivePlayers.add(player);
+				}
+			}
+			
+			// Check if winner
+			if (alivePlayers.size() <= 1) {
+				// Es un for por si en un futuro pudiesen ganar varias personas
+				for (Player player : getPlayers()) {
+					player.setWin(true);
+					updateScore(player);
+				}
 			}
 
 			// Update bullets and handle collision
@@ -305,7 +329,8 @@ public class GameRoom {
 
 				// Handle collision
 				for (Player player : getPlayers()) {
-					if ((projectile.getOwner().getPlayerId() != player.getPlayerId()) && player.intersect(projectile) && !player.getDeath()) {
+					if ((projectile.getOwner().getPlayerId() != player.getPlayerId()) && player.intersect(projectile)
+								&& !player.getDeath() && !player.getWin()) {
 						// System.out.println("Player " + player.getPlayerId() + " was hit!!!");
 						projectile.setHit(true);
 						projectile.getOwner().addPoints(10);
