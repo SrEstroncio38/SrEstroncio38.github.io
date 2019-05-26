@@ -1,6 +1,11 @@
 package spacewar;
 
-import java.io.StringReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
@@ -16,7 +21,9 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.json.Json;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
+import javax.json.JsonWriter;
 
 import org.springframework.web.socket.TextMessage;
 
@@ -378,10 +385,36 @@ public class GameRoom {
 	
 	public void updateScore(Player player) {
 		scoreLock.lock();
-		StringReader reader = new StringReader("[]");
-		JsonReader jsonReader = Json.createReader(reader);
-		JsonObject object = jsonReader.readObject();
-		jsonReader.close();
+		File jsonFile = new File("playerScores.json");
+        InputStream is;
+        OutputStream os;
+        try {
+            is = new FileInputStream(jsonFile);
+            JsonReader reader = Json.createReader(is);
+            JsonObject obj = reader.readObject();
+            reader.close();
+            
+            JsonObjectBuilder newJson = Json.createObjectBuilder();
+            boolean found = false;
+            for (String username : obj.keySet()) {
+            	int currentscore = obj.getInt(username);
+            	if (username.equals(player.getUsername())) {
+            		found = true;
+            		currentscore = player.getPoints();
+            	}
+            	newJson.add(username, currentscore);
+            }
+            if (!found) {
+            	newJson.add(player.getUsername(), player.getPoints());
+            }
+            JsonObject newJsonBuilt = newJson.build();
+            
+            os = new FileOutputStream(jsonFile);
+            JsonWriter writer = Json.createWriter(os);
+            writer.writeObject(newJsonBuilt);
+            
+        } catch (FileNotFoundException e) {
+        }
 		scoreLock.unlock();
 	}
 
