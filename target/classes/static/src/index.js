@@ -8,7 +8,8 @@ window.onload = function() {
 		DEBUG_MODE : connectionData.debug,
 		socket : null,
 		chat : new Object,
-		playingPlayers : null,
+        playingPlayers : null,
+        myRoomPoints: null,
 		rooms : {"name":[],"maxplayers":[],"currentplayers":[]},
 		projectiles : [],
 		recharges : [],
@@ -185,6 +186,19 @@ window.onload = function() {
                 game.global.rooms["currentplayers"][room.index]= room.currentplayers;
                 console.log(game.global.rooms)
 			}
+            break;
+        
+        /** 
+        * Este mensaje se encuentra en GameRoom.java
+        * se deberia activar siempre que un jugador decide ir al raking al terminar
+        * una partida, se usa para que TODOS los jugadores de la sala recivan la puntuacion
+        */
+        case 'UPDATE SCORES END GAMES' :
+			let text2 = "";
+			for (var player of msg.scores) {
+				text2 += player.username + "     Puntuacion:"+player.points+"\n";
+			}
+			game.global.myRoomPoints.setText(text2);
             break;
 
          /**
@@ -372,7 +386,8 @@ window.onload = function() {
 	game.state.add('nameState', Spacewar.nameState)
 	game.state.add('matchmakingState', Spacewar.matchmakingState)
 	game.state.add('roomState', Spacewar.roomState)
-	game.state.add('gameState', Spacewar.gameState)
+    game.state.add('gameState', Spacewar.gameState)
+    game.state.add('endGame', Spacewar.endGame)
 
 	game.state.start('bootState')
 

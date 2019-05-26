@@ -94,6 +94,15 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				game.notifyRoomList(player);
 				break;
 				
+			//Mensaje que se genera en el endGame.js
+			case "ASK ASK FOR SCORES IN ROOM":
+				roomname = node.path("room").asText();
+				room = game.getRoom(roomname);
+				if (room != null) {
+					room.notifyScoreList();
+				}
+				break;
+				
 			//Mensaje que se genera al unirse a una sala en lobby.js
 			case "JOIN ROOM":
 				roomname = node.path("room").asText();

@@ -66,6 +66,11 @@ public class SpacewarGame {
 		
 	}
 	
+	//Devuelve una sala concreta
+	public GameRoom getRoom(String key) {
+		return rooms.get(key);
+	}
+	
 	//Devuelve todas las rooms
 	public Collection<GameRoom> getRooms() {
 		return rooms.values();
