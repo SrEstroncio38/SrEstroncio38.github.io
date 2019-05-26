@@ -184,6 +184,35 @@ public class GameRoom {
 		}
 	}
 	
+	
+	/********************************
+	 * 		  NOTIFICACIONES		*
+	 ********************************/
+	
+	//Envia un mensaje a todos los jugadores de la sala cuando uno de ellos entra a endGame.js
+	public void notifyScoreList() {
+		ObjectNode json = mapper.createObjectNode();
+		ArrayNode arrayNodeScore = mapper.createArrayNode();
+		
+		try {
+			for (Player player : this.getPlayers()) {
+				ObjectNode jsonScore = mapper.createObjectNode();
+				jsonScore.put("id", player.getPlayerId());
+				jsonScore.put("username", player.getUsername());
+				jsonScore.put("points", player.getPoints());
+				arrayNodeScore.addPOJO(jsonScore);
+			}
+			//mensaje tratado en index.js
+			json.put("event", "UPDATE SCORES END GAME");
+			json.putPOJO("scores", arrayNodeScore);
+			
+			this.broadcast(json.toString());
+		} catch (Throwable ex) {
+			
+		}
+		
+	}
+	
 	/********************************
 	 * 			BROADCAST			*
 	 ********************************/
