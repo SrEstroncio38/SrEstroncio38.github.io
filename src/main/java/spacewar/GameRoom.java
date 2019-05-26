@@ -32,6 +32,7 @@ public class GameRoom {
 	
 	//Locks
 	private Lock playersLock = new ReentrantLock();
+	private Lock scoreLock = new ReentrantLock();
 	
 	//Atributos de la room
 	private final String roomName;
@@ -276,6 +277,7 @@ public class GameRoom {
 						player.addHealth(-10);
 						if (player.getHealth() <= 0) {
 							player.setDeath(true);
+							updateScore(player);
 						}
 						break;
 					}
@@ -314,6 +316,12 @@ public class GameRoom {
 		} catch (Throwable ex) {
 
 		}
+	}
+	
+	public void updateScore(Player player) {
+		scoreLock.lock();
+		// Bien, no soporta json
+		scoreLock.unlock();
 	}
 
 	public void handleCollision() {
