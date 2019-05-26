@@ -1,5 +1,6 @@
 package spacewar;
 
+import java.io.StringReader;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
@@ -12,6 +13,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 
 import org.springframework.web.socket.TextMessage;
 
@@ -373,7 +378,10 @@ public class GameRoom {
 	
 	public void updateScore(Player player) {
 		scoreLock.lock();
-		// Bien, no soporta json
+		StringReader reader = new StringReader("[]");
+		JsonReader jsonReader = Json.createReader(reader);
+		JsonObject object = jsonReader.readObject();
+		jsonReader.close();
 		scoreLock.unlock();
 	}
 
