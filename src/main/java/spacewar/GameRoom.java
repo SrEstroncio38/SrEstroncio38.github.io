@@ -415,40 +415,33 @@ public class GameRoom {
         InputStream is;
         OutputStream os;
         try {
-        	System.err.println("Hola, voy a leer");
             is = new FileInputStream(jsonFile);
             JsonReader reader = Json.createReader(is);
             JsonObject obj = reader.readObject();
             reader.close();
-            System.err.println("Ahora voy a crear el duplicado");
             
             JsonObjectBuilder newJson = Json.createObjectBuilder();
             boolean found = false;
             for (String username : obj.keySet()) {
             	int currentscore = obj.getInt(username);
             	if (username.equals(player.getUsername())) {
-            		System.err.println("Actulizo esto");
             		found = true;
             		currentscore = player.getPoints();
             	}
             	newJson.add(username, currentscore);
             }
             if (!found) {
-                System.err.println("Ahora voy a escribir la nueva entrada");
             	newJson.add(player.getUsername(), player.getPoints());
             }
-            System.err.println("Montamos?");
             JsonObject newJsonBuilt = newJson.build();
-            System.err.println("Montamos!");
             
             os = new FileOutputStream(jsonFile);
             JsonWriter writer = Json.createWriter(os);
             writer.writeObject(newJsonBuilt);
             writer.close();
-            System.err.println("GG EZ");
             
         } catch (FileNotFoundException e) {
-        	System.err.println("Has puesto el archivo donde no es maquina.");
+        	e.printStackTrace();
         } catch (Exception e) {
         	e.printStackTrace();
         }
