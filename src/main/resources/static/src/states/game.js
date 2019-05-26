@@ -11,17 +11,6 @@ Spacewar.gameState = function(game) {
 }
 
 function exitGameToLobby () {
-	for (var player of game.global.otherPlayers) {
-		if (typeof player != 'undefined'){
-			player.image.destroy()
-			player.userNLabel.destroy()
-			player.health2.destroy()
-			player.health1.destroy()
-			delete player
-		}
-	}
-	emptyArray = [];
-	game.global.otherPlayers = emptyArray;
 	let message = {
         //Mensaje que se trata en WebsocketGameHandler.java
 		event : 'LEAVE ROOM',
@@ -50,6 +39,9 @@ Spacewar.gameState.prototype = {
 	},
 
 	preload : function() {
+		
+		emptyArray = [];
+		game.global.otherPlayers = emptyArray;
 		
 		// We create a procedural starfield background
 		for (var i = 0; i < this.numStars; i++) {

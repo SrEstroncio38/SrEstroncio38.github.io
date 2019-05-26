@@ -36,10 +36,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 	private int rechargeSpwn; //Counts when to spawn a new recharge
 
 	@Override
-	public void afterConnectionEstablished(WebSocketSession unprotectedSession) throws Exception {
-		sessionLock.lock();
-		WebSocketSession session = unprotectedSession;
-		sessionLock.unlock();
+	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		Player player = new Player(playerId.incrementAndGet(), session);
 		session.getAttributes().put(PLAYER_ATTRIBUTE, player);
 		
@@ -52,7 +49,9 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 		msg.put("ammo", player.getAmmo());
 		msg.put("thrust", player.getThrust());
 		msg.put("roomname", player.getRoomname());
-		player.getSession().sendMessage(new TextMessage(msg.toString()));
+		synchronized (player.getSession()) {
+			player.getSession().sendMessage(new TextMessage(msg.toString()));
+		}
 		
 		game.addPlayer(player);
 		roomListLock.lock();
@@ -61,10 +60,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 	}
 
 	@Override
-	protected void handleTextMessage(WebSocketSession unprotectedSession, TextMessage message) throws Exception {
-		sessionLock.lock();
-		WebSocketSession session = unprotectedSession;
-		sessionLock.unlock();
+	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		try {
 			JsonNode node = mapper.readTree(message.getPayload());
 			ObjectNode msg = mapper.createObjectNode();
@@ -81,7 +77,9 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				msg.put("shipType", player.getShipType());
 				msg.put("username", player.getUsername());
 				msg.put("ammo", player.getAmmo());
-				player.getSession().sendMessage(new TextMessage(msg.toString()));
+				synchronized (player.getSession()) {
+					player.getSession().sendMessage(new TextMessage(msg.toString()));
+				}
 				break;
 				
 			//Mensaje que se genera en el preload de menu.js
@@ -115,7 +113,9 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 						msg.put("event", "SEND TO ROOM");
 						msg.put("room", roomname);
 						msg.put("boss", room.isRoomOwner(player));
-						player.getSession().sendMessage(new TextMessage(msg.toString()));
+						synchronized (player.getSession()) {
+							player.getSession().sendMessage(new TextMessage(msg.toString()));
+						}
 					}
 				}
 				game.notifyRoomList();
@@ -134,7 +134,9 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 						game.removePlayingPlayer(cplayer);
 						//Mensaje que se trata en index.js
 						msg.put("event", "FORCE LEAVING ROOM");
-						cplayer.getSession().sendMessage(new TextMessage(msg.toString()));
+						synchronized (cplayer.getSession()) {
+							cplayer.getSession().sendMessage(new TextMessage(msg.toString()));
+						}
 					}
 					roomListLock.lock();
 					game.removeRoom(roomname);
@@ -197,13 +199,17 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 							msg.put("event", "SEND TO ROOM");
 							msg.put("room", roomname);
 							msg.put("boss", room.isRoomOwner(player));
-							player.getSession().sendMessage(new TextMessage(msg.toString()));
+							synchronized (player.getSession()) {
+								player.getSession().sendMessage(new TextMessage(msg.toString()));
+							}
 						}
 					} 
 				} else {
 					//Mensaje tratado en index.js
 					msg.put("event", "REPEATED ROOM");
-					player.getSession().sendMessage(new TextMessage(msg.toString()));
+					synchronized (player.getSession()) {
+						player.getSession().sendMessage(new TextMessage(msg.toString()));
+					}
 				}
 				game.notifyRoomList();
 				break;
@@ -265,10 +271,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 	}
 
 	@Override
-	public void afterConnectionClosed(WebSocketSession unprotectedSession, CloseStatus status) throws Exception {
-		sessionLock.lock();
-		WebSocketSession session = unprotectedSession;
-		sessionLock.unlock();
+	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 		Player player = (Player) session.getAttributes().get(PLAYER_ATTRIBUTE);
 
 		ObjectNode msg = mapper.createObjectNode();
@@ -290,7 +293,9 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					
 					//Mensaje que se trata en index.js
 					msg.put("event", "FORCE LEAVING ROOM");
-					cplayer.getSession().sendMessage(new TextMessage(msg.toString()));
+					synchronized (cplayer.getSession()) {
+						cplayer.getSession().sendMessage(new TextMessage(msg.toString()));
+					}
 				}
 				roomListLock.lock();
 				game.removeRoom(room.getRoomName());

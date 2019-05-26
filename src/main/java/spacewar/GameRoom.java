@@ -262,7 +262,9 @@ public class GameRoom {
 	public void broadcast(String message) {
 		for (Player player : getPlayers()) {
 			try {
-				player.getSession().sendMessage(new TextMessage(message.toString()));
+				synchronized (player.getSession()) {
+					player.getSession().sendMessage(new TextMessage(message.toString()));
+				}
 			} catch (Throwable ex) {
 				System.err.println("Execption sending message to player " + player.getSession().getId() + "[" + player.getUsername() + "]");
 				ex.printStackTrace(System.err);
@@ -367,11 +369,12 @@ public class GameRoom {
 			if (removeBullets)
 				this.projectiles.keySet().removeAll(bullets2Remove);
 			
+			/*
 			//Update recharges
 			for (Recharge recharge : getRecharges()) {
 				//Handle collision
 			for (Player player : getPlayers()) {
-					if (player.intersect(recharge) && !player.getDeath()) {
+					if (player.intersect(recharge) && !player.getDeath() && !player.getWin()) {
 						//System.out.println("Player " + player.getPlayerId() + " got bullets!!!");
 						player.addAmmo(10);
 						recharge.setHit(true);
@@ -394,6 +397,7 @@ public class GameRoom {
 			
 			if (removeRecharges)
 				this.recharges.keySet().removeAll(recharges2Remove);
+			*/
 			
 			
 			//Este mensaje se encuentra en index.js

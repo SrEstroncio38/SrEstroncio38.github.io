@@ -144,7 +144,9 @@ public class SpacewarGame {
 			json.put("event", "UPDATE ROOM LIST");
 			json.putPOJO("rooms", arrayNodeRooms);
 
-			msgPlayer.getSession().sendMessage(new TextMessage(json.toString()));
+			synchronized (msgPlayer.getSession()) {
+				msgPlayer.getSession().sendMessage(new TextMessage(json.toString()));
+			}
 		} catch (Throwable ex) {
 
 		}
@@ -254,7 +256,9 @@ public class SpacewarGame {
 			json.put("event", "UPDATE PLAYING PLAYERS");
 			json.putPOJO("players", arrayNodePlayers);
 
-			msgPlayer.getSession().sendMessage(new TextMessage(json.toString()));
+			synchronized (msgPlayer.getSession()) {
+				msgPlayer.getSession().sendMessage(new TextMessage(json.toString()));
+			}
 		} catch (Throwable ex) {
 
 		}
@@ -270,7 +274,9 @@ public class SpacewarGame {
 	public void broadcast(String message) {
 		for (Player player : getPlayers()) {
 			try {
-				player.getSession().sendMessage(new TextMessage(message.toString()));
+				synchronized (player.getSession()) {
+					player.getSession().sendMessage(new TextMessage(message.toString()));
+				}
 			} catch (Throwable ex) {
 				System.err.println("Execption sending message to player " + player.getSession().getId() + "[" + player.getUsername() + "]");
 				ex.printStackTrace(System.err);
