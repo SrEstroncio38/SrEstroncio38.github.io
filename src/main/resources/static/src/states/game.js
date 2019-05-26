@@ -6,7 +6,6 @@ Spacewar.gameState = function(game) {
 	this.maxRecharges = 300 
 	this.playerAmmo
 	this.ammoButton
-	this.ammoText
 	this.thrustText
 	this.bulletIsFired = false
 }
@@ -46,7 +45,6 @@ Spacewar.gameState.prototype = {
 		for (var i = 0; i < this.maxRecharges; i++) {
 			game.global.recharges[i] = {
 				image : game.add.sprite(0, 0, 'recharge'),
-				liveTime : 0
 			}
 			game.global.recharges[i].image.anchor.setTo(0.5, 0.5)
 			game.global.recharges[i].image.visible = false
@@ -127,8 +125,8 @@ Spacewar.gameState.prototype = {
 		//print ammo icon
 		game.global.ui.ammoButton = game.add.sprite(10,520, 'ammo');
 		var style = { fontSize: "56px", fill: "#ff0000"};
-		game.global.ui.ammoButton.addChild(this.ammoText = game.add.text(110,110, game.global.myPlayer.ammo, style));
-		this.ammoText.anchor.set(0.5,0.5);
+		game.global.ui.ammoButton.addChild(game.global.ui.ammoText = game.add.text(110,110, game.global.myPlayer.ammo, style));
+		game.global.ui.ammoText.anchor.set(0.5,0.5);
 		game.global.ui.ammoButton.inputEnabled = true;		
 		game.global.ui.ammoButton.fixedToCamera = true;
 		game.global.ui.ammoButton.scale.setTo(0.5,0.5);
@@ -175,29 +173,7 @@ Spacewar.gameState.prototype = {
 			rotRight : false
 		}
 
-		msg.bullet = false
-
-		//Spawn random recharges
-		let rnd = game.rnd.integerInRange(0, 1000);
-		if (rnd > 950){
-			if (!game.global.recharges[game.global.rechargesIdx].image.visible){
-				game.global.recharges[game.global.rechargesIdx].image.visible = true;
-				game.global.recharges[game.global.rechargesIdx].liveTime = 100;
-				game.global.recharges[game.global.rechargesIdx].image.x = game.world.randomX;
-				game.global.recharges[game.global.rechargesIdx].image.y = game.world.randomY;
-			}
-			game.global.rechargesIdx = (game.global.rechargesIdx + 1)% this.maxRecharges;
-		}
-		
-		for(var i = 0; i<this.maxRecharges;i++){
-			if (game.global.recharges[i].image.visible){
-				if (game.global.recharges[i].liveTime<=0)
-					game.global.recharges[i].image.visible = false;
-				else
-					game.global.recharges[i].liveTime--;
-			}
-		}
-		
+		msg.bullet = false		
 		
 		if (this.wKey.isDown)
 			msg.movement.thrust = true;
@@ -214,7 +190,7 @@ Spacewar.gameState.prototype = {
 
 		//update ammo text
 		if (this.bulletIsFired){
-			this.ammoText.setText(game.global.myPlayer.ammo.toString())
+			game.global.ui.ammoText.setText(game.global.myPlayer.ammo.toString())
 		}
 
 		//update thrust text

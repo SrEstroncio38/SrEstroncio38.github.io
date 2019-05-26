@@ -27,6 +27,7 @@ public class GameRoom {
 	//Variables de los players
 	private Map<String, Player> players = new ConcurrentHashMap<>();
 	private Map<Integer, Projectile> projectiles = new ConcurrentHashMap<>();
+	private Map<Integer, Recharge> recharges = new ConcurrentHashMap<>();
 	private AtomicInteger numPlayers = new AtomicInteger();
 	private final int MAXPLAYERS;
 	
@@ -164,6 +165,25 @@ public class GameRoom {
 	public void removeProjectile(Projectile projectile) {
 		players.remove(projectile.getId(), projectile);
 	}
+	
+	/********************************
+	 * 			RECARGAS			*
+	 ********************************/	
+
+	//Añade recargas
+	public void addRecharge(int id, Recharge recharge) {
+		recharges.put(id, recharge);
+	}
+	
+	//Devuelve las recargas
+	public Collection<Recharge> getRecharges() {
+		return recharges.values();
+	}
+	
+	//Elimna una recarga
+	public void removeRecharge(Recharge recharge) {
+		players.remove(recharge.getId(), recharge);
+	}
 
 	/********************************
 	 * 		FUNCIONES DE SALA		*
@@ -210,10 +230,13 @@ public class GameRoom {
 		ObjectNode json = mapper.createObjectNode();
 		ArrayNode arrayNodePlayers = mapper.createArrayNode();
 		ArrayNode arrayNodeProjectiles = mapper.createArrayNode();
+		ArrayNode arrayNodeRecharges = mapper.createArrayNode();
 
 		long thisInstant = System.currentTimeMillis();
 		Set<Integer> bullets2Remove = new HashSet<>();
+		Set<Integer> recharges2Remove = new HashSet<>();
 		boolean removeBullets = false;
+		boolean removeRecharges = false;
 
 		try {
 			// Update players
@@ -276,10 +299,40 @@ public class GameRoom {
 			if (removeBullets)
 				this.projectiles.keySet().removeAll(bullets2Remove);
 			
+			//Update recharges
+			for (Recharge recharge : getRecharges()) {
+				//Handle collision
+				for (Player player : getPlayers()) {
+					if (player.intersect(recharge) && !player.getDeath()) {
+						// System.out.println("Player " + player.getPlayerId() + " got bullets!!!");
+						player.fillAmmo();
+						recharge.setHit(true);
+						break;
+					}
+				}
+				ObjectNode jsonRecharge = mapper.createObjectNode();
+				jsonRecharge.put("id", recharge.getId());
+				if(!recharge.isHit() && recharge.isAlive(thisInstant))
+					jsonRecharge.put("isAlive", true);
+				else{
+					removeRecharges = true;
+					recharges2Remove.add(recharge.getId());
+					jsonRecharge.put("isAlive", false);
+				}
+				jsonRecharge.put("posX", recharge.getPosX());
+				jsonRecharge.put("posY", recharge.getPosY());
+				arrayNodeRecharges.addPOJO(jsonRecharge);
+			}
+			
+			if (removeRecharges)
+				this.recharges.keySet().removeAll(recharges2Remove);
+			
+			
 			//Este mensaje se encuentra en index.js
 			json.put("event", "GAME STATE UPDATE");
 			json.putPOJO("players", arrayNodePlayers);
 			json.putPOJO("projectiles", arrayNodeProjectiles);
+			json.putPOJO("recharges", arrayNodeRecharges);
 
 			this.broadcast(json.toString());
 		} catch (Throwable ex) {
