@@ -120,6 +120,15 @@ Spacewar.gameState.prototype = {
         game.global.ui.exitBtn.visible = false;
         game.global.ui.exitBtn.inputEnabled = false;
 		
+		//print ammo icon
+		game.global.ui.ammoButton = game.add.sprite(10,520, 'ammo');
+		var style = { fontSize: "56px", fill: "#ff0000"};
+		game.global.ui.ammoButton.addChild(game.global.ui.ammoText = game.add.text(110,110, game.global.myPlayer.ammo, style));
+		game.global.ui.ammoText.anchor.set(0.5,0.5);
+		game.global.ui.ammoButton.inputEnabled = true;		
+		game.global.ui.ammoButton.fixedToCamera = true;
+		game.global.ui.ammoButton.scale.setTo(0.5,0.5);
+		
 	},
 
 	create : function() {
@@ -150,15 +159,6 @@ Spacewar.gameState.prototype = {
 				Phaser.Keyboard.SPACEBAR ]);
 
 		game.camera.follow(game.global.myPlayer.image);
-		
-		//print ammo icon
-		game.global.ui.ammoButton = game.add.sprite(10,520, 'ammo');
-		var style = { fontSize: "56px", fill: "#ff0000"};
-		game.global.ui.ammoButton.addChild(game.global.ui.ammoText = game.add.text(110,110, game.global.myPlayer.ammo, style));
-		game.global.ui.ammoText.anchor.set(0.5,0.5);
-		game.global.ui.ammoButton.inputEnabled = true;		
-		game.global.ui.ammoButton.fixedToCamera = true;
-		game.global.ui.ammoButton.scale.setTo(0.5,0.5);
 		
 		//print thrust icon
 		game.global.ui.thrustButton = game.add.sprite(138,520, 'thrust');

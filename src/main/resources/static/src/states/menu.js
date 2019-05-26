@@ -2,6 +2,7 @@ Spacewar.menuState = function(game) {
 	this.currentinput
 	this.currentinputtext
 	this.deletingText
+	this.playingPlayers
 }
 
 function goToLobby(){
@@ -99,11 +100,11 @@ Spacewar.menuState.prototype = {
     	
     	// playing players list
     	style = { font: "24px Arial", fill: "#ffffff", align: "left"};
-    	game.global.playingPlayers = game.add.text(game.world.centerX+190, game.world.centerY-220, "", style);
+		this.playingPlayers = game.add.text(game.world.centerX+190, game.world.centerY-220, "", style);
     	mask = game.add.graphics(0, 0);
     	mask.beginFill(0xffffff);
 		mask.drawRect(game.world.centerX+190,game.world.centerY-220,1280,395);
-		game.global.playingPlayers.mask = mask;
+		this.playingPlayers.mask = mask;
     	let message = {
             //Mensaje que se trata en el WebsocketGameHandler.java
 			event : 'ASK PLAYING PLAYERS'
@@ -118,6 +119,8 @@ Spacewar.menuState.prototype = {
 	},
 
 	update : function() {
+		
+		this.playingPlayers.setText(game.global.playingPlayers);
 		
 		// Position currentinput correctly
 		if (currentinput.width > 566){

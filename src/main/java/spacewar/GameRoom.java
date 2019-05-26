@@ -369,7 +369,6 @@ public class GameRoom {
 			if (removeBullets)
 				this.projectiles.keySet().removeAll(bullets2Remove);
 			
-			/*
 			//Update recharges
 			for (Recharge recharge : getRecharges()) {
 				//Handle collision
@@ -397,8 +396,6 @@ public class GameRoom {
 			
 			if (removeRecharges)
 				this.recharges.keySet().removeAll(recharges2Remove);
-			*/
-			
 			
 			//Este mensaje se encuentra en index.js
 			json.put("event", "GAME STATE UPDATE");

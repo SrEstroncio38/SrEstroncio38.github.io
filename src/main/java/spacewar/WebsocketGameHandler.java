@@ -27,7 +27,6 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 	private AtomicInteger rechargeId = new AtomicInteger(0);
 	
 	//Locks
-	private Lock sessionLock = new ReentrantLock();
 	private Lock chatLock = new ReentrantLock();
 	private Lock roomChatLock = new ReentrantLock();
 	private Lock roomListLock = new ReentrantLock();
@@ -163,14 +162,14 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					Projectile projectile = new Projectile(player, this.projectileId.incrementAndGet());
 					room.addProjectile(projectile.getId(), projectile);					
 					player.setAmmo(node.path("ammo").asInt());
-				}/*
+				}
 				if(rechargeSpwn % 30 == 0) {
 					Recharge recharge = new Recharge(this.rechargeId.incrementAndGet());
 					Random rnd = new Random();
 					recharge.setPosition(rnd.nextInt(1880)+20, rnd.nextInt(1880)+20);
 					room.addRecharge(recharge.getId(), recharge);
 				}
-				rechargeSpwn++;*/
+				rechargeSpwn++;
 				break;
 				
 			//Mensaje que actualiza el nombre del jugador al escogido en name.js

@@ -8,7 +8,7 @@ window.onload = function() {
 		DEBUG_MODE : connectionData.debug,
 		socket : null,
 		chat : new Object,
-        playingPlayers : null,
+        playingPlayers : "",
         myRoomPoints: null,
 		rooms : {"name":[],"maxplayers":[],"currentplayers":[]},
 		projectiles : [],
@@ -169,7 +169,7 @@ window.onload = function() {
 			for (var player of msg.players) {
 				text += player.username + "\n";
 			}
-			game.global.playingPlayers.setText(text);
+			game.global.playingPlayers = text;
             break;
        /** 
         * Este mensaje se encuentra en SpacewarGame.java
@@ -225,6 +225,7 @@ window.onload = function() {
 						game.global.myPlayer.health1.x = player.posX - 50
 						game.global.myPlayer.health1.y = player.posY
 						game.global.ui.currentHealth.scale.setTo(2.23*scale, 3.42)
+						game.global.ui.ammoText.setText(game.global.myPlayer.ammo.toString())
 						game.global.myPlayer.points = player.points
 						if(player.thrust>50)
 							game.global.ui.thrustButtonG.alpha = 1;						
@@ -327,7 +328,6 @@ window.onload = function() {
 						game.global.recharges[recharge.id].image.visible = false
 				}
 			}
-			game.global.ui.ammoText.setText(game.global.myPlayer.ammo.toString())
             break
 
                             /*********************
