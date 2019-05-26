@@ -127,8 +127,8 @@ public class Player extends Spaceship {
 		this.ammo = ammo;
 	}
 	
-	public void addAmmo(int ammo) {
-		this.ammo += ammo;
+	public void fillAmmo() {
+		this.ammo = 50;
 	}
 	
 	public int getPoints() {

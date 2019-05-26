@@ -309,7 +309,20 @@ window.onload = function() {
 						game.global.projectiles[projectile.id].image.visible = false
 					}
 				}
+				
+				for (var recharge of msg.recharges){
+					if(recharge.isAlive){
+						game.global.recharges[recharge.id].image.x = recharge.posX
+						game.global.recharges[recharge.id].image.y = recharge.posY
+						if (game.global.recharges[recharge.id].image.visible === false) {
+							game.global.recharges[recharge.id].image.visible = true
+						}
+					}
+					else
+						game.global.recharges[recharge.id].image.visible = false
+				}
 			}
+			game.global.ui.ammoText.setText(game.global.myPlayer.ammo.toString())
             break
 
                             /*********************

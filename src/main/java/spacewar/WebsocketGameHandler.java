@@ -12,6 +12,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.util.Random;
 
 public class WebsocketGameHandler extends TextWebSocketHandler {
 	
@@ -23,6 +24,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 	private ObjectMapper mapper = new ObjectMapper();
 	private AtomicInteger playerId = new AtomicInteger(0);
 	private AtomicInteger projectileId = new AtomicInteger(0);
+	private AtomicInteger rechargeId = new AtomicInteger(0);
 	
 	//Locks
 	private Lock sessionLock = new ReentrantLock();
@@ -30,6 +32,8 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 	private Lock roomChatLock = new ReentrantLock();
 	private Lock roomListLock = new ReentrantLock();
 	private Lock leaveRoomLock = new ReentrantLock();
+	
+	private int rechargeSpwn; //Counts when to spawn a new recharge
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession unprotectedSession) throws Exception {
@@ -153,9 +157,16 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 						node.path("movement").get("rotRight").asBoolean());
 				if (node.path("bullet").asBoolean() && player.getDeath() == false) {
 					Projectile projectile = new Projectile(player, this.projectileId.incrementAndGet());
-					room.addProjectile(projectile.getId(), projectile);
+					room.addProjectile(projectile.getId(), projectile);					
 					player.setAmmo(node.path("ammo").asInt());
 				}
+				if(rechargeSpwn % 10 == 0) {
+					Recharge recharge = new Recharge(this.rechargeId.incrementAndGet());
+					Random rnd = new Random();
+					recharge.setPosition(rnd.nextInt(1880)+20, rnd.nextInt(1880)+20);
+					room.addRecharge(recharge.getId(), recharge);
+				}
+				rechargeSpwn++;
 				break;
 				
 			//Mensaje que actualiza el nombre del jugador al escogido en name.js
