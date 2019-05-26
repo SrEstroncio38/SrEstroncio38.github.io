@@ -160,7 +160,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					room.addProjectile(projectile.getId(), projectile);					
 					player.setAmmo(node.path("ammo").asInt());
 				}
-				if(rechargeSpwn % 10 == 0) {
+				if(rechargeSpwn % 30 == 0) {
 					Recharge recharge = new Recharge(this.rechargeId.incrementAndGet());
 					Random rnd = new Random();
 					recharge.setPosition(rnd.nextInt(1880)+20, rnd.nextInt(1880)+20);

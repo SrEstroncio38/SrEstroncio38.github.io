@@ -98,7 +98,7 @@ Spacewar.gameState.prototype = {
 		this.fireBullet = function() {
 			if (game.time.now > this.bulletTime && game.global.myPlayer.ammo > 0) {
 				this.bulletTime = game.time.now + 250;
-				game.global.myPlayer.ammo -= 1;
+				//game.global.myPlayer.ammo -= 1;
 				this.playerAmmo = game.global.myPlayer.ammo - 1;
 				// this.weapon.fire()
 				this.bulletIsFired = true;

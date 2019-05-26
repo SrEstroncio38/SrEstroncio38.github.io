@@ -2,7 +2,7 @@ package spacewar;
 
 public class Recharge extends SpaceObject{
 	private final int id;
-	private static final int LIFESPAN = 4000;
+	private static final int LIFESPAN = 7000;
 	private final long spawnInstant;
 	private boolean isHit = false;
 	

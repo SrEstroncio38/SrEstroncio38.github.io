@@ -211,6 +211,7 @@ window.onload = function() {
 				for (var player of msg.players) {
 					if (game.global.myPlayer.id == player.id) {
 						game.global.myPlayer.thrust = player.thrust
+						game.global.myPlayer.ammo = player.ammo
 						game.global.myPlayer.image.x = player.posX
 						game.global.myPlayer.image.y = player.posY
 						game.global.myPlayer.image.angle = player.facingAngle

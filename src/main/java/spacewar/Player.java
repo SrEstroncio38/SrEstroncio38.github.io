@@ -89,15 +89,15 @@ public class Player extends Spaceship {
 	public void loadMovement(boolean thrust, boolean brake, boolean rotLeft, boolean rotRight) {
 		if (_dead == false) {
 			if (thrust && this.thrust>0) {
-				this.thrust--;				
+				this.thrust = this.thrust - 0.5f;				
 			}
 			else if (!thrust && this.thrust<99) {
 				if (this.thrust<1) 
 					this.thrust = this.thrust + 0.1f;
 				else if (this.thrust<50) 
-					this.thrust = this.thrust + 0.4f;				
+					this.thrust = this.thrust + 0.5f;				
 				else
-					this.thrust = this.thrust + 0.3f;
+					this.thrust = this.thrust + 0.4f;
 			}
 			if (thrust && this.thrust<=0) {
 				thrust = false;
@@ -127,8 +127,10 @@ public class Player extends Spaceship {
 		this.ammo = ammo;
 	}
 	
-	public void fillAmmo() {
-		this.ammo = 50;
+	public void addAmmo(int ammo) {
+		this.ammo += ammo;
+		if (this.ammo > 50)
+			this.ammo = 50;
 	}
 	
 	public int getPoints() {
