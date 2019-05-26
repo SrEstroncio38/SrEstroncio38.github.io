@@ -15,33 +15,39 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class SpacewarGame {
-
+	//Instancia
 	public final static SpacewarGame INSTANCE = new SpacewarGame();
-
+	
+	//Variables generales
 	public final static int FPS = 30;
 	public final static long TICK_DELAY = 1000 / FPS;
 	public final static boolean DEBUG_MODE = true;
 	public final static boolean VERBOSE_MODE = true;
 
 	ObjectMapper mapper = new ObjectMapper();
-
+	
+	//Variables de jugadores
 	private Map<String, Player> players = new ConcurrentHashMap<>();
 	private AtomicInteger numPlayers = new AtomicInteger();
 	
+	//Variables de salas
 	private AtomicInteger numRooms = new AtomicInteger();
 	public Map<String,GameRoom> rooms = new ConcurrentHashMap<>();
 	
+	//Variables de jugadores DENTRO de salas
 	private Map<String, Player> playingPlayers = new ConcurrentHashMap<>();
 	private AtomicInteger numPlayingPlayers = new AtomicInteger();
 	private Lock playingPlayersLock = new ReentrantLock();
 	
 	private SpacewarGame() {
 		this.numRooms.getAndSet(-1);
-		/*rooms.put("Sala 1", new GameRoom());
-		rooms.put("Sala 2", new GameRoom());*/
-
 	}
 	
+	/********************************
+	 * 		FUNCIONES DE ROOM		*
+	 ********************************/
+	
+	//Elimina una sala y manda lista de salas a TODOS los jugadores
 	public void removeRoom(String name) {
 		if(rooms.remove(name) != null) {
 			numRooms.getAndDecrement();
@@ -49,6 +55,7 @@ public class SpacewarGame {
 		}
 	}
 	
+	//Añade una sala y manda lista de salas a TODOS los jugadores
 	public boolean addRoom(String name, String gameMode) {
 		if(rooms.putIfAbsent(name, new GameRoom(name, gameMode)) == null) {
 			numRooms.getAndIncrement();
@@ -59,10 +66,12 @@ public class SpacewarGame {
 		
 	}
 	
+	//Devuelve todas las rooms
 	public Collection<GameRoom> getRooms() {
 		return rooms.values();
 	}
 	
+	//Devuelve las salas que no esten activas
 	public Collection<GameRoom> getUnstartedRooms() {
 		Collection<GameRoom> unstartedRooms = new HashSet<>();
 		for (GameRoom room : getRooms()) {
@@ -72,6 +81,14 @@ public class SpacewarGame {
 		return unstartedRooms;
 	}
 	
+	/********************************
+	 * 		NOTIFICACIONES ROOM		*
+	 ********************************/
+	
+	/*
+	 * Manda un Broadcas a TODOS los players de las salas que hay
+	 * junto su nombre, los jugadores en la sala y los máximos
+	 */
 	public void notifyRoomList() {
 		ObjectNode json = mapper.createObjectNode();
 		ArrayNode arrayNodeRooms = mapper.createArrayNode();
@@ -97,6 +114,10 @@ public class SpacewarGame {
 		}
 	}
 	
+	/*
+	 * Manda un mensaje al player pasa como argumento de las salas que hay
+	 * junto su nombre, los jugadores en la sala y los máximos
+	 */
 	public void notifyRoomList(Player msgPlayer) {
 		ObjectNode json = mapper.createObjectNode();
 		ArrayNode arrayNodeRooms = mapper.createArrayNode();
@@ -122,16 +143,23 @@ public class SpacewarGame {
 		}
 	}
 
+	/********************************
+	 * 		FUNCIONES PLAYER		*
+	 ********************************/
+	
+	//Añade un jugador al juego y lo contabiliza
 	public void addPlayer(Player player) {
 		players.put(player.getSession().getId(), player);
 
 		numPlayers.getAndIncrement();
 	}
-
+	
+	//Devuelve los players del juego
 	public Collection<Player> getPlayers() {
 		return players.values();
 	}
-
+	
+	//Elimina un player asegurandose que también lo hace de una sala si es necesario
 	public void removePlayer(Player player) {
 		players.remove(player.getSession().getId());
 		removePlayingPlayer(player);
@@ -143,24 +171,43 @@ public class SpacewarGame {
 		this.numPlayers.decrementAndGet();
 	}
 	
+	/********************************
+	 * 	FUNCIONES PLAYER EN SALA	*
+	 ********************************/
+	
+	/*
+	 * Añade un player a la lista de jugadores dentro de alguna sala
+	 */
 	public void addPlayingPlayer(Player player) {
 		playingPlayersLock.lock();
 		playingPlayers.put(player.getSession().getId(), player);
 		numPlayingPlayers.getAndIncrement();
 		notifyPlayingPlayers();
 	}
-
+	
+	/*
+	 * Elimina un player de la lista de jugadores dentro de alguna sala
+	 */
 	public void removePlayingPlayer(Player player) {
 		playingPlayersLock.lock();
 		playingPlayers.remove(player.getSession().getId());
 		this.numPlayingPlayers.decrementAndGet();
 		notifyPlayingPlayers();
 	}
-
+	
+	//Devuelve los jugadores que se encuentren en alguna sala
 	public Collection<Player> getPlayingPlayers() {
 		return playingPlayers.values();
 	}
 	
+	/********************************
+	 * NOTIFICACIONES PLAYER EN SALA*
+	 ********************************/
+	
+	/*
+	 * Realiza un broadcast a TODOS los jugadores del juego, enviando
+	 * el id y el nombre de los jugadores que estén en alguna sala
+	 */
 	public void notifyPlayingPlayers() {
 		ObjectNode json = mapper.createObjectNode();
 		ArrayNode arrayNodePlayers = mapper.createArrayNode();
@@ -181,7 +228,10 @@ public class SpacewarGame {
 		}
 		playingPlayersLock.unlock();
 	}
-	
+	/*
+	 * Manda un mensaje al player pasado por argumento los jugadores del juego, 
+	 * enviando el id y el nombre de los jugadores que estén en alguna sala
+	 */
 	public void notifyPlayingPlayers(Player msgPlayer) {
 		playingPlayersLock.lock();
 		ObjectNode json = mapper.createObjectNode();
@@ -204,6 +254,12 @@ public class SpacewarGame {
 		playingPlayersLock.unlock();
 	}
 
+	
+	/********************************
+	 * 			BROADCAST			*
+	 ********************************/
+	
+	//Manda un mensaje a TODOS los jugadores del juego
 	public void broadcast(String message) {
 		for (Player player : getPlayers()) {
 			try {

@@ -105,11 +105,13 @@ Spacewar.menuState.prototype = {
 		mask.drawRect(game.world.centerX+190,game.world.centerY-220,1280,395);
 		game.global.playingPlayers.mask = mask;
     	let message = {
+            //Mensaje que se trata en el WebsocketGameHandler.java
 			event : 'ASK PLAYING PLAYERS'
 		}
 		game.global.socket.send(JSON.stringify(message))
 		
 		let message2 = {
+            //Mensaje que se trata en el WebsocketGameHandler.java
 			event : 'ASK ROOM LIST'
 		}
 		game.global.socket.send(JSON.stringify(message))
@@ -140,6 +142,7 @@ Spacewar.menuState.prototype = {
 
 		if (this.enterKey.isDown && currentinputtext.length > 0){
 			let message = {
+                //Mensaje que se trata en el WebsocketGameHandler.java
 				event : 'POST GLOBAL CHAT',
 				username: game.global.myPlayer.username,
 				text: currentinputtext

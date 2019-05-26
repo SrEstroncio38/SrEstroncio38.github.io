@@ -10,6 +10,7 @@ Spacewar.roomState = function(game) {
 
 function goToGame(){
 	let message = {
+        //Mensaje que se trata en WebsocketGameHandler.java
 		event : 'START GAME',
 		room : game.global.myPlayer.roomname
 	}
@@ -18,6 +19,7 @@ function goToGame(){
 
 function exitGame(){
 	let message = {
+        //Mensaje que se trata en WebsocketGameHandler.java
 		event : 'LEAVE ROOM',
 		room : game.global.myPlayer.roomname
 	}
@@ -161,6 +163,7 @@ Spacewar.roomState.prototype = {
 
 		if (this.enterKey.isDown && currentinputtext.length > 0){
 			let message = {
+                //Mensaje que se trata en WebsocketGameHandler.java
 				event : 'POST ROOM CHAT',
 				username: game.global.myPlayer.username,
 				text: currentinputtext

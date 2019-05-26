@@ -58,6 +58,7 @@ Spacewar.nameState.prototype = {
 
 		if (this.enterKey.isDown && game.global.myPlayer.username !== ""){
 			let message = {
+                    //Mensaje en WebsocketGameHandler.java
 					event : 'UPDATE NAME',
 					username: game.global.myPlayer.username
 				}

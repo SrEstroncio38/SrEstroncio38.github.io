@@ -24,19 +24,22 @@ public class GameRoom {
 	ObjectMapper mapper = new ObjectMapper();
 	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	
+	//Variables de los players
 	private Map<String, Player> players = new ConcurrentHashMap<>();
+	private Map<Integer, Projectile> projectiles = new ConcurrentHashMap<>();
 	private AtomicInteger numPlayers = new AtomicInteger();
 	private final int MAXPLAYERS;
+	
+	//Locks
 	private Lock playersLock = new ReentrantLock();
 	
-	private Map<Integer, Projectile> projectiles = new ConcurrentHashMap<>();
-	
+	//Atributos de la room
 	private final String roomName;
 	private final String GameMode;
 	private Player roomCreator;
-	
 	private AtomicBoolean isActive = new AtomicBoolean(false);
 
+	//Constructor
 	public GameRoom(String roomName, String GameModeRef) {
 		this.roomName = roomName;
 		this.GameMode = GameModeRef;
@@ -53,29 +56,26 @@ public class GameRoom {
 		}
 	}
 	
+	/********************************
+	 * 		FUNCIONES PLAYER		*
+	 ********************************/
+	
+	//Devuelve el numero de players
 	public int getNumPlayers() {
 		return numPlayers.get();
 	}
 	
+	//Devuelve el nombre de la sala
 	public String getRoomName() {
 		return roomName;
 	}
 	
-	public boolean isRoomActive() {
-		return isActive.get();
-	}
-	
-	public boolean isRoomOwner(Player player) {
-		if (roomCreator.getPlayerId() == player.getPlayerId()) {
-			return true;
-		}
-		return false;
-	}
-
+	//Devuelve el numero maximo de jugadores de la sala
 	public int getMaxPlayers() {
 		return this.MAXPLAYERS;
 	}
 	
+	//Añade un jugador a la sala si es que cabe
 	public boolean addPlayer(Player player) {
 		boolean result = false;
 		//Revisa que quepan los jugadores antes de agregarlo
@@ -88,6 +88,8 @@ public class GameRoom {
 			result = true;
 		}
 		playersLock.unlock();
+		
+		//Este mensaje se encuentra index.js
 		ObjectNode msg = mapper.createObjectNode();
 		msg.put("event", "NUM PLAYERS IN ROOM");
 		msg.put("numplayers", numPlayers.get());
@@ -96,11 +98,16 @@ public class GameRoom {
 		broadcast(msg.toString());
 		return result;
 	}
-
+	
+	//Devuelve los jugadores de la sala
 	public Collection<Player> getPlayers() {
 		return players.values();
 	}
-
+	
+	/*
+	 * Elimina un jugador de la sala comprobando que sea o no su creador
+	 * si es así, elimina la sala notificando de salida a TODOS LOS DE LA SALA
+	 */
 	public boolean removePlayer(Player player) {
 		boolean result = false;
 		playersLock.lock();
@@ -115,6 +122,8 @@ public class GameRoom {
 		if (player.getPlayerId() == roomCreator.getPlayerId()) {
 			result = true;
 		}
+		
+		//Este mensaje se recibe en index.js
 		ObjectNode msg = mapper.createObjectNode();
 		msg.put("event", "NUM PLAYERS IN ROOM");
 		msg.put("numplayers", numPlayers.get());
@@ -123,31 +132,63 @@ public class GameRoom {
 		broadcast(msg.toString());
 		return result;
 	}
+	
+	//Devuelve si la partida a comenzado o no
+	public boolean isRoomActive() {
+		return isActive.get();
+	}
+	
+	//Devuelve si el jugador pasado como argumento es el dueño de la sala
+	public boolean isRoomOwner(Player player) {
+		if (roomCreator.getPlayerId() == player.getPlayerId()) {
+			return true;
+		}
+		return false;
+	}
 
+	/********************************
+	 * 			PROYECTILES			*
+	 ********************************/
+	
+	//Añade proyectiles
 	public void addProjectile(int id, Projectile projectile) {
 		projectiles.put(id, projectile);
 	}
-
+	
+	//Devuelve los proyectiles
 	public Collection<Projectile> getProjectiles() {
 		return projectiles.values();
 	}
-
+	
+	//Elimna un proyectil
 	public void removeProjectile(Projectile projectile) {
 		players.remove(projectile.getId(), projectile);
 	}
 
+	/********************************
+	 * 		FUNCIONES DE SALA		*
+	 ********************************/
+	
+	//Comienza la partida y su correspondiente hilo
 	public void startGameLoop() {
 		this.isActive.set(true);
 		scheduler = Executors.newScheduledThreadPool(1);
 		scheduler.scheduleAtFixedRate(() -> tick(), SpacewarGame.TICK_DELAY, SpacewarGame.TICK_DELAY, TimeUnit.MILLISECONDS);
 	}
-
+	
+	//Termina la partida y su correspondiente hilo
 	public void stopGameLoop() {
 		if (scheduler != null) {
 			scheduler.shutdown();
+			this.isActive.set(false);
 		}
 	}
-
+	
+	/********************************
+	 * 			BROADCAST			*
+	 ********************************/
+	
+	//Envia un mensaje a todos los jugadores de la sala
 	public void broadcast(String message) {
 		for (Player player : getPlayers()) {
 			try {
@@ -159,7 +200,12 @@ public class GameRoom {
 			}
 		}
 	}
-
+	
+	/********************************
+	 * 		FUNCIONES DE PARTIDA	*
+	 ********************************/
+	
+	//Actualiza la partida en cada "tick" de reloj
 	private void tick() {
 		ObjectNode json = mapper.createObjectNode();
 		ArrayNode arrayNodePlayers = mapper.createArrayNode();
@@ -229,7 +275,8 @@ public class GameRoom {
 
 			if (removeBullets)
 				this.projectiles.keySet().removeAll(bullets2Remove);
-
+			
+			//Este mensaje se encuentra en index.js
 			json.put("event", "GAME STATE UPDATE");
 			json.putPOJO("players", arrayNodePlayers);
 			json.putPOJO("projectiles", arrayNodeProjectiles);

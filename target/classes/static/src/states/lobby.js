@@ -21,6 +21,7 @@ function returnPage() {
 function joinRoom(item) {
 	if (item.variable != "") {
 		let message = {
+                //Mensaje que se trata en WebsocketGameHandler.java
 				event : 'JOIN ROOM',
 				room: item.variable
 			}

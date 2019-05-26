@@ -18,6 +18,7 @@ function exitCreateRoom(){
 
 function reCreateRoom(){
 	let message = {
+            //Mensaje que se trata en el WebsocketGameHandler.java
 			event : 'CREATE ROOM',
 			roomname: game.global.myPlayer.roomname,
 			gamemode: game.global.myPlayer.gamemode

@@ -17,7 +17,8 @@ window.onload = function() {
 		otherPlayers : [],
 		ui : new Object()
 	}
-	
+    
+    //Inicializamos variables por si acaso
 	game.global.myPlayer.roomcurrentplayers = 0;
 	game.global.myPlayer.roommaxplayers = 0;
 	game.global.myPlayer.gamemode = "";
@@ -43,13 +44,24 @@ window.onload = function() {
 		
 		let currentpos
 		let endingpos
-		
+        
+        //Mensaje para debug generico
 		if (game.global.DEBUG_MODE) {
 			console.log('[DEBUG] ' + msg.event + ' message recieved')
 			console.dir(msg)
 		}
 		
 		switch (msg.event) {
+        
+                                /*******************
+                                 *     SESSION     *
+                                 *******************/
+
+        /**
+         * Este mensaje se encuentra en WebsocketGameHandler.java
+         * se envia cuando se genera una conexion al juego
+         * no hace falta que rellenos el nombre para generar este mensaje
+         */
 		case 'JOIN':
 			game.global.myPlayer.id = msg.id
 			game.global.myPlayer.shipType = msg.shipType
@@ -60,13 +72,126 @@ window.onload = function() {
 			if (game.global.DEBUG_MODE) {
 				console.log('[DEBUG] ID assigned to player: ' + game.global.myPlayer.id)
 			}
-			break
-		case 'NEW ROOM' :
-			game.global.myPlayer.room = {
-					name : msg.room
+            break
+        
+        /**
+         * Este mensaje se encuentra en WebsocketGameHandler.java
+         * se activa al perder la conexion
+         * se usa para notificar a TODOS los jugadores de han abandonado
+         * el juego y no hay que tenerlos  en cuenta
+         */
+		case 'REMOVE PLAYER' :
+			if (typeof game.global.otherPlayers[msg.id] != 'undefined'){
+				game.global.otherPlayers[msg.id].image.destroy()
+				game.global.otherPlayers[msg.id].userNLabel.destroy()
+				game.global.otherPlayers[msg.id].health2.destroy()
+				game.global.otherPlayers[msg.id].health1.destroy()
+				delete game.global.otherPlayers[msg.id]
 			}
+            break;
+
+                                /*******************
+                                 *      ROOMS       *
+                                 *******************/
+
+        /**
+         * Este mensaje se encuentra en WebsocketGameHandler.java
+         * se activa tras "JOIN ROOM"
+         * se usa para mandar a un player a una sala concreta, tambien
+         * se le indica si es o no el dueño de la sala
+         */
+		case 'SEND TO ROOM' :
+			game.global.myPlayer.roomname = msg.room;
 			game.global.myPlayer.isRoomOwner = msg.boss;
-			break
+			game.state.start('roomState');
+            break;
+
+        /**
+         * Este mensaje se encuentra en GameRoom.java
+         * se activa al modificar los jugadores de una sala
+         * se usa para saber el numero de jugadores acutales, maximos
+         * y el modo de juego de la sala en la que nos encontramos
+         */
+		case 'NUM PLAYERS IN ROOM' :
+			game.global.myPlayer.roomcurrentplayers = msg.numplayers;
+			game.global.myPlayer.roommaxplayers = msg.maxplayers;
+			game.global.myPlayer.gamemode = msg.gamemode;
+            break;
+
+         /**
+         * Este mensaje se encuentra en WebsocketGameHandler.java
+         * se activa al perder la conexion o al salir de la sala siendo el dueño
+         * se usa para forzar a los players a abandonar la sala o partida
+         * ya sea porque abandone el lider o no haya gente para jugar 
+         */
+		case 'FORCE LEAVING ROOM' :
+			game.world.setBounds(0, 0, 1280, 640);
+			game.state.start('lobbyState');
+            break;  
+        
+        /**
+         * Este mensaje se encuetra en WebsocketGameHandler.java
+         * se activa cuando creamos una sala y esta esta ya creada con el mismo nombre
+         */
+        case 'REPEATED ROOM' :
+			game.state.start('repeatedRoom');
+            break;     
+
+            
+                            /*********************
+                             *       GAMES       *
+                             *********************/
+            
+
+        /**
+         * Este mensaje se encuentra en WebsocketGameHandler.java
+         * se activa al llegar el mensaje "START GAME"
+         * se usa para comenzar una partida dentro de una sala
+         */
+		case 'SEND TO GAME' :
+			game.state.start('gameState');
+            break;
+        
+
+                            /*********************
+                             *      UPDATES      *
+                             *********************/
+
+            
+       /** 
+        * Este mensaje se encuentra en SpacewarGame.java
+        * se deberia activar siempre que se modifiquen los jugadores en una sala
+        * se usa para actualizar la lista de jugadores del menu principal 
+        */
+		case 'UPDATE PLAYING PLAYERS' :
+			let text = "";
+			for (var player of msg.players) {
+				text += player.username + "\n";
+			}
+			game.global.playingPlayers.setText(text);
+            break;
+       /** 
+        * Este mensaje se encuentra en SpacewarGame.java
+        * se deberia activar siempre que se modifiquen las salas o los jugadores de ellas
+        * se usa para actualizar la lista de salas del lobby 
+        */
+		case 'UPDATE ROOM LIST' :
+            game.global.rooms["name"] = [];
+            game.global.rooms["maxplayers"] = [];
+            game.global.rooms["currentplayers"] = [];
+			for (var room of msg.rooms) {
+                game.global.rooms["name"][room.index]= room.name;
+                game.global.rooms["maxplayers"][room.index]= room.maxplayers;
+                game.global.rooms["currentplayers"][room.index]= room.currentplayers;
+                console.log(game.global.rooms)
+			}
+            break;
+
+         /**
+         * Este mensaje se encuentra dentro de GameRoom.java
+         * se activa con cada tick y funciona para actualizar los datos
+         * de la partida, tanto tuyos como el del resto de jugadores
+         */
 		case 'GAME STATE UPDATE' :
 			if (typeof game.global.myPlayer.image !== 'undefined') {
 				for (var player of msg.players) {
@@ -171,51 +296,17 @@ window.onload = function() {
 					}
 				}
 			}
-			break
-		case 'SEND TO ROOM' :
-			game.global.myPlayer.roomname = msg.room;
-			game.global.myPlayer.isRoomOwner = msg.boss;
-			game.state.start('roomState');
-			break;
-		case 'REMOVE PLAYER' :
-			if (typeof game.global.otherPlayers[msg.id] != 'undefined'){
-				game.global.otherPlayers[msg.id].image.destroy()
-				game.global.otherPlayers[msg.id].userNLabel.destroy()
-				game.global.otherPlayers[msg.id].health2.destroy()
-				game.global.otherPlayers[msg.id].health1.destroy()
-				delete game.global.otherPlayers[msg.id]
-			}
-			break;
-		case 'FORCE LEAVING ROOM' :
-			game.world.setBounds(0, 0, 1280, 640);
-			game.state.start('lobbyState');
-			break;
-		case 'SEND TO GAME' :
-			game.state.start('gameState');
-			break;
-		case 'NUM PLAYERS IN ROOM' :
-			game.global.myPlayer.roomcurrentplayers = msg.numplayers;
-			game.global.myPlayer.roommaxplayers = msg.maxplayers;
-			game.global.myPlayer.gamemode = msg.gamemode;
-			break;
-		case 'UPDATE PLAYING PLAYERS' :
-			let text = "";
-			for (var player of msg.players) {
-				text += player.username + "\n";
-			}
-			game.global.playingPlayers.setText(text);
-			break;
-		case 'UPDATE ROOM LIST' :
-            game.global.rooms["name"] = [];
-            game.global.rooms["maxplayers"] = [];
-            game.global.rooms["currentplayers"] = [];
-			for (var room of msg.rooms) {
-                game.global.rooms["name"][room.index]= room.name;
-                game.global.rooms["maxplayers"][room.index]= room.maxplayers;
-                game.global.rooms["currentplayers"][room.index]= room.currentplayers;
-                console.log(game.global.rooms)
-			}
-			break;
+            break
+
+                            /*********************
+                             *      PRINTS       *
+                             *********************/
+
+        /** 
+         * Este mensaje se encuentra en WebsocketGameHandler.java
+         * se recibe a partir del mensaje "POST GLOBAL CHAT"
+         * es quien manda pintar los mensajes en el chat global del menu
+         */    
 		case 'PRINT GLOBAL CHAT' :
 			currentpos = game.global.chat.text.length;
 			endingpos = currentpos + msg.username.length + 3;
@@ -223,7 +314,12 @@ window.onload = function() {
 			game.global.chat.element.setText(game.global.chat.text);
 			game.global.chat.element.addColor('#ffff44', currentpos);
 			game.global.chat.element.addColor('#ffffff', endingpos);
-			break;
+            break;
+        /** 
+         * Este mensaje se encuentra en WebsocketGameHandler.java
+         * se recibe a partir del mensaje "POST ROOM CHAT"
+         * es quien manda pintar los mensajes en el chat de cada room
+         */  
 		case 'PRINT ROOM CHAT' :
 			currentpos = game.global.myPlayer.chattext.length;
 			endingpos = currentpos + msg.username.length + 3;
@@ -231,7 +327,21 @@ window.onload = function() {
 			game.global.myPlayer.chat.setText(game.global.myPlayer.chattext);
 			game.global.myPlayer.chat.addColor('#ffff44', currentpos);
 			game.global.myPlayer.chat.addColor('#ffffff', endingpos);
-			break;
+            break;
+        
+        /**
+         * LO HE BUSCADO EN TODOS LOS SRC QUE DEBERIA PODER ESTAR Y NO LO HE ENCONTRADO
+         * LO COMENTO DE MOMENTO POR SI ES NECESARIO POSTERIORMENTE
+         * CREO QUE ES LO RESIDUOS DEL ANTIGUO JOIN ROOM
+         */
+        /*
+		case 'NEW ROOM' :
+			game.global.myPlayer.room = {
+					name : msg.room
+			}
+			game.global.myPlayer.isRoomOwner = msg.boss;
+            break
+        */
 		default :
 			console.dir(msg)
 			break
@@ -244,7 +354,8 @@ window.onload = function() {
 	game.state.add('menuState', Spacewar.menuState)
 	game.state.add('lobbyState', Spacewar.lobbyState)
 	game.state.add('ratingState', Spacewar.ratingState)	
-	game.state.add('createRoom', Spacewar.createRoom)
+    game.state.add('createRoom', Spacewar.createRoom)
+    game.state.add('repeatedRoom', Spacewar.repeatedRoom)
 	game.state.add('nameState', Spacewar.nameState)
 	game.state.add('matchmakingState', Spacewar.matchmakingState)
 	game.state.add('roomState', Spacewar.roomState)

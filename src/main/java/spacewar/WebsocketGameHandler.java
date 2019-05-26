@@ -14,13 +14,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class WebsocketGameHandler extends TextWebSocketHandler {
-
+	
+	//Instancia de juego
 	private SpacewarGame game = SpacewarGame.INSTANCE;
+	
+	//Atributos para jugadores
 	private static final String PLAYER_ATTRIBUTE = "PLAYER";
 	private ObjectMapper mapper = new ObjectMapper();
 	private AtomicInteger playerId = new AtomicInteger(0);
 	private AtomicInteger projectileId = new AtomicInteger(0);
 	
+	//Locks
 	private Lock sessionLock = new ReentrantLock();
 	private Lock chatLock = new ReentrantLock();
 	private Lock roomChatLock = new ReentrantLock();
@@ -35,6 +39,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 		Player player = new Player(playerId.incrementAndGet(), session);
 		session.getAttributes().put(PLAYER_ATTRIBUTE, player);
 		
+		//Este evento se genera al conectarse, se trata en index.js y en este archivo
 		ObjectNode msg = mapper.createObjectNode();
 		msg.put("event", "JOIN");
 		msg.put("id", player.getPlayerId());
@@ -65,7 +70,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 			String roomname;
 
 			switch (node.get("event").asText()) {
-			//Mensaje que se activa cuando se entra en la aplicacion
+			//Mensaje que se genera cuando se crea la conexión se trata aqui y en index.js
 			case "JOIN":
 				msg.put("event", "JOIN");
 				msg.put("id", player.getPlayerId());
@@ -74,19 +79,25 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				msg.put("ammo", player.getAmmo());
 				player.getSession().sendMessage(new TextMessage(msg.toString()));
 				break;
+				
+			//Mensaje que se genera en el preload de menu.js
 			case "ASK PLAYING PLAYERS":
 				game.notifyPlayingPlayers(player);
 				break;
+				
+			//Mensaje que se genera en el preload de menu.js
 			case "ASK ROOM LIST":
 				game.notifyRoomList(player);
 				break;
-			//Mensaje que permite entrar a la sala pasada en "room", en caso de null entra en una default, GLOBAL
+				
+			//Mensaje que se genera al unirse a una sala en lobby.js
 			case "JOIN ROOM":
 				roomname = node.path("room").asText();
 				room = game.rooms.get(roomname);
 				if (room != null) {
 					if (room.addPlayer(player)) {
 						game.addPlayingPlayer(player);
+						//Mensaje que se trata en index.js
 						msg.put("event", "SEND TO ROOM");
 						msg.put("room", roomname);
 						msg.put("boss", room.isRoomOwner(player));
@@ -95,6 +106,8 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				}
 				game.notifyRoomList();
 				break;
+				
+			//Mensaje que se genera al abandonar una sala en room.js	
 			case "LEAVE ROOM":
 				roomname = node.path("room").asText();
 				leaveRoomLock.lock();
@@ -104,6 +117,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				if (room.removePlayer(player)) {
 					for (Player cplayer : room.getPlayers()) {
 						game.removePlayingPlayer(cplayer);
+						//Mensaje que se trata en index.js
 						msg.put("event", "FORCE LEAVING ROOM");
 						cplayer.getSession().sendMessage(new TextMessage(msg.toString()));
 					}
@@ -114,7 +128,8 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				leaveRoomLock.unlock();
 				game.notifyRoomList();
 				break;
-			//Mensaje para actualizar la posicion del jugador
+				
+			//Mensaje que se genera en game.js para actualizar la posicion del jugador 	
 			case "UPDATE MOVEMENT":
 				room = null;
 				for (GameRoom croom : game.getRooms()) {
@@ -133,7 +148,8 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					player.setAmmo(node.path("ammo").asInt());
 				}
 				break;
-			//Mensaje que actualiza el nombre del jugador al escogido	
+				
+			//Mensaje que actualiza el nombre del jugador al escogido en name.js
 			case "UPDATE NAME":
 				player.setUsername(node.path("username").asText());
 				for (Player currentplayer : game.getPlayers()) {
@@ -142,7 +158,8 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					}
 				}
 				break;
-			//Mensaje que se llama cuando se crea una nueva sala para recibir su nombre
+				
+			//Mensaje que se llama cuando se crea una nueva sala en createRoom.js
 			case "CREATE ROOM":
 				roomname = node.path("roomname").asText();
 				boolean isRoomCreated;
@@ -154,15 +171,22 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					if (room != null) {
 						if (room.addPlayer(player)) {
 							game.addPlayingPlayer(player);
+							//Mensaje tratado en index.js
 							msg.put("event", "SEND TO ROOM");
 							msg.put("room", roomname);
 							msg.put("boss", room.isRoomOwner(player));
 							player.getSession().sendMessage(new TextMessage(msg.toString()));
 						}
-					}
+					} 
+				} else {
+					//Mensaje tratado en index.js
+					msg.put("event", "REPEATED ROOM");
+					player.getSession().sendMessage(new TextMessage(msg.toString()));
 				}
 				game.notifyRoomList();
 				break;
+				
+			//Mensaje que se genera al empezar la partida en room.js	
 			case "START GAME":
 				roomname = node.path("room").asText();
 				leaveRoomLock.lock();
@@ -177,16 +201,19 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				}
 				leaveRoomLock.unlock();
 				break;
-			//Mensaje que imprime una cadena de texto nueva en el chat global (a todo el mundo conectado)
+				
+			//Mensaje que se genera en menu.js que imprime una cadena de texto nueva en el chat global (a todo el mundo conectado)
 			case "POST GLOBAL CHAT":
 				chatLock.lock();
+				//Mensaje que se trata en index.js
 				msg.put("event", "PRINT GLOBAL CHAT");
 				msg.put("username", node.path("username").asText());
 				msg.put("text", node.path("text").asText());
 				game.broadcast(msg.toString());
 				chatLock.unlock();
 				break;
-			//Mensaje que imprime una cadena de texto nueva en el chat local (a todo el mundo en tu partida)
+				
+			//Mensaje que se genera en room.js imprime una cadena de texto nueva en el chat local (a todo el mundo en tu partida)
 			case "POST ROOM CHAT":
 				roomChatLock.lock();
 				room = null;
@@ -197,6 +224,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					}
 				}
 				if (room != null) {
+					//Mensaje que se trata en index.js
 					msg.put("event", "PRINT ROOM CHAT");
 					msg.put("username", node.path("username").asText());
 					msg.put("text", node.path("text").asText());
@@ -237,6 +265,8 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 			if (room.removePlayer(player)) {
 				for (Player cplayer : room.getPlayers()) {
 					game.removePlayingPlayer(cplayer);
+					
+					//Mensaje que se trata en index.js
 					msg.put("event", "FORCE LEAVING ROOM");
 					cplayer.getSession().sendMessage(new TextMessage(msg.toString()));
 				}
