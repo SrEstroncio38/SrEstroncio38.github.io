@@ -8,8 +8,12 @@ function selectClassic(){
 	game.global.myPlayer.gamemode = "Classic"
 }
 
-function selectBattleRoyal(){
-	game.global.myPlayer.gamemode = "BattleRoyal"
+function selectBattleRoyale(){
+	game.global.myPlayer.gamemode = "BattleRoyale"
+}
+
+function selectBattleRoyalePlus(){
+	game.global.myPlayer.gamemode = "BattleRoyalePlus"
 }
 
 function exitCreateRoom(){
@@ -79,28 +83,36 @@ Spacewar.createRoom.prototype = {
 		
 		//Colocamos boton classic
 		var style2 = { font: "20px Arial", fill: "#ffffff", align: "center" };
-		classic = game.add.button(game.world.centerX - 150, game.world.centerY + 170, 'roombg',selectClassic, 2, 1, 0);
+		classic = game.add.button(game.world.centerX - 200, game.world.centerY + 170, 'roombg',selectClassic, 2, 1, 0);
 		classic.scale.setTo(0.5,0.5);
 		classic.anchor.setTo(0.5,0.5)
-		t1 = game.add.text(game.world.centerX - 150, game.world.centerY + 175, "Classic" , style2);
+		t1 = game.add.text(game.world.centerX - 200, game.world.centerY + 170, "Classic" , style2);
 		t1.anchor.setTo(0.5,0.5)
 		
-		//Colocamos boton Battle royal
+		//Colocamos boton Battle royale
 		var style2 = { font: "20px Arial", fill: "#ffffff", align: "center" };
-		BTR = game.add.button(game.world.centerX + 150, game.world.centerY + 170, 'roombg',selectBattleRoyal, 2, 1, 0);
+		BTR = game.add.button(game.world.centerX, game.world.centerY + 170, 'roombg',selectBattleRoyale, 2, 1, 0);
 		BTR.scale.setTo(0.5,0.5);
 		BTR.anchor.setTo(0.5,0.5)
-		t2 = game.add.text(game.world.centerX + 150, game.world.centerY + 175, "BattleRoyal" , style2);
+		t2 = game.add.text(game.world.centerX, game.world.centerY + 170, "BattleRoyale" , style2);
 		t2.anchor.setTo(0.5,0.5)
+		
+		//Colocamos boton Battle royale
+		var style2 = { font: "20px Arial", fill: "#ffffff", align: "center" };
+		BTR2 = game.add.button(game.world.centerX + 200, game.world.centerY + 170, 'roombg',selectBattleRoyalePlus, 2, 1, 0);
+		BTR2.scale.setTo(0.5,0.5);
+		BTR2.anchor.setTo(0.5,0.5)
+		t3 = game.add.text(game.world.centerX + 200, game.world.centerY + 170, "BattleRoyale+" , style2);
+		t3.anchor.setTo(0.5,0.5)
 		
 		//Texto modo de juego
 		gamemodebg = game.add.sprite(game.world.centerX , game.world.centerY + 250, 'gamemodebg');
 		gamemodebg.anchor.setTo(0.5,0.5)
 		gamemodebg.scale.setTo(0.5,0.5)
-		t3 = game.add.text(game.world.centerX, game.world.centerY + 235, "Modo elegido:" , style);
-		t3.anchor.setTo(0.5,0.5)
-		t3 = game.add.text(game.world.centerX, game.world.centerY + 265, game.global.myPlayer.gamemode , style);
-		t3.anchor.setTo(0.5,0.5)
+		t4 = game.add.text(game.world.centerX, game.world.centerY + 235, "Modo elegido:" , style);
+		t4.anchor.setTo(0.5,0.5)
+		t4 = game.add.text(game.world.centerX, game.world.centerY + 265, game.global.myPlayer.gamemode , style);
+		t4.anchor.setTo(0.5,0.5)
 		
 		deletingText = false;
 		
@@ -112,7 +124,7 @@ Spacewar.createRoom.prototype = {
 	        create.inputEnabled = false;
 		}
 		
-		t3.text = game.global.myPlayer.gamemode
+		t4.text = game.global.myPlayer.gamemode
 		if (this.backKey.isDown){
 			if (!deletingText) {
 				game.global.myPlayer.roomname = game.global.myPlayer.roomname.substring(0,game.global.myPlayer.roomname.length-1);

@@ -65,8 +65,11 @@ public class GameRoom {
 			case "Classic":
 				MAXPLAYERS = 2;
 				break;
-			case "BattleRoyal":
+			case "BattleRoyale":
 				MAXPLAYERS = 20;
+				break;
+			case "BattleRoyalePlus":
+				MAXPLAYERS = 100;
 				break;
 			default:
 				MAXPLAYERS = 4;
@@ -467,7 +470,9 @@ public class GameRoom {
             	int currentscore = obj.getInt(username);
             	if (username.equals(player.getUsername())) {
             		found = true;
-            		currentscore = player.getPoints();
+            		if (player.getPoints() > currentscore) {
+            			currentscore = player.getPoints();
+            		}
             	}
             	newJson.add(username, currentscore);
             }

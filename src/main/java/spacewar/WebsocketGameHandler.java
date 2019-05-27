@@ -145,7 +145,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 			
 				roomListLock.lock();
 				int i = 1;
-				while(game.addRoom("Sala "+i,"BattleRoyal") == false) i++;
+				while(game.addRoom("Sala "+i,"BattleRoyale") == false) i++;
 				roomListLock.unlock();
 				room = game.rooms.get("Sala "+i);
 				if (room != null) {

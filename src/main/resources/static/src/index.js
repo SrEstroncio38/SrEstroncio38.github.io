@@ -345,17 +345,19 @@ window.onload = function() {
          * es quien manda pintar los mensajes en el chat de cada room
          */  
 		case 'PRINT ROOM CHAT' :
-			currentpos = game.global.myPlayer.chattext.length;
-			endingpos = currentpos + msg.username.length + 3;
-			if (msg.username != "") {
-				game.global.myPlayer.chattext += "\n[" + msg.username + "]: " + msg.text;
-				game.global.myPlayer.chat.setText(game.global.myPlayer.chattext);
-				game.global.myPlayer.chat.addColor('#ffff44', currentpos);
-				game.global.myPlayer.chat.addColor('#ffffff', endingpos);
-			} else {
-				game.global.myPlayer.chattext += "\n" + msg.text;
-				game.global.myPlayer.chat.setText(game.global.myPlayer.chattext);
-				game.global.myPlayer.chat.addColor('#aaaaaa', currentpos);
+			if (typeof game.global.myPlayer.chattext != 'undefined') {
+				currentpos = game.global.myPlayer.chattext.length;
+				endingpos = currentpos + msg.username.length + 3;
+				if (msg.username != "") {
+					game.global.myPlayer.chattext += "\n[" + msg.username + "]: " + msg.text;
+					game.global.myPlayer.chat.setText(game.global.myPlayer.chattext);
+					game.global.myPlayer.chat.addColor('#ffff44', currentpos);
+					game.global.myPlayer.chat.addColor('#ffffff', endingpos);
+				} else {
+					game.global.myPlayer.chattext += "\n" + msg.text;
+					game.global.myPlayer.chat.setText(game.global.myPlayer.chattext);
+					game.global.myPlayer.chat.addColor('#aaaaaa', currentpos);
+				}
 			}
             break;
         

@@ -19,16 +19,13 @@ Spacewar.ratingState.prototype = {
 		if (game.global.DEBUG_MODE) {
 			console.log("[DEBUG] Entering **RATING** state");
 		}
-	},
-
-	preload : function() {
 		
 		game.global.myPlayer.rankingtext = "Cargando...";
         game.global.myPlayer.rankingnumber = "";
         game.global.myPlayer.myrankingtext = "";
-
+        
         $.getJSON("./playerScores.json", function (data) {
-            console.log(game.global.myPlayer.username)
+            //console.log(game.global.myPlayer.username)
         	game.global.myPlayer.rankingtext = "";
             game.global.myPlayer.rankingnumber = "";
             playerFound = false;
@@ -75,7 +72,9 @@ Spacewar.ratingState.prototype = {
             }
             
         });
-		
+	},
+
+	preload : function() {
         
 	},
 
