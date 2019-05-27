@@ -416,6 +416,7 @@ public class GameRoom {
 					if (player.intersect(recharge) && !player.getDeath() && !player.getWin()) {
 						//System.out.println("Player " + player.getPlayerId() + " got bullets!!!");
 						player.addAmmo(10);
+						player.addPoints(1);
 						recharge.setHit(true);
 						break;
 					}	
