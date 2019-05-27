@@ -38,7 +38,9 @@ Spacewar.ratingState.prototype = {
 	            	}
 	            }
 	            game.global.myPlayer.rankingtext += (i+1) + ". " + highername + "\n";
-	            game.global.myPlayer.rankingnumber += higherpoints + "\n";
+	            if (higherpoints > -1) {
+	            	game.global.myPlayer.rankingnumber += higherpoints + "\n";
+	            }
 	            delete data[highername];
         	}
         });
