@@ -1,6 +1,7 @@
 Spacewar.ratingState = function(game) {
 	this.rankinglist;
-	this.rankinglist2;
+    this.rankinglist2;
+    this.rankinglist3;
 }
 
 function goToLobby(){
@@ -23,11 +24,14 @@ Spacewar.ratingState.prototype = {
 	preload : function() {
 		
 		game.global.myPlayer.rankingtext = "Cargando...";
-		game.global.myPlayer.rankingnumber = "";
+        game.global.myPlayer.rankingnumber = "";
+        game.global.myPlayer.myrankingtext = "";
 
         $.getJSON("./playerScores.json", function (data) {
+            console.log(game.global.myPlayer.username)
         	game.global.myPlayer.rankingtext = "";
-        	game.global.myPlayer.rankingnumber = "";
+            game.global.myPlayer.rankingnumber = "";
+            playerFound = false;
         	for (var i = 0; i < 10; i++){
         		highername = "";
         		higherpoints = -1;
@@ -36,16 +40,43 @@ Spacewar.ratingState.prototype = {
 	            		highername = name;
 	            		higherpoints = data[name];
 	            	}
-	            }
+                }
+                if ((highername) == (game.global.myPlayer.username)){
+                    playerFound = true;
+                }
 	            game.global.myPlayer.rankingtext += (i+1) + ". " + highername + "\n";
 	            if (higherpoints > -1) {
 	            	game.global.myPlayer.rankingnumber += higherpoints + "\n";
 	            }
 	            delete data[highername];
-        	}
+            }
+            var j = 11;
+            
+            while (!playerFound){
+        		highername = "";
+                higherpoints = -1;
+                flag = false;
+	            for (var name of Object.keys(data)){
+                    flag = true;
+	            	if (data[name] > higherpoints) {
+	            		highername = name;
+	            		higherpoints = data[name];
+	            	}
+                }
+                if ((highername) == (game.global.myPlayer.username)){
+                    playerFound = true;
+                    game.global.myPlayer.myrankingtext = j + ". " + highername + "      "+higherpoints+"\n";
+                }
+	            j++;
+                delete data[highername];
+                if(!flag) playerFound = true;
+                console.log(highername);
+                console.log(game.global.myPlayer.myrankingtext);
+            }
+            
         });
 		
-
+        
 	},
 
 	create : function() {
@@ -72,12 +103,23 @@ Spacewar.ratingState.prototype = {
         this.rankinglist = game.add.text(350, 170, "", style);
         style = { font: "24px Arial", fill: "#ffffff", align: "right", boundsAlignH: 'left' };
         this.rankinglist2 = game.add.text(850, 170, "", style);
+
+        var textbg = game.add.sprite(330 , 505, 'gamemodebg');
+		//textbg.anchor.setTo(0.5,0.5)
+        textbg.scale.setTo(0.9,0.4)
+        
+        //Añadimos miRank
+        style = { font: "24px Arial", fill: "#ffffff", align: "left", boundsAlignH: 'left' };
+        this.rankinglist3 = game.add.text(350, 525, "", style);
+
+        
 	},
 
 	update : function() {
 
 		this.rankinglist.setText(game.global.myPlayer.rankingtext);
-		this.rankinglist2.setText(game.global.myPlayer.rankingnumber);
+        this.rankinglist2.setText(game.global.myPlayer.rankingnumber);
+        this.rankinglist3.setText(game.global.myPlayer.myrankingtext);
 		
 	},		
 	
