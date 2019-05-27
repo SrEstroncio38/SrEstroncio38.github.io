@@ -7,7 +7,7 @@ Spacewar.lobbyState = function(game) {
 //Funcion para entrarEnMatchMaking
 function enterMatchMaking(){
 
-    //game.state.start('matchmakingState');
+    game.state.start('matchmakingState');
 }
 
 function advancePage() {
@@ -54,6 +54,8 @@ Spacewar.lobbyState.prototype = {
     },
 
     preload : function() {
+
+        game.world.setBounds(0, 0, 1280, 640)
 
     	currentpage = 0;
 

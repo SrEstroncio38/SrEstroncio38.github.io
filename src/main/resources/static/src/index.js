@@ -241,10 +241,11 @@ window.onload = function() {
 						}
 						if (player.win) {
 							game.global.ui.victoryRoyale.alpha = 1.0;
-						}
+                        }
+                        game.global.myPlayer.endGame = false;
 						if (player.death || player.win) {
-							game.global.ui.exitBtn.visible = true;
-					        game.global.ui.exitBtn.inputEnabled = true;
+                            game.global.myPlayer.endGame = true;
+                            game.global.ui.exitBtn.alpha = 1.0;
 						}
 					} else {
 						if (typeof game.global.otherPlayers[player.id] == 'undefined') {

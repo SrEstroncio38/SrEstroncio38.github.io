@@ -93,7 +93,7 @@ public class GameRoom {
 	}
 	
 	//Añade un jugador a la sala si es que cabe
-	public boolean addPlayer(Player player) {
+	public boolean addPlayer(Player player, boolean FlagQueue) {
 		boolean result = false;
 			//Revisa que quepan los jugadores antes de agregarlo
 			playersLock.lock();
@@ -107,10 +107,12 @@ public class GameRoom {
 					playersLock.unlock();
 				} else {
 					playersLock.unlock();
-					try {
-						waitingPlayers.put(player);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
+					if(FlagQueue) {
+						try {
+							waitingPlayers.put(player);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			} else {
@@ -145,7 +147,7 @@ public class GameRoom {
 			count = this.numPlayers.decrementAndGet();
 			Player newPlayer = waitingPlayers.poll();
 			if (newPlayer != null) {
-				if (addPlayer(newPlayer)) {
+				if (addPlayer(newPlayer,true)) {
 					try {
 						//Mensaje que se trata en index.js
 						msg.put("event", "SEND TO ROOM");

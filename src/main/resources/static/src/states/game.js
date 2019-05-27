@@ -11,21 +11,24 @@ Spacewar.gameState = function(game) {
 }
 
 function exitGameToLobby () {
-	let message = {
-        //Mensaje que se trata en WebsocketGameHandler.java
-		event : 'LEAVE ROOM',
-		room : game.global.myPlayer.roomname
-	}
-	game.global.myPlayer.gamemode = ""
-	game.global.myPlayer.roomname = ""
-	game.global.socket.send(JSON.stringify(message))
-	game.world.setBounds(0, 0, 1280, 640)
-	game.input.keyboard.removeKeyCapture(Phaser.Keyboard.W);
-	game.input.keyboard.removeKeyCapture(Phaser.Keyboard.A);
-	game.input.keyboard.removeKeyCapture(Phaser.Keyboard.S);
-	game.input.keyboard.removeKeyCapture(Phaser.Keyboard.D);
-	game.input.keyboard.removeKeyCapture(Phaser.Keyboard.SPACEBAR);
-	game.state.start('lobbyState')
+    if (game.global.myPlayer.endGame){
+        let message = {
+            //Mensaje que se trata en WebsocketGameHandler.java
+            event : 'LEAVE ROOM',
+            room : game.global.myPlayer.roomname
+        }
+        game.global.myPlayer.gamemode = ""
+        game.global.myPlayer.roomname = ""
+        game.global.socket.send(JSON.stringify(message))
+        game.world.setBounds(0, 0, 1280, 640)
+        game.input.keyboard.removeKeyCapture(Phaser.Keyboard.W);
+        game.input.keyboard.removeKeyCapture(Phaser.Keyboard.A);
+        game.input.keyboard.removeKeyCapture(Phaser.Keyboard.S);
+        game.input.keyboard.removeKeyCapture(Phaser.Keyboard.D);
+        game.input.keyboard.removeKeyCapture(Phaser.Keyboard.SPACEBAR);
+        //game.global.ui.exitBtn = null;
+        game.state.start('lobbyState')
+    }
 }
 
 Spacewar.gameState.prototype = {
@@ -117,8 +120,8 @@ Spacewar.gameState.prototype = {
         game.global.ui.exitBtn.scale.setTo(0.5, 0.5);
         game.global.ui.exitBtn.anchor.setTo(0.5,0.5);
         game.global.ui.exitBtn.fixedToCamera = true;
-        game.global.ui.exitBtn.visible = false;
-        game.global.ui.exitBtn.inputEnabled = false;
+        game.global.ui.exitBtn.alpha = 0.0;
+        
 		
 		//print ammo icon
 		game.global.ui.ammoButton = game.add.sprite(10,520, 'ammo');

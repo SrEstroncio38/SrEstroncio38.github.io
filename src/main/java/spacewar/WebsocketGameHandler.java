@@ -98,7 +98,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				roomname = node.path("room").asText();
 				room = game.rooms.get(roomname);
 				if (room != null) {
-					if (room.addPlayer(player)) {
+					if (room.addPlayer(player,true)) {
 						//Mensaje que se trata en index.js
 						msg.put("event", "SEND TO ROOM");
 						msg.put("room", roomname);
@@ -109,6 +109,52 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					}
 				}
 				game.notifyRoomList();
+				break;
+				
+			//Mensaje que se genera para unirse a una sala desde Matchmaking.js	
+			case "JOIN MATCHMAKING ROOM":
+				player.resetValues();
+				game.addPlayingPlayer(player);
+				boolean RoomFound = false;
+				for (GameRoom room1 : game.getRooms()) {
+					if (room1 != null) {
+						if (room1.addPlayer(player,false)) {
+							RoomFound = true;
+							//Mensaje que se trata en index.js
+							msg.put("event", "SEND TO ROOM");
+							msg.put("room", room1.getRoomName());
+							msg.put("boss", room1.isRoomOwner(player));
+							synchronized (player.getSession()) {
+								player.getSession().sendMessage(new TextMessage(msg.toString()));
+							}
+							game.notifyRoomList();
+							break;
+						}
+					}
+				}
+				
+				if(RoomFound) break;
+			
+				roomListLock.lock();
+				int i = 1;
+				while(game.addRoom("Sala "+i,"BattleRoyal") == false) i++;
+				roomListLock.unlock();
+				room = game.rooms.get("Sala "+i);
+				if (room != null) {
+					if (room.addPlayer(player,true)) {
+						//Mensaje tratado en index.js
+						msg.put("event", "SEND TO ROOM");
+						msg.put("room", room.getRoomName());
+						msg.put("boss", room.isRoomOwner(player));
+						synchronized (player.getSession()) {
+							player.getSession().sendMessage(new TextMessage(msg.toString()));
+						}
+					}
+				} 
+				 
+				
+				game.notifyRoomList();
+				
 				break;
 				
 			//Cancela la solicitud de unirse a una sala
@@ -193,7 +239,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				if (isRoomCreated) {
 					room = game.rooms.get(roomname);
 					if (room != null) {
-						if (room.addPlayer(player)) {
+						if (room.addPlayer(player,true)) {
 							game.addPlayingPlayer(player);
 							//Mensaje tratado en index.js
 							msg.put("event", "SEND TO ROOM");
