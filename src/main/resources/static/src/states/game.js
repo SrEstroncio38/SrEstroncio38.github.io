@@ -189,6 +189,12 @@ Spacewar.gameState.prototype = {
 		game.global.ui.deathText.anchor.set(0.5,1.5);
 		game.global.ui.deathText.fixedToCamera = true;
 		
+		game.global.ui.victoryRoyale = game.add.sprite(640,320,'victory');
+		game.global.ui.victoryRoyale.alpha = 0.0;
+		game.global.ui.victoryRoyale.scale.setTo(0.75,0.75);
+		game.global.ui.victoryRoyale.anchor.set(0.5,0.75);
+		game.global.ui.victoryRoyale.fixedToCamera = true;
+		
 	},
 
 	update : function() {

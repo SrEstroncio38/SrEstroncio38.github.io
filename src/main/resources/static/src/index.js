@@ -252,6 +252,9 @@ window.onload = function() {
 							game.global.myPlayer.health1.alpha = 0.0
 							game.global.ui.deathText.alpha = 1.0
 						}
+						if (player.win) {
+							game.global.ui.victoryRoyale.alpha = 1.0;
+						}
 						if (player.death || player.win) {
 							game.global.ui.exitBtn.visible = true;
 					        game.global.ui.exitBtn.inputEnabled = true;

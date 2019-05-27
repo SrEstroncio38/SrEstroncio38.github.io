@@ -320,8 +320,10 @@ public class GameRoom {
 			if (alivePlayers.size() <= 1) {
 				// Es un for por si en un futuro pudiesen ganar varias personas
 				for (Player player : getPlayers()) {
-					player.setWin(true);
-					updateScore(player);
+					if (!player.getWin()) {
+						player.setWin(true);
+						updateScore(player);
+					}
 				}
 			}
 
