@@ -41,10 +41,6 @@ Spacewar.menuState.prototype = {
 	},
 
 	create : function() {
-
-        $.getJSON("./playerScores.json", function (data) {
-            game.global.scoresJson = data;
-            console.log(game.global.scoresJson)});
 		
 		var bg = game.add.sprite(game.world.centerX, game.world.centerY, 'background');
     	bg.anchor.setTo(0.5,0.5);

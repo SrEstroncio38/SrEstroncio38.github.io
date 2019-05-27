@@ -1,5 +1,6 @@
 Spacewar.ratingState = function(game) {
-
+	this.rankinglist;
+	this.rankinglist2;
 }
 
 function goToLobby(){
@@ -20,6 +21,27 @@ Spacewar.ratingState.prototype = {
 	},
 
 	preload : function() {
+		
+		game.global.myPlayer.rankingtext = "Cargando...";
+		game.global.myPlayer.rankingnumber = "";
+
+        $.getJSON("./playerScores.json", function (data) {
+        	game.global.myPlayer.rankingtext = "";
+        	game.global.myPlayer.rankingnumber = "";
+        	for (var i = 0; i < 10; i++){
+        		highername = "";
+        		higherpoints = -1;
+	            for (var name of Object.keys(data)){
+	            	if (data[name] > higherpoints) {
+	            		highername = name;
+	            		higherpoints = data[name];
+	            	}
+	            }
+	            game.global.myPlayer.rankingtext += (i+1) + ". " + highername + "\n";
+	            game.global.myPlayer.rankingnumber += higherpoints + "\n";
+	            delete data[highername];
+        	}
+        });
 		
 
 	},
@@ -42,26 +64,19 @@ Spacewar.ratingState.prototype = {
         rating.addChild(ratinglogo = game.add.sprite(0, -310, 'ratinglogo'));
         ratinglogo.anchor.setTo(0.5,0.5);
         ratinglogo.scale.setTo(0.8,0.8)
-
-        //Añadimos el ranking
-        var text =""
-        var points = new Array();
-        var names = new Array();
-        var i = 0;
-        for (var name of Object.keys(game.global.scoresJson)){
-            points[i] = game.global.scoresJson[name]
-            names[i] = name;
-            i++;
-        }
-        //points.sort(MayorToMenor)
-        for (var i = 0; i < points.length; i++){
-            text += "Nombre: " + names[points[i]] + " Puntuacion: " + points[i] +"\n"
-        }
-        console.log(text)
+        
+        //Añadimos el TOP 10
+        var style = { font: "24px Arial", fill: "#ffffff", align: "left", boundsAlignH: 'left' };
+        this.rankinglist = game.add.text(350, 170, "", style);
+        style = { font: "24px Arial", fill: "#ffffff", align: "right", boundsAlignH: 'left' };
+        this.rankinglist2 = game.add.text(850, 170, "", style);
 	},
 
 	update : function() {
 
+		this.rankinglist.setText(game.global.myPlayer.rankingtext);
+		this.rankinglist2.setText(game.global.myPlayer.rankingnumber);
+		
 	},		
 	
 }
