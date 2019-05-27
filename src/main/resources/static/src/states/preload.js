@@ -61,6 +61,7 @@ Spacewar.preloadState.prototype = {
 		game.load.image('thrustR','assets/images/thrustIconLow.png');
 		game.load.image('thrustY','assets/images/thrustIconAlert.png');
 		game.load.image('thrustG','assets/images/thrustIconFull.png');
+		game.load.image('victory','assets/images/victory_royale.png');
 		
 		//Imagenes de room
 		game.load.image('ship','assets/buttons/Ship_BTN.png');
