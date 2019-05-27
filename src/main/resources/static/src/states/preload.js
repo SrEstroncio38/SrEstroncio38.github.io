@@ -33,7 +33,7 @@ Spacewar.preloadState.prototype = {
         
         //Imagenes de rating
         game.load.image('ratingtable','assets/images/rating_window2.png');
-        game.load.image('ratinglogo','assets/images/rating.png'); 
+        game.load.image('ratinglogo','assets/images/record.png'); 
         
         //Imagenes de name y createRoom
         game.load.image('background','assets/images/stars.png');
