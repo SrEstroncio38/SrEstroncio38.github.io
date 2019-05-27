@@ -10,8 +10,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -38,6 +40,7 @@ public class GameRoom {
 	
 	//Variables de los players
 	private Map<String, Player> players = new ConcurrentHashMap<>();
+	private BlockingQueue<Player> waitingPlayers = new LinkedBlockingQueue<>();
 	private Map<Integer, Projectile> projectiles = new ConcurrentHashMap<>();
 	private Map<Integer, Recharge> recharges = new ConcurrentHashMap<>();
 	private AtomicInteger numPlayers = new AtomicInteger();
@@ -100,8 +103,15 @@ public class GameRoom {
 				roomCreator = player;
 			}
 			result = true;
+			playersLock.unlock();
+		} else {
+			playersLock.unlock();
+			try {
+				waitingPlayers.put(player);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
-		playersLock.unlock();
 		
 		//Este mensaje se encuentra index.js
 		ObjectNode msg = mapper.createObjectNode();
@@ -124,10 +134,27 @@ public class GameRoom {
 	 */
 	public boolean removePlayer(Player player) {
 		boolean result = false;
+		ObjectNode msg = mapper.createObjectNode();
 		playersLock.lock();
 		int count = this.numPlayers.get();
 		if(players.remove(player.getSession().getId()) != null) {
 			count = this.numPlayers.decrementAndGet();
+			Player newPlayer = waitingPlayers.poll();
+			if (newPlayer != null) {
+				if (addPlayer(newPlayer)) {
+					try {
+						//Mensaje que se trata en index.js
+						msg.put("event", "SEND TO ROOM");
+						msg.put("room", roomName);
+						msg.put("boss", isRoomOwner(newPlayer));
+						synchronized (player.getSession()) {
+							newPlayer.getSession().sendMessage(new TextMessage(msg.toString()));
+						}
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
 		}
 		playersLock.unlock();
 		if (count <= 0) {
@@ -137,7 +164,7 @@ public class GameRoom {
 			result = true;
 		}
 		
-		ObjectNode msg = mapper.createObjectNode();
+		msg = mapper.createObjectNode();
 		
 		if (isActive.get() == true) {
 			// Notify the missing player
@@ -153,6 +180,11 @@ public class GameRoom {
 		msg.put("gamemode", GameMode);
 		broadcast(msg.toString());
 		return result;
+	}
+	
+	//Te borra de la lista de espera
+	public void removeWaitingPlayer (Player player) {
+		waitingPlayers.remove(player);
 	}
 	
 	//Devuelve si la partida a comenzado o no

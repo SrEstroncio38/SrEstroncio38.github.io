@@ -4,6 +4,14 @@ Spacewar.waitingRoom = function(game) {
 
 
 function exitWaitingRoom(){
+	let message = {
+	        //Mensaje que se trata en WebsocketGameHandler.java
+			event : 'FORFEIT JOIN ROOM',
+			room : game.global.myPlayer.roomname
+		}
+		game.global.myPlayer.gamemode = ""
+		game.global.myPlayer.roomname = ""
+		game.global.socket.send(JSON.stringify(message))
 	game.state.start('lobbyState')
 }
 
@@ -41,7 +49,7 @@ Spacewar.waitingRoom.prototype = {
         
         // add room name
 		var style = { font: "24px Arial", fill: "#ffffff", align: "center" };
-		var text = game.add.text(game.world.centerX, game.world.centerY - 50, "Esperando a entra a sala", style);
+		var text = game.add.text(game.world.centerX, game.world.centerY - 50, "Esperando a entrar a sala", style);
 		text.anchor.set(0.5,0.5);
 		
 	},

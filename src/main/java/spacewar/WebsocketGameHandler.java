@@ -94,11 +94,11 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 			//Mensaje que se genera al unirse a una sala en lobby.js
 			case "JOIN ROOM":
 				player.resetValues();
+				game.addPlayingPlayer(player);
 				roomname = node.path("room").asText();
 				room = game.rooms.get(roomname);
 				if (room != null) {
 					if (room.addPlayer(player)) {
-						game.addPlayingPlayer(player);
 						//Mensaje que se trata en index.js
 						msg.put("event", "SEND TO ROOM");
 						msg.put("room", roomname);
@@ -109,6 +109,16 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					}
 				}
 				game.notifyRoomList();
+				break;
+				
+			//Cancela la solicitud de unirse a una sala
+			case "FORFEIT JOIN ROOM":
+				game.removePlayingPlayer(player);
+				roomname = node.path("room").asText();
+				room = game.rooms.get(roomname);
+				if (room != null) {
+					room.removeWaitingPlayer(player);
+				}
 				break;
 				
 			//Mensaje que se genera al abandonar una sala en room.js	
