@@ -11,6 +11,14 @@ Spacewar.preloadState.prototype = {
 	},
 
 	preload : function() {
+        
+        $.getJSON("./playerScores.json", function (data) {
+            game.global.scoresJson = data;
+            console.log(game.global.scoresJson)});
+        
+        /*game.global.scoresJson = game.load.json('scoresPlayers', '../../../../../../playerScores.json');
+        console.log(game.global.scoresJson)*/
+
 		game.load.atlas('spacewar', 'assets/atlas/spacewar.png',
 				'assets/atlas/spacewar.json',
 				Phaser.Loader.TEXTURE_ATLAS_JSON_HASH)

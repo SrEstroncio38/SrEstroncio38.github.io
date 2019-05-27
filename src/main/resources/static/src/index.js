@@ -16,7 +16,8 @@ window.onload = function() {
 		rechargesIdx : 0,
 		myPlayer : new Object(),
 		otherPlayers : [],
-		ui : new Object()
+        ui : new Object(),
+        scoresJson : null 
 	}
     
     //Inicializamos variables por si acaso
@@ -198,7 +199,7 @@ window.onload = function() {
 			for (var player of msg.scores) {
 				text2 += player.username + "     Puntuacion:"+player.points+"\n";
 			}
-			game.global.myRoomPoints.setText(text2);
+			//game.global.myRoomPoints.setText(text2);
             break;
 
          /**

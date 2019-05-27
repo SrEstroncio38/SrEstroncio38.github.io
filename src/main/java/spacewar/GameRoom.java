@@ -411,7 +411,7 @@ public class GameRoom {
 	
 	public void updateScore(Player player) {
 		scoreLock.lock();
-		File jsonFile = new File("playerScores.json");
+		File jsonFile = new File("./src/main/resources/static/playerScores.json");
         InputStream is;
         OutputStream os;
         try {

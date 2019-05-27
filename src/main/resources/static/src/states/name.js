@@ -18,6 +18,7 @@ Spacewar.nameState.prototype = {
 	},
 
 	create : function() {
+        
 		
 		var bg = game.add.sprite(game.world.centerX, game.world.centerY, 'background');
     	bg.anchor.setTo(0.5,0.5);
