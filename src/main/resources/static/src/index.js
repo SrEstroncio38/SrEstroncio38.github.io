@@ -347,10 +347,16 @@ window.onload = function() {
 		case 'PRINT ROOM CHAT' :
 			currentpos = game.global.myPlayer.chattext.length;
 			endingpos = currentpos + msg.username.length + 3;
-			game.global.myPlayer.chattext += "\n[" + msg.username + "]: " + msg.text;
-			game.global.myPlayer.chat.setText(game.global.myPlayer.chattext);
-			game.global.myPlayer.chat.addColor('#ffff44', currentpos);
-			game.global.myPlayer.chat.addColor('#ffffff', endingpos);
+			if (msg.username != "") {
+				game.global.myPlayer.chattext += "\n[" + msg.username + "]: " + msg.text;
+				game.global.myPlayer.chat.setText(game.global.myPlayer.chattext);
+				game.global.myPlayer.chat.addColor('#ffff44', currentpos);
+				game.global.myPlayer.chat.addColor('#ffffff', endingpos);
+			} else {
+				game.global.myPlayer.chattext += "\n" + msg.text;
+				game.global.myPlayer.chat.setText(game.global.myPlayer.chattext);
+				game.global.myPlayer.chat.addColor('#aaaaaa', currentpos);
+			}
             break;
         
 		default :

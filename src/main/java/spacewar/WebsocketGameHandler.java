@@ -106,6 +106,10 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 						synchronized (player.getSession()) {
 							player.getSession().sendMessage(new TextMessage(msg.toString()));
 						}
+						msg.put("event", "PRINT ROOM CHAT");
+						msg.put("username", "");
+						msg.put("text", player.getUsername() + " se ha unido a la sala.");
+						room.broadcast(msg.toString());
 					}
 				}
 				game.notifyRoomList();
@@ -128,6 +132,10 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 								player.getSession().sendMessage(new TextMessage(msg.toString()));
 							}
 							game.notifyRoomList();
+							msg.put("event", "PRINT ROOM CHAT");
+							msg.put("username", "");
+							msg.put("text", player.getUsername() + " se ha unido a la sala.");
+							room1.broadcast(msg.toString());
 							break;
 						}
 					}
@@ -187,6 +195,11 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					roomListLock.lock();
 					game.removeRoom(roomname);
 					roomListLock.unlock();
+				} else {
+					msg.put("event", "PRINT ROOM CHAT");
+					msg.put("username", "");
+					msg.put("text", player.getUsername() + " ha abandonado la sala.");
+					room.broadcast(msg.toString());
 				}
 				leaveRoomLock.unlock();
 				game.notifyRoomList();
@@ -346,6 +359,11 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				roomListLock.lock();
 				game.removeRoom(room.getRoomName());
 				roomListLock.unlock();
+			} else {
+				msg.put("event", "PRINT ROOM CHAT");
+				msg.put("username", "");
+				msg.put("text", player.getUsername() + " ha abandonado la sala.");
+				room.broadcast(msg.toString());
 			}
 		}
 		
