@@ -53,7 +53,7 @@ Spacewar.ratingState.prototype = {
             names[i] = name;
             i++;
         }
-        points.sort(MayorToMenor)
+        //points.sort(MayorToMenor)
         for (var i = 0; i < points.length; i++){
             text += "Nombre: " + names[points[i]] + " Puntuacion: " + points[i] +"\n"
         }

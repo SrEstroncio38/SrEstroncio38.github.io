@@ -19,6 +19,8 @@ function returnPage() {
 }
 
 function joinRoom(item) {
+
+    game.state.start('waitingRoom');
 	if (item.variable != "") {
 		let message = {
                 //Mensaje que se trata en WebsocketGameHandler.java

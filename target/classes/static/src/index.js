@@ -359,7 +359,8 @@ window.onload = function() {
 	game.state.add('bootState', Spacewar.bootState)
 	game.state.add('preloadState', Spacewar.preloadState)
 	game.state.add('menuState', Spacewar.menuState)
-	game.state.add('lobbyState', Spacewar.lobbyState)
+    game.state.add('lobbyState', Spacewar.lobbyState)
+    game.state.add('waitingRoom', Spacewar.waitingRoom)
 	game.state.add('ratingState', Spacewar.ratingState)	
     game.state.add('createRoom', Spacewar.createRoom)
     game.state.add('repeatedRoom', Spacewar.repeatedRoom)
@@ -367,7 +368,6 @@ window.onload = function() {
 	game.state.add('matchmakingState', Spacewar.matchmakingState)
 	game.state.add('roomState', Spacewar.roomState)
     game.state.add('gameState', Spacewar.gameState)
-    game.state.add('endGame', Spacewar.endGame)
 
 	game.state.start('bootState')
 
