@@ -139,6 +139,10 @@ Spacewar.roomState.prototype = {
 		
 		roomplayers.setText(game.global.myPlayer.roomcurrentplayers + "/" + game.global.myPlayer.roommaxplayers);
 		roommode.setText(game.global.myPlayer.gamemode);
+		
+		if (game.global.myPlayer.roomcurrentplayers >= game.global.myPlayer.roommaxplayers && game.global.myPlayer.isRoomOwner) {
+			goToGame();
+		}
 
     	// Position currentinput correctly
 		if (currentinput.width > 350){

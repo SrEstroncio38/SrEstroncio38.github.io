@@ -355,7 +355,7 @@ public class GameRoom {
 			// Check if winner
 			if (alivePlayers.size() <= 1) {
 				// Es un for por si en un futuro pudiesen ganar varias personas
-				for (Player player : getPlayers()) {
+				for (Player player : alivePlayers) {
 					if (!player.getWin()) {
 						player.setWin(true);
 						updateScore(player);
