@@ -50,7 +50,7 @@ Spacewar.ratingState.prototype = {
         var i = 0;
         for (var name of Object.keys(game.global.scoresJson)){
             points[i] = game.global.scoresJson[name]
-            names[game.global.scoresJson[name]] = name;
+            names[i] = name;
             i++;
         }
         points.sort(MayorToMenor)

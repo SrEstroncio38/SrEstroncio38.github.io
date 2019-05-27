@@ -189,19 +189,6 @@ window.onload = function() {
 			}
             break;
         
-        /** 
-        * Este mensaje se encuentra en GameRoom.java
-        * se deberia activar siempre que un jugador decide ir al raking al terminar
-        * una partida, se usa para que TODOS los jugadores de la sala recivan la puntuacion
-        */
-        case 'UPDATE SCORES END GAMES' :
-			let text2 = "";
-			for (var player of msg.scores) {
-				text2 += player.username + "     Puntuacion:"+player.points+"\n";
-			}
-			//game.global.myRoomPoints.setText(text2);
-            break;
-
          /**
          * Este mensaje se encuentra dentro de GameRoom.java
          * se activa con cada tick y funciona para actualizar los datos
@@ -365,19 +352,6 @@ window.onload = function() {
 			game.global.myPlayer.chat.addColor('#ffffff', endingpos);
             break;
         
-        /**
-         * LO HE BUSCADO EN TODOS LOS SRC QUE DEBERIA PODER ESTAR Y NO LO HE ENCONTRADO
-         * LO COMENTO DE MOMENTO POR SI ES NECESARIO POSTERIORMENTE
-         * CREO QUE ES LO RESIDUOS DEL ANTIGUO JOIN ROOM
-         */
-        /*
-		case 'NEW ROOM' :
-			game.global.myPlayer.room = {
-					name : msg.room
-			}
-			game.global.myPlayer.isRoomOwner = msg.boss;
-            break
-        */
 		default :
 			console.dir(msg)
 			break
