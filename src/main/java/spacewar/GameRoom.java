@@ -95,23 +95,27 @@ public class GameRoom {
 	//Añade un jugador a la sala si es que cabe
 	public boolean addPlayer(Player player) {
 		boolean result = false;
-		//Revisa que quepan los jugadores antes de agregarlo
-		playersLock.lock();
-		if(numPlayers.get() < MAXPLAYERS) {
-			players.put(player.getSession().getId(), player);
-			if (numPlayers.getAndIncrement() < 1) {
-				roomCreator = player;
+			//Revisa que quepan los jugadores antes de agregarlo
+			playersLock.lock();
+			if (!isRoomActive()) {
+				if(numPlayers.get() < MAXPLAYERS) {
+					players.put(player.getSession().getId(), player);
+					if (numPlayers.getAndIncrement() < 1) {
+						roomCreator = player;
+					}
+					result = true;
+					playersLock.unlock();
+				} else {
+					playersLock.unlock();
+					try {
+						waitingPlayers.put(player);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			} else {
+				playersLock.unlock();
 			}
-			result = true;
-			playersLock.unlock();
-		} else {
-			playersLock.unlock();
-			try {
-				waitingPlayers.put(player);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
 		
 		//Este mensaje se encuentra index.js
 		ObjectNode msg = mapper.createObjectNode();

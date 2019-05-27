@@ -26,6 +26,7 @@ Spacewar.waitingRoom.prototype = {
 
 	preload : function() {		
 
+		game.time.events.add(Phaser.Timer.SECOND * 5, exitWaitingRoom, this);
 		
 	},
 
