@@ -17,7 +17,7 @@ Spacewar.waitingRoom.prototype = {
 	},
 
 	preload : function() {		
-        console.log("He pasado por la sala de espera")
+
 		
 	},
 
